@@ -8,7 +8,7 @@ class CreateConsulenteTable extends Migration {
 	public function up()
 	{
 		Schema::create('consulente', function(Blueprint $table) {
-			$table->increments('id_consulente');
+			$table->increments('id');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->string('codice_fiscale', 16)->unique();
@@ -23,7 +23,6 @@ class CreateConsulenteTable extends Migration {
 			$table->string('mobile2', 30);
 			$table->string('partita_iva');
 			$table->enum('tipo', array('PARTNER', 'SENIOR', 'JUNIOR'));
-			$table->string('username', 30)->unique();
 		});
 	}
 

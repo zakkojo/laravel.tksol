@@ -9,10 +9,11 @@ class CreateUsersTable extends Migration {
 	{
 		Schema::create('users', function(Blueprint $table) {
 			$table->increments('id');
-			$table->string('username', 50)->unique();
+			$table->string('email')->unique();
+			$table->string('password');
 			$table->tinyInteger('tipo_utente');
-			$table->integer('id_esterno');
-			$table->string('tipo_esterno');
+			$table->integer('id_esterno')->index();
+			$table->tinyInteger('tipo_esterno');
 			$table->timestamps();
 			$table->softDeletes();
 		});

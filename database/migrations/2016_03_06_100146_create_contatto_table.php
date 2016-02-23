@@ -8,7 +8,7 @@ class CreateContattoTable extends Migration {
 	public function up()
 	{
 		Schema::create('contatto', function(Blueprint $table) {
-			$table->increments('id_contatto');
+			$table->increments('id');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->integer('id_cliente')->unsigned();
@@ -23,7 +23,6 @@ class CreateContattoTable extends Migration {
 			$table->string('citta', 50);
 			$table->string('cap', 5);
 			$table->string('provincia', 2);
-			$table->string('username', 50)->unique();
 		});
 	}
 

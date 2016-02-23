@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/*
+| Route "base" definite in
+| APP\vendor\acacha\admin-lte-template-laravel\src\Http\routes.php
+*/
 
 /*
 |--------------------------------------------------------------------------

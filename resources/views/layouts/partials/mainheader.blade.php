@@ -127,10 +127,10 @@
                                 <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
                                 <p>
                                     {{ Auth::user()->name }}
-                                    <small>Member since Nov. 2012</small>
+                                    <!--small>Member since Nov. 2012</small-->
                                 </p>
                             </li>
-                            <!-- Menu Body -->
+                            <!-- Menu Body>
                             <li class="user-body">
                                 <div class="col-xs-4 text-center">
                                     <a href="#">Followers</a>
@@ -141,14 +141,14 @@
                                 <div class="col-xs-4 text-center">
                                     <a href="#">Friends</a>
                                 </div>
-                            </li>
+                            </li-->
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="#" class="btn btn-default btn-flat">Profilo</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="{{ url('/logout') }}" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="{{ url('/logout') }}" class="btn btn-default btn-flat">Log out</a>
                                 </div>
                             </li>
                         </ul>

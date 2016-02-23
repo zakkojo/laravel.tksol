@@ -5,23 +5,45 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model {
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-	protected $table = 'users';
-	public $timestamps = true;
+class User extends Authenticatable
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
 
-	use SoftDeletes;
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
 
-	protected $dates = ['deleted_at'];
+    
 
-	public function consulente()
-	{
-		return $this->hasOne('Consulente');
-	}
+    protected $table = 'users';
+    public $timestamps = true;
 
-	public function cliente()
-	{
-		return $this->hasOne('Contatto');
-	}
+    use SoftDeletes;
 
+    protected $dates = ['deleted_at'];
+
+
+    public function consulente()
+    {
+        return $this->hasOne('Consulente');
+    }
+
+    public function cliente()
+    {
+        return $this->hasOne('Contatto');
+    }
 }

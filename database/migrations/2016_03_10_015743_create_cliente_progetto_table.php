@@ -3,11 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateProgettoClienteTable extends Migration {
+class CreateClienteProgettoTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('progettoCliente', function(Blueprint $table) {
+		Schema::create('cliente_progetto', function(Blueprint $table) {
 			$table->increments('id');
 			$table->integer('id_cliente')->unsigned();
 			$table->integer('id_progetto')->unsigned();
@@ -26,6 +26,6 @@ class CreateProgettoClienteTable extends Migration {
 
 	public function down()
 	{
-		Schema::drop('progettoCliente');
+		Schema::drop('cliente_progetto');
 	}
 }

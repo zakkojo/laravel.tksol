@@ -7,7 +7,7 @@ class CreateConsulenteInterventoTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('consulenteIntervento', function(Blueprint $table) {
+		Schema::create('consulente_intervento', function(Blueprint $table) {
 			$table->increments('id');
 			$table->timestamps();
 			$table->softDeletes();
@@ -20,6 +20,6 @@ class CreateConsulenteInterventoTable extends Migration {
 
 	public function down()
 	{
-		Schema::drop('consulenteIntervento');
+		Schema::drop('consulente_intervento');
 	}
 }

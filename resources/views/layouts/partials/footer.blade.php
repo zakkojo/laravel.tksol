@@ -5,6 +5,6 @@
 
     </div>
     <!-- Default to the left -->
-    <strong>Tikeos CRM </strong>
+    <strong>Teikos CRM </strong>
     Copyright &copy; 2016
 </footer>

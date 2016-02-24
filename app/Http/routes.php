@@ -27,6 +27,24 @@
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
+Route::group(['middleware' => 'web'], function () {
+
+// Auth routes = Rpoute::auth();
+// Login routes
+    Route::get('/login','Auth\AuthController@showLoginForm');
+    Route::post('/login','Auth\AuthController@login');
+    Route::get('/logout','Auth\AuthController@logout');
+// Password reset link request routes...
+    Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
+
+// Password reset routes...
+    Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+    Route::post('password/reset', 'Auth\PasswordController@reset');
+
+
+    Route::get('/home', 'HomeController@index');
+
+    Route::get('/', 'HomeController@index');
+
+    Route::resource('user', 'UserController');
 });

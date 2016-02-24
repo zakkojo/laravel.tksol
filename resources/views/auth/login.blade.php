@@ -8,7 +8,7 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ url('/home') }}"><b>Admin</b>LTE</a>
+            <a href="{{ url('/home') }}"><b>Teikos</b>CRM</a>
         </div><!-- /.login-logo -->
 
     @if (count($errors) > 0)
@@ -48,6 +48,7 @@
         </div>
     </form>
 
+    <!--
     <div class="social-auth-links text-center">
         <p>- OR -</p>
         <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a>
@@ -55,7 +56,7 @@
     </div><!-- /.social-auth-links -->
 
     <a href="{{ url('/password/reset') }}">I forgot my password</a><br>
-    <a href="{{ url('/register') }}" class="text-center">Register a new membership</a>
+    <!--a href="{{ url('/register') }}" class="text-center">Register a new membership</a-->
 
 </div><!-- /.login-box-body -->
 

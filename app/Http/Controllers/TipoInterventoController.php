@@ -1,8 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use Symfony\Component\HttpFoundation\Request;
-
-class UserController extends Controller {
+class TipoInterventoController extends Controller {
 
   /**
    * Display a listing of the resource.
@@ -21,7 +19,7 @@ class UserController extends Controller {
    */
   public function create()
   {
-    return view('utenti.create');
+    
   }
 
   /**
@@ -31,9 +29,7 @@ class UserController extends Controller {
    */
   public function store()
   {
-    $data = Request::all();
-
-    return $data;
+    
   }
 
   /**

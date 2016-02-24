@@ -8,7 +8,7 @@
         @if (! Auth::guest())
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="{{asset('/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image" />
+                    <img src="@yield('user_image', '/img/user-placeholder.png')" class="img-circle" alt="User Image" />
                 </div>
                 <div class="pull-left info">
                     <p>{{ Auth::user()->name }}</p>
@@ -31,17 +31,28 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header">HEADER</li>
+            <li class="header">CONSULENTE</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>Home</span></a></li>
-            <li><a href="#"><i class='fa fa-link'></i> <span>Another Link</span></a></li>
-            <li class="treeview">
+            <li class="active"><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>Dashboard</span></a></li>
+            <li><a href="#"><i class='fa fa-link'></i> <span>Clienti</span></a></li>
+            <li><a href="#"><i class='fa fa-link'></i> <span>Attività</span></a></li>
+            <li><a href="#"><i class='fa fa-link'></i> <span>Progetti</span></a></li>
+            <!--li class="treeview">
                 <a href="#"><i class='fa fa-link'></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
                     <li><a href="#">Link in level 2</a></li>
                     <li><a href="#">Link in level 2</a></li>
                 </ul>
-            </li>
+            </li-->
+            <li class="header">AMMINISTRATORE</li>
+            <!-- Optionally, you can add icons to the links -->
+            <li><a href="#"><i class='fa fa-link'></i> <span>Consulenti</span></a></li>
+            <li><a href="#"><i class='fa fa-link'></i> <span>Progetti</span></a></li>
+            <li><a href="#"><i class='fa fa-link'></i> <span>Prospect</span></a></li>
+            <li class="header">CLIENTE</li>
+            <!-- Optionally, you can add icons to the links -->
+            <li class="active"><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>Attività</span></a></li>
+            <li><a href="#"><i class='fa fa-link'></i> <span>Consuntivo</span></a></li>
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

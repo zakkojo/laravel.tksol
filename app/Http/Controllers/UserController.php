@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use Symfony\Component\HttpFoundation\Request;
+use Request;
 
 class UserController extends Controller {
 

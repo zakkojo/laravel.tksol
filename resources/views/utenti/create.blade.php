@@ -17,7 +17,7 @@
 
 @section('main-content')
 
-    {!! Form::open(['url' => 'users']) !!}
+    {!! Form::open(['url' => 'user']) !!}
 	<div class="container spark-screen">
 		<div class="row">
 
@@ -39,7 +39,12 @@
                     <br>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input type="password" class="form-control" placeholder="Password" name="confermaPassword">
+                        <input type="password" class="form-control" placeholder="Password" name="password">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input type="password" class="form-control" placeholder="Conferma Password" name="confermaPassword">
                     </div>
                     <br>
                     <div class="col-xs-4">
@@ -53,7 +58,7 @@
 
 		</div>
 	</div>
-    {!! Form::open(array('route' => 'route.name', 'method' => 'POST')) !!}
+    {!! Form::close() !!}
 
     @if (count($errors) > 0)
         <div class="alert alert-danger">

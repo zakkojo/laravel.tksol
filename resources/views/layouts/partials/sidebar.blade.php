@@ -33,10 +33,11 @@
         <ul class="sidebar-menu">
             <li class="header">CONSULENTE</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>Dashboard</span></a></li>
-            <li><a href="#"><i class='fa fa-link'></i> <span>Clienti</span></a></li>
-            <li><a href="#"><i class='fa fa-link'></i> <span>Attività</span></a></li>
-            <li><a href="#"><i class='fa fa-link'></i> <span>Progetti</span></a></li>
+            <li><a href="/dashboard"><i class='fa fa-link glyphicon-dashboard'></i> <span>Dashboard</span></a></li>
+            <li><a href="/calendario"><i class='fa fa-link glyphicon-calendar'></i> <span>Calendario</span></a></li>
+            <li><a href="/consulenti"><i class='fa fa-link glyphicon-user'></i> <span>Consulenti</span></a></li>
+            <li><a href="/progetti"><i class='fa fa-link glyphicon-bitcoin'></i> <span>Filiera</span></a></li>
+            <li><a href="/clienti"><i class='fa fa-link glyphicon-briefcase'></i> <span>Clienti</span></a></li>
             <!--li class="treeview">
                 <a href="#"><i class='fa fa-link'></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">
@@ -44,15 +45,11 @@
                     <li><a href="#">Link in level 2</a></li>
                 </ul>
             </li-->
-            <li class="header">AMMINISTRATORE</li>
-            <!-- Optionally, you can add icons to the links -->
-            <li><a href="#"><i class='fa fa-link'></i> <span>Consulenti</span></a></li>
-            <li><a href="#"><i class='fa fa-link'></i> <span>Progetti</span></a></li>
-            <li><a href="#"><i class='fa fa-link'></i> <span>Prospect</span></a></li>
             <li class="header">CLIENTE</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="{{ url('home') }}"><i class='fa fa-link'></i> <span>Attività</span></a></li>
-            <li><a href="#"><i class='fa fa-link'></i> <span>Consuntivo</span></a></li>
+            <li><a href="/calendario"><i class='fa fa-link'></i> <span>Calendario</span></a></li>
+            <li><a href="/dashboard"><i class='fa fa-link'></i> <span>Dashboard</span></a></li>
+            <li><a href="/consulenti"><i class='fa fa-link glyphicon-user'></i> <span>I miei consulenti</span></a></li>
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

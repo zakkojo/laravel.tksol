@@ -28,8 +28,6 @@
 */
 
 Route::group(['middleware' => 'web'], function () {
-
-// Auth routes = Rpoute::auth();
 // Login routes
     Route::get('/login','Auth\AuthController@showLoginForm');
     Route::post('/login','Auth\AuthController@login');
@@ -47,4 +45,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/', 'HomeController@index');
 
     Route::resource('user', 'UserController');
+
+    Route::resource('consulenti','ConsulenteController');
+
 });

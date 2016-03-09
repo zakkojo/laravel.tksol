@@ -19,7 +19,7 @@ Route::get('/', function()
 
 Route::resource('cliente', 'ClienteController');
 Route::resource('contatto', 'ContattoController');
-Route::resource('consulente', 'ConsulenteController');
+Route::resource('consulenti', 'ConsulenteController');
 Route::resource('prodotto', 'ProdottoController');
 Route::resource('progetto', 'ProgettoController');
 Route::resource('attivita', 'AttivitaController');

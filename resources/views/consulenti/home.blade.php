@@ -6,6 +6,7 @@
 @endsection
 @section('contentheader_title')
         Consulenti
+        <button type="" class="btn btn-primary btn-block btn-flat">Nuovo consulente</button>
 @endsection
 
 @section('contentheader_breadcrumb')
@@ -27,6 +28,7 @@
                 </div>
             </div>
         </div>
+
         <!-- /.box-header -->
         <div class="box-body table-responsive no-padding">
             <table class="table table-hover">

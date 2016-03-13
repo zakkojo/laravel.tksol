@@ -21,8 +21,8 @@ class CreateContattoTable extends Migration {
 			$table->string('email2', 120);
 			$table->string('indirizzo', 150);
 			$table->string('citta', 50);
-			$table->string('cap', 5);
-			$table->string('provincia', 2);
+			$table->string('cap', 10);
+			$table->string('provincia', 10);
 		});
 	}
 

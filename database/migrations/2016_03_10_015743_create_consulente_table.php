@@ -16,13 +16,13 @@ class CreateConsulenteTable extends Migration {
 			$table->string('nome', 50);
 			$table->string('indirizzo', 120);
 			$table->string('citta', 50);
-			$table->string('provincia', 4);
+			$table->string('provincia', 10);
 			$table->string('cap', 10);
 			$table->string('telefono', 30);
 			$table->string('telefono2', 30);
 			$table->string('mobile', 30);
 			$table->string('mobile2', 30);
-			$table->string('partita_iva');
+			$table->string('partita_iva', 11);
 			$table->enum('tipo', array('Partner', 'Senior', 'Junior'));
 		});
 	}

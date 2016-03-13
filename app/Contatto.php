@@ -11,7 +11,7 @@ class Contatto extends Model {
 	public $timestamps = true;
 
 	protected $fillable = [
-		'codice_fiscale','cognome','nome','indirizzo','citta','provincia','cap','telefono','mobile','partita_iva','tipo',
+		'descrizione','email','email2','indirizzo','citta','provincia','cap','telefono','mobile','telefono2','mobile2',
 	];
 
 	use SoftDeletes;

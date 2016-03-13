@@ -1,6 +1,18 @@
 <?php namespace App\Http\Controllers;
 
+use App\Http\Requests;
+use App\Http\Requests\ClientiRequest;
+use App\Cliente;
+
+use Request;
+
+
 class ClienteController extends Controller {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
   /**
    * Display a listing of the resource.
@@ -9,7 +21,7 @@ class ClienteController extends Controller {
    */
   public function index()
   {
-    
+      return view('clienti.index');
   }
 
   /**
@@ -19,7 +31,7 @@ class ClienteController extends Controller {
    */
   public function create()
   {
-    
+      return view('clienti.create');
   }
 
   /**
@@ -27,9 +39,11 @@ class ClienteController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(ClientiRequest $request)
   {
-    
+      $data = $request->all();
+      $ret =  Cliente::create($data);
+      return redirect()->action('ClienteController@edit', $ret->id);
   }
 
   /**
@@ -40,7 +54,7 @@ class ClienteController extends Controller {
    */
   public function show($id)
   {
-    
+      return redirect()->action('ClienteController@edit', $id);
   }
 
   /**
@@ -51,7 +65,8 @@ class ClienteController extends Controller {
    */
   public function edit($id)
   {
-    
+      $cliente = Cliente::findOrFail($id);
+      return view('clienti.edit', compact('cliente'));
   }
 
   /**
@@ -60,9 +75,11 @@ class ClienteController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id, ClientiRequest $request)
   {
-    
+      $cliente = Cliente::findOrFail($id);
+      $cliente->update($request->all());
+      return redirect()->action('ClienteController@edit', $id);
   }
 
   /**

@@ -1,0 +1,102 @@
+@extends('layouts.app')
+
+
+@section('htmlheader_title')
+    Clienti
+@endsection
+@section('contentheader_title')
+    Clienti &nbsp;
+    <button type="button" class="btn btn-default navbar-btn" onClick="location.href='clienti/create'" title="Aggiungi Nuovo">
+        <i class="fa fa-plus"></i>&nbsp; Modifica Cliente
+    </button>
+    <button type="button" class="btn btn-default navbar-btn" onClick="location.href='clienti/create'" title="Aggiungi Nuovo">
+        <i class="fa fa-plus"></i>&nbsp; Elimina Cliente
+    </button>
+    <button type="button" class="btn btn-default navbar-btn" onClick="location.href='clienti/create'" title="Aggiungi Nuovo">
+        <i class="fa fa-plus"></i>&nbsp; Aggiungi Contatto
+    </button>
+@endsection
+
+@section('contentheader_breadcrumb')
+
+@endsection
+
+@section('main-content')
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Elenco clienti</h3>
+
+            <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+            <table class="table table-hover">
+                <tbody><tr>
+                    <th>CF</th>
+                    <th>Nominativo</th>
+                    <th>Tipo</th>
+                    <th>Ultimo intervento</th>
+                    <th>Prossimo intervento</th>
+                    <th>Clienti</th>
+                    <th>Progetti</th>
+                    <th>Interventi pianificati</th>
+                    <th>Opzioni</th>
+                </tr>
+                <tr>
+                    <td>GNTNCL77P27C573Q</td>
+                    <td><a href="contatti/1">Nicola Gentili</a></td>
+                    <td>Junior</td>
+                    <td>03/04/2016</td>
+                    <td><span class="label label-success">04/04/2016</span></td>
+                    <td>12</td>
+                    <td>24</td>
+                    <td>5</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>GNTNCL77P27C573Q</td>
+                    <td><a href="contatti/2">Nicola Gentili</a></td>
+                    <td>Senior</td>
+                    <td>03/04/2016</td>
+                    <td><span class="label label-warning">18/04/2016</span></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>GNTNCL77P27C573Q</td>
+                    <td><a href="#">Nicola Gentili</a></td>
+                    <td>Partner</td>
+                    <td>03/04/2016</td>
+                    <td><span class="label label-primary">04/04/2016</span></td>
+                    <td>12</td>
+                    <td>24</td>
+                    <td>9</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>GNTNCL77P27C573Q</td>
+                    <td><a href="#">Nicola Gentili</a></td>
+                    <td>Junior</td>
+                    <td>03/04/2016</td>
+                    <td><span class="label label-danger">non definito</span></td>
+                    <td>3</td>
+                    <td>6</td>
+                    <td>0</td>
+                    <td>5</td>
+                </tr>
+                </tbody></table>
+        </div>
+        <!-- /.box-body -->
+    </div>
+@endsection

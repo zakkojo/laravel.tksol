@@ -1,7 +1,16 @@
 <?php namespace App\Http\Controllers;
 
+use App\Http\Requests;
+use App\Http\Requests\ContattiRequest;
+use App\Contatto;
+
+use Request;
 class ContattoController extends Controller {
 
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
   /**
    * Display a listing of the resource.
    *
@@ -9,7 +18,7 @@ class ContattoController extends Controller {
    */
   public function index()
   {
-    
+      return view('contatti.index');
   }
 
   /**
@@ -19,17 +28,18 @@ class ContattoController extends Controller {
    */
   public function create()
   {
-    
-  }
+      return view('contatti.create');  }
 
   /**
    * Store a newly created resource in storage.
    *
    * @return Response
    */
-  public function store()
+  public function store(ContattiRequest $request)
   {
-    
+      $data = $request->all();
+      $ret =  Contatto::create($data);
+      return redirect()->action('ContattoController@edit', $ret->id);
   }
 
   /**
@@ -40,7 +50,7 @@ class ContattoController extends Controller {
    */
   public function show($id)
   {
-    
+      return redirect()->action('ContattoController@edit', $id);
   }
 
   /**
@@ -51,7 +61,8 @@ class ContattoController extends Controller {
    */
   public function edit($id)
   {
-    
+      $contatto = Contatto::findOrFail($id);
+      return view('contatti.edit', compact('contatto'));
   }
 
   /**
@@ -60,9 +71,11 @@ class ContattoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
+  public function update($id,ContattiRequest $request)
   {
-    
+      $contatto = Contatto::findOrFail($id);
+      $contatto->update($request->all());
+      return redirect()->action('ContattoController@edit', $id);
   }
 
   /**

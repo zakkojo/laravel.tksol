@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 
-class ConsulentiRequest extends Request
+class ClientiRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,8 @@ class ConsulentiRequest extends Request
     {
         return [
             'codice_fiscale'=> 'required',
-            'cognome'=> 'required',
-            'nome'=> 'required',
-            //'indirizzo'=> 'required',
-            //'citta'=> 'required',
-            //'provincia'=> 'required',
-            //'cap'=> 'required',
-            'telefono' => 'required_without:mobile',
-            'mobile' => 'required_without:telefono',
             'partita_iva'=> 'required',
-            'tipo'=> 'required'
+            'ragione_sociale'=> 'required',
         ];
     }
 }

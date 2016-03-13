@@ -20,7 +20,7 @@ class ConsulenteController extends Controller {
    */
   public function index()
   {
-    return view('consulenti.home');
+    return view('consulenti.index');
   }
 
   /**
@@ -30,7 +30,7 @@ class ConsulenteController extends Controller {
    */
   public function create()
   {
-    return view('consulenti.create', array('consulente' => ''));
+    return view('consulenti.create');
   }
 
   /**

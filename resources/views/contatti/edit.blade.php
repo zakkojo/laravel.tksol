@@ -2,10 +2,10 @@
 
 
 @section('htmlheader_title')
-   Nuovo Contatto
+   {{{ $contatto->descrizione }}}
 @endsection
 @section('contentheader_title')
-    Nuovo Contatto
+    {{{ $contatto->descrizione }}}
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -23,7 +23,7 @@
 
     <div class="col-md-8">
         <div class="box box-primary">
-            {!! Form::open(['url' => 'contatti']) !!}
+            {!! Form::model($contatto, ['url' => 'contatti/'.$contatto->id, 'method' => 'PATCH' ]) !!}
             @include('contatti.partials.contattoForm')
             {!! Form::close() !!}
         </div>

@@ -25,10 +25,10 @@
     </div>
     <div class="form-group">
         <select class="form-control select2 select2-hidden-accessible" name="tipo" style="width: 100%;" tabindex="-1" aria-hidden="true">
-            <option> {{ $consulente->tipo or  'Tipo' }}</option>
-            <option>Partner</option>
-            <option>Senior</option>
-            <option>Junior</option>
+            <option value="{{ $consulente->tipo or  '' }}"> {{ $consulente->tipo or  'Tipo' }}</option>
+            <option value="Partner">Partner</option>
+            <option value="Senior">Senior</option>
+            <option value="Junior">Junior</option>
         </select>
     </div>
     <div class="form-group">

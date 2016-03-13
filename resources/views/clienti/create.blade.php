@@ -2,10 +2,10 @@
 
 
 @section('htmlheader_title')
-   Nuovo Contatto
+   Nuovo Cliente
 @endsection
 @section('contentheader_title')
-    Nuovo Contatto
+    Nuovo Cliente
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -23,11 +23,12 @@
 
     <div class="col-md-8">
         <div class="box box-primary">
-            {!! Form::open(['url' => 'contatti']) !!}
-            @include('contatti.partials.contattoForm')
+            {!! Form::open(['url' => 'clienti']) !!}
+            @include('clienti.partials.clienteForm')
             {!! Form::close() !!}
         </div>
     </div>
 
 @endsection
+
 

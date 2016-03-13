@@ -16,8 +16,14 @@ class CreateClienteTable extends Migration {
 			$table->string('ragione_sociale', 100);
 			$table->integer('rating');
 			$table->boolean('cliente');
-			$table->string('settore', 20);
+			$table->string('settore', 50);
 			$table->boolean('softwarehouse');
+			$table->string('indirizzo', 150);
+			$table->string('citta', 50);
+			$table->string('cap', 10);
+			$table->string('provincia', 10);
+			$table->string('telefono', 50);
+
 		});
 	}
 

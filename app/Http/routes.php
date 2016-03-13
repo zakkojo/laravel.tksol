@@ -47,5 +47,6 @@ Route::group(['middleware' => 'web'], function () {
     Route::resource('user', 'UserController');
 
     Route::resource('consulenti','ConsulenteController');
+    Route::resource('contatti','ContattoController');
 
 });

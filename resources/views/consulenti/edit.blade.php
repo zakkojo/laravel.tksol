@@ -2,11 +2,14 @@
 
 
 @section('htmlheader_title')
-   Nuovo Consulente
+   {{{ $consulente->nome." ".$consulente->cognome }}}
 @endsection
 @section('contentheader_title')
-
-    Nuovo Consulente
+    @if($consulente->id)
+        {{{ $consulente->nome." ".$consulente->cognome}}}
+    @else
+        Nuovo Utente
+    @endif
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -22,13 +25,15 @@
         </div>
     @endif
 
+
     <div class="col-md-8">
         <div class="box box-primary">
-            {!! Form::open(['url' => 'consulenti']) !!}
+            {!! Form::model($consulente, ['url' => 'consulenti/'.$consulente->id, 'method' => 'PATCH' ]) !!}
             @include('consulenti.partials.consulenteForm')
             {!! Form::close() !!}
         </div>
     </div>
+
 
 @include('consulenti.partials.consulenteWidget')
 

@@ -6,7 +6,7 @@
 @endsection
 @section('contentheader_title')
         Clienti &nbsp;
-        <button type="button" class="btn btn-default navbar-btn" onClick="location.href='clienti/create'" title="Aggiungi Nuovo">
+        <button type="button" class="btn btn-default navbar-btn" onClick="location.href='contatto/create'" title="Aggiungi Nuovo">
             <i class="fa fa-plus"></i>&nbsp; Aggiungi Nuovo
         </button>
 @endsection
@@ -44,14 +44,14 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($clienti as $cliente)
+            @foreach($cliente->rubrica as $contatto)
                 <tr>
-                    <td>{{ $cliente->ragione_sociale }}</td>
-                    <td>{{ $cliente->citta }}</td>
-                    <td>{{ $cliente->telefono }}</td>
+                    <td>{{ $contatto->descrizione }}</td>
+                    <td>{{ $contatto->citta }}</td>
+                    <td>{{ $contatto->telefono }}</td>
                     <td>
-                        <a href="{{ action('ClienteController@show',$cliente->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a>
-                        <a href="{{ action('ClienteController@edit',$cliente->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a href="{{ action('ClienteController@show',$contatto->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a>
+                        <a href="{{ action('ClienteController@edit',$contatto->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                         <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
 
                     </td>

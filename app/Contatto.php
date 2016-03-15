@@ -18,4 +18,9 @@ class Contatto extends Model {
 
 	protected $dates = ['deleted_at'];
 
+    public function azienda()
+    {
+        return $this->belongsTo(Cliente::class, 'id_cliente');
+    }
+
 }

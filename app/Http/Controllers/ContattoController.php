@@ -28,7 +28,7 @@ class ContattoController extends Controller {
    */
   public function create()
   {
-      return view('contatti.create');  }
+      return view('clienti.index');  }
 
   /**
    * Store a newly created resource in storage.

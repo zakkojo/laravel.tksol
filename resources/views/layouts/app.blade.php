@@ -57,6 +57,7 @@ desired effect
 @section('scripts')
     @include('layouts.partials.scripts')
 @show
-
+@section('page_scripts')
+@show
 </body>
 </html>

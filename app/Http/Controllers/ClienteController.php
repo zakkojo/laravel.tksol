@@ -21,9 +21,10 @@ class ClienteController extends Controller {
    */
   public function index()
   {
-      return view('clienti.index');
-  }
+      $clienti = Cliente::all();
 
+      return view('clienti.index')->with(compact('clienti'));
+  }
   /**
    * Show the form for creating a new resource.
    *
@@ -54,7 +55,8 @@ class ClienteController extends Controller {
    */
   public function show($id)
   {
-      return redirect()->action('ClienteController@edit', $id);
+      $cliente = Cliente::findOrFail($id);
+      return view('clienti.show')->with(compact('cliente'));
   }
 
   /**
@@ -81,6 +83,14 @@ class ClienteController extends Controller {
       $cliente->update($request->all());
       return redirect()->action('ClienteController@edit', $id);
   }
+
+    public function associa($id_cliente)
+    {
+        if ($cliente = Cliente::findOrFail($id_cliente))
+            return view('contatti.create')->with(compact('cliente'));
+        else
+            abort(404);
+    }
 
   /**
    * Remove the specified resource from storage.

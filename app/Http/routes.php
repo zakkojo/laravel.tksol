@@ -47,7 +47,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::resource('user', 'UserController');
 
     Route::resource('consulenti','ConsulenteController');
-    Route::get('ajax/toggleUser', 'ConsulenteController@ajaxToggleUser');
+    Route::get('ajax/toggleUser', 'UserController@ajaxToggleUser');
     Route::resource('contatti','ContattoController');
     Route::resource('clienti','ClienteController');
     Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');

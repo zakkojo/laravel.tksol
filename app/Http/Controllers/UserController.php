@@ -1,6 +1,12 @@
 <?php namespace App\Http\Controllers;
+use App\Http\Requests;
+use App\Consulente;
+use App\Contatto;
+use App\User;
 
 use Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller {
 
@@ -83,6 +89,31 @@ class UserController extends Controller {
   {
     
   }
+
+    public function ajaxToggleUser()
+    {
+        if(Input::get('tipo_utente') == 1){
+            $utente =  Consulente::findOrFail(Input::get('id'));
+        }
+        elseif(Input::get('tipo_utente') == 2) {
+            $utente =  Contatto::findOrFail(Input::get('id'));
+        }
+        if(count($utente->user)){
+            $user = User::find($utente->user_id);
+            $user->delete();
+            $msg = 'Accesso Disabilitato';
+        }
+        else{
+            $utente->user()->withTrashed()->first()->restore();
+            $msg = 'Accesso Abilitato';
+        }
+
+        $response = array(
+            'status' => 'success',
+            'msg' => $msg,
+        );
+        return Response::json( $response );
+    }
   
 }
 

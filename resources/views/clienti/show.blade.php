@@ -51,6 +51,8 @@
                     <td>{{ $contatto->citta }}</td>
                     <td>{{ $contatto->telefono }}</td>
                     <td>
+                        <?php if(count($contatto->user)) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
+                        <a onclick="toggleUser({{$contatto->id}})" id="consulente_{{$contatto->id}}" data-skin="skin-blue" class="btn btn-xs {{$btnclass}}"><i class="glyphicon glyphicon-user"></i></a>
                         <a href="{{ action('ContattoController@edit',$contatto->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                         <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
 
@@ -79,5 +81,22 @@
             oTable.search($(this).val()).draw() ;
         })
     });
+
+    function toggleUser(id){
+        var request = $.ajax({
+            url: "/ajax/toggleUser",
+            type: "get",
+            data: {'tipo_utente':2,'id':id},
+            dataType: "JSON"
+        }).done(function( data ) {
+
+            if($('#consulente_'+id).hasClass('btn-primary')) $('#consulente_'+id).removeClass('btn-primary').addClass('btn-default');
+            else $('#consulente_'+id).removeClass('btn-default').addClass('btn-primary');
+            console.log(data['msg']);
+        }).fail(function( jqXHR, textStatus ) {
+            alert( "Request failed: " + textStatus );
+        });
+    }
 </script>
 @endsection
+

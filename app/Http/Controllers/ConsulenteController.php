@@ -56,25 +56,7 @@ class ConsulenteController extends Controller {
 
   }
 
-    public function ajaxToggleUser()
-    {
-        $consulente =  Consulente::findOrFail(Input::get('id'));
-        if(count($consulente->user)){
-            $user = User::find($consulente->user_id);
-            $user->delete();
-            $msg = 'Accesso Disabilitato';
-        }
-        else{
-            $consulente->user()->withTrashed()->first()->restore();
-            $msg = 'Accesso Abilitato';
-        }
 
-        $response = array(
-            'status' => 'success',
-            'msg' => $msg,
-        );
-        return Response::json( $response );
-    }
 
   /**
    * Display the specified resource.
@@ -110,7 +92,7 @@ class ConsulenteController extends Controller {
   {
       $consulente = Consulente::findOrFail($id);
       $consulente->update($request->all());
-      return redirect()->action('ConsulenteController@edit', $id);
+      return redirect()->action('ConsulenteController@index');
   }
 
   /**

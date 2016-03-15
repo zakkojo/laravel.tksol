@@ -93,9 +93,9 @@
         });
         function toggleUser(id){
             var request = $.ajax({
-                url: "ajax/toggleUser",
+                url: "/ajax/toggleUser",
                 type: "get",
-                data: 'id='+ id,
+                data: {'tipo_utente':1,'id':id},
                 dataType: "JSON"
             }).done(function( data ) {
 

@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Requests\ContattiRequest;
 use App\Contatto;
+use App\User;
 
 use Request;
 class ContattoController extends Controller {
@@ -22,13 +23,17 @@ class ContattoController extends Controller {
    *
    * @return Response
    */
-  public function store(ContattiRequest $request)
-  {
-      $data = $request->all();
-      $contatto =  Contatto::create($data);
-      return redirect()->action('ClienteController@show', $contatto->cliente->id);
-  }
+    public function store(ContattiRequest $request)
+    {
+        $data = $request->all();
+        $user = User::create(['email'=>$request->email, 'password' => bcrypt('tksol'), 'tipo_utente' => '2']);
+        $contatto =  Contatto::create($data);
+        $contatto->user()->associate($user->id);
+        $contatto->save();
+        $user->delete();
+        return redirect()->action('ClienteController@show',$contatto->cliente_id);
 
+    }
   /**
    * Display the specified resource.
    *

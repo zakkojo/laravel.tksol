@@ -2,8 +2,11 @@
 use App\Http\Requests;
 use App\Http\Requests\ConsulentiRequest;
 use App\Consulente;
+use App\User;
 
 use Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Input;
 
 
 class ConsulenteController extends Controller {
@@ -45,10 +48,33 @@ class ConsulenteController extends Controller {
   public function store(ConsulentiRequest $request)
   {
       $data = $request->all();
-      $ret =  Consulente::create($data);
-      return redirect()->action('ConsulenteController@edit', $ret->id);
+      $user = User::create(['email'=>$request->email, 'password' => bcrypt('tksol'), 'tipo_utente' => '1']);
+      $consulente =  Consulente::create($data);
+      $consulente->user()->associate($user->id);
+      $consulente->save();
+      return redirect()->action('ConsulenteController@index');
 
   }
+
+    public function ajaxToggleUser()
+    {
+        $consulente =  Consulente::findOrFail(Input::get('id'));
+        if(count($consulente->user)){
+            $user = User::find($consulente->user_id);
+            $user->delete();
+            $msg = 'Accesso Disabilitato';
+        }
+        else{
+            $consulente->user()->withTrashed()->first()->restore();
+            $msg = 'Accesso Abilitato';
+        }
+
+        $response = array(
+            'status' => 'success',
+            'msg' => $msg,
+        );
+        return Response::json( $response );
+    }
 
   /**
    * Display the specified resource.
@@ -70,6 +96,7 @@ class ConsulenteController extends Controller {
   public function edit($id)
   {
     $consulente = Consulente::findOrFail($id);
+    $consulente->email =  $consulente->user()->withTrashed()->first()->email;
     return view('consulenti.edit', compact('consulente'));
   }
 

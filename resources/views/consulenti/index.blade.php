@@ -6,7 +6,9 @@
 @endsection
 @section('contentheader_title')
         Consulenti
-        <button type="" class="btn btn-primary btn-block btn-flat">Nuovo consulente</button>
+        <button type="button" class="btn btn-default navbar-btn" onclick="location.href='{{action('ConsulenteController@create')}}'" title="Aggiungi Nuovo">
+            <i class="fa fa-plus"></i>&nbsp; Aggiungi Nuovo
+        </button>
 @endsection
 
 @section('contentheader_breadcrumb')
@@ -51,6 +53,8 @@
                 <tr>
                     <td>{{ $consulente->codice_fiscale }}</td>
                     <td>
+                        <?php if(count($consulente->user)) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
+                        <a onclick="toggleUser({{$consulente->id}})" id="consulente_{{$consulente->id}}" data-skin="skin-blue" class="btn btn-xs {{$btnclass}}"><i class="glyphicon glyphicon-user"></i></a>
                         <a href="{{ action('ConsulenteController@edit',$consulente->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                         {{ $consulente->nome . " " . $consulente->cognome }}
                     </td>
@@ -87,5 +91,21 @@
                 oTable.search($(this).val()).draw() ;
             })
         });
+        function toggleUser(id){
+            var request = $.ajax({
+                url: "ajax/toggleUser",
+                type: "get",
+                data: 'id='+ id,
+                dataType: "JSON"
+            }).done(function( data ) {
+
+                if($('#consulente_'+id).hasClass('btn-primary')) $('#consulente_'+id).removeClass('btn-primary').addClass('btn-default');
+                else $('#consulente_'+id).removeClass('btn-default').addClass('btn-primary');
+                console.log(data['msg']);
+            }).fail(function( jqXHR, textStatus ) {
+                alert( "Request failed: " + textStatus );
+            });
+        }
+
     </script>
 @endsection

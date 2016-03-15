@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
-
+Use App\User;
 
 class ConsulentiRequest extends Request
 {
@@ -22,17 +22,51 @@ class ConsulentiRequest extends Request
      */
     public function rules()
     {
-        return [
-            'cognome'=> 'required',
-            'nome'=> 'required',
-            //'indirizzo'=> 'required',
-            //'citta'=> 'required',
-            //'provincia'=> 'required',
-            //'cap'=> 'required',
-            'telefono' => 'required_without:mobile',
-            'mobile' => 'required_without:telefono',
-            'partita_iva'=> 'required',
-            'tipo'=> 'required'
-        ];
+
+        switch ($this->method())
+        {
+            case 'GET':
+            case 'DELETE':
+            {
+                return [];
+            }
+            case 'POST':
+            {
+                return [
+                    'cognome'=> 'required',
+                    'nome'=> 'required',
+                    'email'=> 'required|email|unique:users,email,',
+                    //'indirizzo'=> 'required',
+                    //'citta'=> 'required',
+                    //'provincia'=> 'required',
+                    //'cap'=> 'required',
+                    'telefono' => 'required_without:mobile',
+                    'mobile' => 'required_without:telefono',
+                    'partita_iva'=> 'required',
+                    'tipo'=> 'required'
+                ];
+            }
+            case 'PUT':
+            case 'PATCH':
+            {
+                $user = User::withTrashed()->where('email', '=', $this->email)->first();
+                return [
+                    'cognome'=> 'required',
+                    'nome'=> 'required',
+                    'email'=> 'required|email|unique:users,email,'.$user->id,
+                    //'indirizzo'=> 'required',
+                    //'citta'=> 'required',
+                    //'provincia'=> 'required',
+                    //'cap'=> 'required',
+                    'telefono' => 'required_without:mobile',
+                    'mobile' => 'required_without:telefono',
+                    'partita_iva'=> 'required',
+                    'tipo'=> 'required'
+                ];
+            }
+            default:
+                break;
+        }
     }
+
 }

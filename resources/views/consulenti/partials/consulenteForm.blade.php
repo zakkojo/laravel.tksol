@@ -7,6 +7,9 @@
         {!! Form::text('nome', null,['class'=>'form-control', 'id'=>'nome', 'placeholder'=>'Nome']) !!}
     </div>
     <div class="form-group">
+        {!! Form::email('email', null,['class'=>'form-control', 'id'=>'email', 'placeholder'=>'email']) !!}
+    </div>
+    <div class="form-group">
         {!! Form::text('indirizzo', null,['class'=>'form-control', 'id'=>'indirizzo', 'placeholder'=>'Indirizzo']) !!}
         {!! Form::text('citta', null,['class'=>'form-control', 'id'=>'citta', 'placeholder'=>'Città']) !!}
         {!! Form::text('provincia', null,['class'=>'form-control', 'id'=>'provincia', 'placeholder'=>'Provincia']) !!}

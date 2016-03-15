@@ -7,13 +7,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'email', 'password', 'tipo_utente',
     ];
 
     /**
@@ -30,7 +31,6 @@ class User extends Authenticatable
     protected $table = 'users';
     public $timestamps = true;
 
-    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
 

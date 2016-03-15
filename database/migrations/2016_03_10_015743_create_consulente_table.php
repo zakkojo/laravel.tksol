@@ -13,16 +13,17 @@ class CreateConsulenteTable extends Migration {
 			$table->softDeletes();
 			$table->string('codice_fiscale', 16)->unique();
 			$table->string('cognome', 50);
-			$table->string('nome', 4);
+			$table->string('nome', 50);
 			$table->string('indirizzo', 120);
 			$table->string('citta', 50);
-			$table->string('cap', 4);
+			$table->string('provincia', 10);
+			$table->string('cap', 10);
 			$table->string('telefono', 30);
 			$table->string('telefono2', 30);
 			$table->string('mobile', 30);
 			$table->string('mobile2', 30);
-			$table->string('partita_iva');
-			$table->enum('tipo', array('PARTNER', 'SENIOR', 'JUNIOR'));
+			$table->string('partita_iva', 11);
+			$table->enum('tipo', array('Partner', 'Senior', 'Junior'));
 		});
 	}
 

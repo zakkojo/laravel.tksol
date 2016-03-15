@@ -2,11 +2,10 @@
 
 
 @section('htmlheader_title')
-   Nuovo Consulente
+   Nuovo Contatto
 @endsection
 @section('contentheader_title')
-
-    Nuovo Consulente
+    Nuovo Contatto @if(isset($cliente)) per {{$cliente->ragione_sociale}} @endif
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -24,13 +23,11 @@
 
     <div class="col-md-8">
         <div class="box box-primary">
-            {!! Form::open(['url' => 'consulenti']) !!}
-            @include('consulenti.partials.consulenteForm')
+            {!! Form::open(['url' => 'contatti']) !!}
+            @include('contatti.partials.contattoForm')
             {!! Form::close() !!}
         </div>
     </div>
-
-@include('consulenti.partials.consulenteWidget')
 
 @endsection
 

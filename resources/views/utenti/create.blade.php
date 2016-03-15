@@ -47,9 +47,12 @@
                         <input type="password" class="form-control" placeholder="Conferma Password" name="confermaPassword">
                     </div>
                     <br>
+                    @can('creaUtente')
                     <div class="col-xs-4">
                         <button type="submit" class="btn btn-primary btn-block btn-flat">Crea Utente</button>
-                    </div><!-- /.col -->
+                    </div>
+                    @endcan
+                    <!-- /.col -->
                     <!-- /input-group -->
                 </div>
                 <!-- /.box-body -->

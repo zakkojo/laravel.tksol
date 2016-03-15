@@ -2,11 +2,10 @@
 
 
 @section('htmlheader_title')
-   Nuovo Consulente
+   {{ $cliente->ragione_sociale }}
 @endsection
 @section('contentheader_title')
-
-    Nuovo Consulente
+        {{ $cliente->ragione_sociale}}
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -24,13 +23,11 @@
 
     <div class="col-md-8">
         <div class="box box-primary">
-            {!! Form::open(['url' => 'consulenti']) !!}
-            @include('consulenti.partials.consulenteForm')
+            {!! Form::model($cliente, ['url' => 'clienti/'.$cliente->id, 'method' => 'PATCH' ]) !!}
+            @include('clienti.partials.clienteForm')
             {!! Form::close() !!}
         </div>
     </div>
-
-@include('consulenti.partials.consulenteWidget')
 
 @endsection
 

@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Consulente extends Model {
 
-	protected $table = 'consulenti';
+	protected $table = 'consulente';
 	public $timestamps = true;
+
+	protected $fillable = [
+		'codice_fiscale','cognome','nome','indirizzo','citta','provincia','cap','telefono','mobile','telefono2','mobile2','partita_iva','tipo',
+	];
 
 	use SoftDeletes;
 

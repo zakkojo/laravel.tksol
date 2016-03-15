@@ -2,13 +2,14 @@
 
 
 @section('htmlheader_title')
-        Clienti
+        Cliente
 @endsection
 @section('contentheader_title')
-        Clienti &nbsp;
-        <button type="button" class="btn btn-default navbar-btn" onClick="location.href='contatto/create'" title="Aggiungi Nuovo">
-            <i class="fa fa-plus"></i>&nbsp; Aggiungi Nuovo
+        Cliente &nbsp;
+        <button type="button" class="btn btn-default navbar-btn" onClick="location.href='{{ action('ClienteController@associa',$cliente->id) }}'" title="Aggiungi Nuovo">
+            <i class="fa fa-plus"></i>&nbsp; Aggiungi Contatto
         </button>
+
 @endsection
 
 @section('contentheader_breadcrumb')
@@ -18,7 +19,7 @@
 @section('main-content')
     <div class="box">
         <div class="box-header">
-            <h3 class="box-title">Elenco clienti</h3>
+            <h3 class="box-title">Elenco contatti</h3>
 
             <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
@@ -50,8 +51,7 @@
                     <td>{{ $contatto->citta }}</td>
                     <td>{{ $contatto->telefono }}</td>
                     <td>
-                        <a href="{{ action('ClienteController@show',$contatto->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a>
-                        <a href="{{ action('ClienteController@edit',$contatto->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                        <a href="{{ action('ContattoController@edit',$contatto->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                         <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
 
                     </td>

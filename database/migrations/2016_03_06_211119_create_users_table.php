@@ -11,10 +11,7 @@ class CreateUsersTable extends Migration {
 			$table->increments('id');
 			$table->string('email')->unique();
 			$table->string('password');
-			$table->string('name');
 			$table->tinyInteger('tipo_utente');
-			$table->integer('id_esterno')->index();
-			$table->tinyInteger('tipo_esterno');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->rememberToken('rememberToken');

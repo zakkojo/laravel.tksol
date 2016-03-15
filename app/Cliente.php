@@ -20,7 +20,7 @@ class Cliente extends Model {
 
 	public function rubrica()
 	{
-		return $this->hasMany(Contatto::class, 'id_cliente');
+		return $this->hasMany(Contatto::class);
 	}
 
 }

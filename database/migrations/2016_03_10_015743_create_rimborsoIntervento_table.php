@@ -16,8 +16,8 @@ class CreateRimborsoInterventoTable extends Migration {
 			$table->decimal('quantita');
 			$table->decimal('importo');
 			$table->string('note', 100);
-			$table->integer('id_intervento');
-			$table->integer('id_consulente');
+			$table->integer('intervento_id');
+			$table->integer('consulente_id');
 		});
 	}
 

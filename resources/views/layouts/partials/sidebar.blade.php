@@ -11,7 +11,11 @@
                     <img src="@yield('user_image', '/img/user-placeholder.png')" class="img-circle" alt="User Image" />
                 </div>
                 <div class="pull-left info">
-                    <p>{{ Auth::user()->name }}</p>
+                    <p> @if(Auth::user()->tipo_utente == '1')
+                            {{ Auth::user()->consulente->nome }} {{ Auth::user()->consulente->cognome }}
+                        @else
+                            {{ Auth::user()->contatto->descrizione }}
+                        @endif</p>
                     <!-- Status -->
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>

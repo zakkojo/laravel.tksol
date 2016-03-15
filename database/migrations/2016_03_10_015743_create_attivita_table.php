@@ -9,7 +9,7 @@ class CreateAttivitaTable extends Migration {
 	{
 		Schema::create('attivita', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('id_progetto')->unsigned();
+			$table->integer('progetto_id')->unsigned();
 			$table->timestamps();
 			$table->softDeletes();
 			$table->integer('sequenza');

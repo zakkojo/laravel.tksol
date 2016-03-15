@@ -9,9 +9,10 @@ class CreateConsulenteTable extends Migration {
 	{
 		Schema::create('consulente', function(Blueprint $table) {
 			$table->increments('id');
+			$table->integer('user_id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->string('codice_fiscale', 16)->unique();
+			$table->string('codice_fiscale', 16);
 			$table->string('cognome', 50);
 			$table->string('nome', 50);
 			$table->string('indirizzo', 120);
@@ -31,11 +32,6 @@ class CreateConsulenteTable extends Migration {
 	public function down()
 	{
 		Schema::drop('consulente');
-	}
-
-	public function interventi()
-	{
-		return $this->hasMany('consulente_intervento');
 	}
 
 }

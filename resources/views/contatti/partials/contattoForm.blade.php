@@ -1,5 +1,6 @@
 <div class="box-body">
     <div class="form-group">
+        {!! Form::hidden('cliente_id', $cliente->id) !!}
         {!! Form::text('descrizione', null,['class'=>'form-control', 'id'=>'descrizione', 'placeholder'=>'Cognome Nome']) !!}
     </div>
     <div class="form-group">

@@ -9,8 +9,8 @@ class CreateClienteProgettoTable extends Migration {
 	{
 		Schema::create('cliente_progetto', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('id_cliente')->unsigned();
-			$table->integer('id_progetto')->unsigned();
+			$table->integer('cliente_id')->unsigned();
+			$table->integer('progetto_id')->unsigned();
 			$table->enum('stato', array('CONTACT', 'PROSPECT', 'FALL', 'ACTIVE', 'CLOSED'));
 			$table->string('note', 500);
 			$table->date('data_primo_contatto');

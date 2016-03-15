@@ -36,12 +36,12 @@ class User extends Authenticatable
 
     public function consulente()
     {
-        return $this->hasOne('Consulente');
+        return $this->hasOne(Consulente::class);
     }
 
-    public function cliente()
+    public function contatto()
     {
-        return $this->hasOne('Contatto');
+        return $this->hasOne(Contatto::class);
     }
 
     public function roles()

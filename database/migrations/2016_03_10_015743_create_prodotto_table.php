@@ -13,7 +13,7 @@ class CreateProdottoTable extends Migration {
 			$table->softDeletes();
 			$table->string('area', 40);
 			$table->string('nome', 50);
-			$table->integer('id_progetto')->unsigned();
+			$table->integer('progetto_id')->unsigned();
 		});
 	}
 

@@ -23,7 +23,6 @@ class ConsulentiRequest extends Request
     public function rules()
     {
         return [
-            'codice_fiscale'=> 'required',
             'cognome'=> 'required',
             'nome'=> 'required',
             //'indirizzo'=> 'required',

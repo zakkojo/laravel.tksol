@@ -2,11 +2,11 @@
 
 
 @section('htmlheader_title')
-        Consulenti
+        Contatti
 @endsection
 @section('contentheader_title')
-        Consulenti
-        <button type="" class="btn btn-primary btn-block btn-flat">Nuovo consulente</button>
+    Contatti
+        <button type="" class="btn btn-primary btn-block btn-flat">Nuovo contatto</button>
 @endsection
 
 @section('contentheader_breadcrumb')

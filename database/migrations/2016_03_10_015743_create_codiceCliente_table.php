@@ -9,6 +9,7 @@ class CreateCodiceClienteTable extends Migration {
 	{
 		Schema::create('codiceCliente', function(Blueprint $table) {
 			$table->increments('id');
+			$table->integer('cliente_id');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->string('codice', 30);

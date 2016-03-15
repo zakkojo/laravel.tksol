@@ -11,8 +11,8 @@ class CreateListinoProgettoTable extends Migration {
 			$table->increments('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->integer('id_consulente');
-			$table->integer('id_prodotto');
+			$table->integer('consulente_id');
+			$table->integer('prodotto_id');
 			$table->float('importo');
 			$table->float('iva');
 			$table->enum('tipo_iva', array('NORMALE', 'SPLIT'));

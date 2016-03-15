@@ -119,14 +119,24 @@
                             <!-- The user image in the navbar-->
                             <img src="@yield('user_image', '/img/user-placeholder.png')" class="user-image" alt="User Image"/>
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs">{{ Auth::user()->name }}</span>
+                            <span class="hidden-xs">
+                                @if(Auth::user()->tipo_utente == '1')
+                                    {{ Auth::user()->consulente->nome }} {{ Auth::user()->consulente->cognome }}
+                                @else
+                                    {{ Auth::user()->contatto->descrizione }}
+                                @endif
+                            </span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- The user image in the menu -->
                             <li class="user-header">
                                 <img src="@yield('user_image', '/img/user-placeholder.png')" class="img-circle" alt="User Image" />
                                 <p>
-                                    {{ Auth::user()->name }}
+                                    @if(Auth::user()->tipo_utente == '1')
+                                        {{ Auth::user()->consulente->nome }} {{ Auth::user()->consulente->cognome }}
+                                    @else
+                                        {{ Auth::user()->contatto->descrizione }}
+                                    @endif
                                     <!--small>Member since Nov. 2012</small-->
                                 </p>
                             </li>

@@ -11,7 +11,7 @@ class CreateContattoTable extends Migration {
 			$table->increments('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->integer('id_cliente')->unsigned();
+			$table->integer('cliente_id')->unsigned();
 			$table->string('descrizione', 80);
 			$table->string('telefono', 30);
 			$table->string('telefono2', 40);

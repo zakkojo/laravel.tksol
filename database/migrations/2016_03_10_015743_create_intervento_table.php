@@ -15,10 +15,10 @@ class CreateInterventoTable extends Migration {
 			$table->boolean('fatturabile');
 			$table->text('relazione');
 			$table->text('note');
-			$table->integer('id_cliente')->unsigned();
-			$table->integer('id_progetto')->unsigned();
-			$table->integer('id_attivita')->unsigned();
-			$table->integer('id_tipo_intervento');
+			$table->integer('cliente_id')->unsigned();
+			$table->integer('progetto_id')->unsigned();
+			$table->integer('attivita_id')->unsigned();
+			$table->integer('tipoIntervento_id');
 			$table->enum('tipo_consulente', array('SENIOR', 'JUNIOR'));
 		});
 	}

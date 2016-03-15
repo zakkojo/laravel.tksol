@@ -11,8 +11,8 @@ class CreateConsulenteInterventoTable extends Migration {
 			$table->increments('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->integer('id_intervento')->unsigned();
-			$table->integer('id_consulente')->unsigned();
+			$table->integer('intervento_id')->unsigned();
+			$table->integer('consulente_id')->unsigned();
 			$table->boolean('fatturabile');
 			$table->decimal('importo', 8,2);
 		});

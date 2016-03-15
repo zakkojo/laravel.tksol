@@ -16,19 +16,6 @@ class ContattoController extends Controller {
    *
    * @return Response
    */
-  public function index()
-  {
-      return view('contatti.index');
-  }
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-      return view('clienti.index');  }
 
   /**
    * Store a newly created resource in storage.
@@ -38,8 +25,8 @@ class ContattoController extends Controller {
   public function store(ContattiRequest $request)
   {
       $data = $request->all();
-      $ret =  Contatto::create($data);
-      return redirect()->action('ContattoController@edit', $ret->id);
+      $contatto =  Contatto::create($data);
+      return redirect()->action('ClienteController@show', $contatto->cliente->id);
   }
 
   /**
@@ -62,7 +49,8 @@ class ContattoController extends Controller {
   public function edit($id)
   {
       $contatto = Contatto::findOrFail($id);
-      return view('contatti.edit', compact('contatto'));
+      $cliente = $contatto->cliente;
+      return view('contatti.edit', compact('contatto','cliente'));
   }
 
   /**
@@ -75,7 +63,7 @@ class ContattoController extends Controller {
   {
       $contatto = Contatto::findOrFail($id);
       $contatto->update($request->all());
-      return redirect()->action('ContattoController@edit', $id);
+      return redirect()->action('ClienteController@show', $contatto->cliente->id);
   }
 
   /**

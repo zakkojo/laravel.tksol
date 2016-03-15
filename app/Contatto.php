@@ -11,16 +11,16 @@ class Contatto extends Model {
 	public $timestamps = true;
 
 	protected $fillable = [
-		'descrizione','email','email2','indirizzo','citta','provincia','cap','telefono','mobile','telefono2','mobile2',
+		'cliente_id','descrizione','email','email2','indirizzo','citta','provincia','cap','telefono','mobile','telefono2','mobile2',
 	];
 
 	use SoftDeletes;
 
 	protected $dates = ['deleted_at'];
 
-    public function azienda()
+    public function cliente()
     {
-        return $this->belongsTo(Cliente::class, 'id_cliente');
+        return $this->belongsTo(Cliente::class);
     }
 
 }

@@ -4,9 +4,61 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "894a33dab1080569bd297b173259b935",
-    "content-hash": "f2c1cec5b969f695deaa56c6af6f46a9",
+    "hash": "37a2b3496d631223e8af28c90e02fe6b",
+    "content-hash": "ce11a7a19aa2bf5cb26ae4f109ceebc2",
     "packages": [
+        {
+            "name": "acacha/admin-lte-template-laravel",
+            "version": "2.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/acacha/adminlte-laravel.git",
+                "reference": "92abb4b004d02aa7b93bb32d65d961569411e7c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/acacha/adminlte-laravel/zipball/92abb4b004d02aa7b93bb32d65d961569411e7c7",
+                "reference": "92abb4b004d02aa7b93bb32d65d961569411e7c7",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "~5.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "Acacha\\AdminLTETemplateLaravel\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergi Tur Badenas",
+                    "email": "sergiturbadenas@gmail.com",
+                    "homepage": "http://acacha.org"
+                }
+            ],
+            "description": "AdminLTE template applied to Laravel Scaffolding",
+            "keywords": [
+                "AdminLTE",
+                "admin",
+                "admin-lte",
+                "administrator",
+                "bootstrap",
+                "laravel",
+                "template",
+                "theme"
+            ],
+            "time": "2016-03-02 17:36:31"
+        },
         {
             "name": "classpreloader/classpreloader",
             "version": "3.0.0",
@@ -1882,58 +1934,6 @@
         }
     ],
     "packages-dev": [
-        {
-            "name": "acacha/admin-lte-template-laravel",
-            "version": "2.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/acacha/adminlte-laravel.git",
-                "reference": "92abb4b004d02aa7b93bb32d65d961569411e7c7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/acacha/adminlte-laravel/zipball/92abb4b004d02aa7b93bb32d65d961569411e7c7",
-                "reference": "92abb4b004d02aa7b93bb32d65d961569411e7c7",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/console": "~5.0",
-                "illuminate/support": "~5.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "package",
-            "autoload": {
-                "psr-4": {
-                    "Acacha\\AdminLTETemplateLaravel\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sergi Tur Badenas",
-                    "email": "sergiturbadenas@gmail.com",
-                    "homepage": "http://acacha.org"
-                }
-            ],
-            "description": "AdminLTE template applied to Laravel Scaffolding",
-            "keywords": [
-                "AdminLTE",
-                "admin",
-                "admin-lte",
-                "administrator",
-                "bootstrap",
-                "laravel",
-                "template",
-                "theme"
-            ],
-            "time": "2016-03-02 17:36:31"
-        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",

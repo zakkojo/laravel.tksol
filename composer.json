@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
 	"laravelcollective/html": "5.2.*",
-	"orangehill/iseed": "^2.1"
+	"orangehill/iseed": "^2.1",
+        "acacha/admin-lte-template-laravel": "2.0.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

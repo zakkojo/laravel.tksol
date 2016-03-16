@@ -5,6 +5,7 @@
     </div>
     <div class="form-group">
         {!! Form::input('email','email', null,['class'=>'form-control', 'id'=>'email', 'placeholder'=>'Email']) !!}
+        <input type="hidden" name="user_email" value="{{$contatto->email or ''}}"/>
         {!! Form::input('email','email2', null,['class'=>'form-control', 'id'=>'email2', 'placeholder'=>'Email secondaria']) !!}
     </div>
     <div class="form-group">

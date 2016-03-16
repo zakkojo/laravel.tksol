@@ -46,7 +46,7 @@ class ContattiRequest extends Request
             case 'PUT':
             case 'PATCH':
             {
-                $user = User::withTrashed()->where('email', '=', $this->email)->first();
+                $user = User::withTrashed()->where('email', '=', $this->user_email)->first();
                 return [
                     'descrizione'=> 'required',
                     //'indirizzo'=> 'required',

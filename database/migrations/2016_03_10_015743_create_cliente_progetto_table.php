@@ -7,7 +7,7 @@ class CreateClienteProgettoTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('cliente_progetto', function(Blueprint $table) {
+		Schema::create('contratto', function(Blueprint $table) {
 			$table->increments('id');
 			$table->integer('cliente_id')->unsigned();
 			$table->integer('progetto_id')->unsigned();
@@ -16,16 +16,17 @@ class CreateClienteProgettoTable extends Migration {
 			$table->date('data_primo_contatto');
 			$table->date('data_avvio_progetto');
 			$table->date('data_chiusura_progetto');
-			$table->enum('modalita_fattura', array('CHIAVI_IN_MANO;TIME_CONSUMING'));
+			$table->enum('modalita_fattura', array('CHIAVI_IN_MANO','TIME_CONSUMING'))->nullable();
 			$table->float('importo');
 			$table->date('data_validita_contratto');
 			$table->integer('periodicita_pagamenti');
+			$table->timeStamps();
 			$table->softDeletes();
 		});
 	}
 
 	public function down()
 	{
-		Schema::drop('cliente_progetto');
+		Schema::drop('contratto');
 	}
 }

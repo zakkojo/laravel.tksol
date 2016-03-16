@@ -92,6 +92,9 @@ class ConsulenteController extends Controller {
   {
       $consulente = Consulente::findOrFail($id);
       $consulente->update($request->all());
+      $user = User::withTrashed()->where('email','=',$request->user_email)->firstOrFail();
+      $user->email = $request->email;
+      $user->save();
       return redirect()->action('ConsulenteController@index');
   }
 

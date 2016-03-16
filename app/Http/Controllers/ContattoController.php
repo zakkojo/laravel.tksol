@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Requests\ContattiRequest;
 use App\Contatto;
 use App\User;
+use DB;
 
 use Request;
 class ContattoController extends Controller {
@@ -68,6 +69,9 @@ class ContattoController extends Controller {
   {
       $contatto = Contatto::findOrFail($id);
       $contatto->update($request->all());
+      $user = User::withTrashed()->where('email','=',$request->user_email)->firstOrFail();
+      $user->email = $request->email;
+      $user->save();
       return redirect()->action('ClienteController@show', $contatto->cliente->id);
   }
 

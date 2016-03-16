@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 class Progetto extends Model {
 
 	protected $table = 'progetto';
@@ -34,5 +33,9 @@ class Progetto extends Model {
         return $this->hasMany($this, 'progetto_padre');
     }
 
+    public function contratti()
+    {
+        return $this->hasMany(Contratto::class);
+    }
 }
 

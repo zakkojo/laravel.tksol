@@ -161,6 +161,8 @@ return [
 	
 	Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
 
+	Orangehill\Iseed\IseedServiceProvider::class,
+
     ],
 
     /*

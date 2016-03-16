@@ -10,14 +10,11 @@ class Intervento extends Model {
 	protected $table = 'intervento';
 	public $timestamps = false;
 
+
+
 	use SoftDeletes;
 
 	protected $dates = ['deleted_at'];
-
-	public function intervento_progetto()
-	{
-		return $this->morphOne('Attivita', 'id_attivita');
-	}
 
 	public function intervento_progetto()
 	{

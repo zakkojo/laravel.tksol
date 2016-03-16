@@ -28,4 +28,8 @@ class Cliente extends Model {
 		return $this->hasMany('Progetto')->where('progetto_padre', 0);
 	}
 
+	public function contratti(){
+		return $this->hasMany(Contratto::class);
+	}
+
 }

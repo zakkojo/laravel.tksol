@@ -38,6 +38,8 @@
             <thead>
             <tr>
                 <td>Ragione Sociale </td>
+                <td>Cliente</td>
+                <td>Software house</td>
                 <td>Città</td>
                 <td>Telefono</td>
                 <td>Opzioni</td>
@@ -47,6 +49,8 @@
             @foreach($clienti as $cliente)
                 <tr>
                     <td>{{ $cliente->ragione_sociale }}</td>
+                    <td>{{ $cliente->software_house }}</td>
+                    <td>{{ $cliente->cliente }}</td>
                     <td>{{ $cliente->citta }}</td>
                     <td>{{ $cliente->telefono }}</td>
                     <td>

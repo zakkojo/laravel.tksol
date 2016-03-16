@@ -22,6 +22,7 @@ class CreateConsulenteTable extends Migration {
 			$table->string('telefono2', 30);
 			$table->string('mobile', 30);
 			$table->string('mobile2', 30);
+			$table->string('mail', 100);
 			$table->string('partita_iva', 11);
 			$table->enum('tipo', array('Partner', 'Senior', 'Junior'));
 		});
@@ -31,4 +32,10 @@ class CreateConsulenteTable extends Migration {
 	{
 		Schema::drop('consulente');
 	}
+
+	public function interventi()
+	{
+		return $this->hasMany('consulente_intervento');
+	}
+
 }

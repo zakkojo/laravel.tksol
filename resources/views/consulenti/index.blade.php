@@ -20,7 +20,7 @@
 
             <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                    <input type="text" id="consulenti_search" name="table_search" class="form-control pull-right" placeholder="Search">
 
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -31,60 +31,61 @@
 
         <!-- /.box-header -->
         <div class="box-body table-responsive no-padding">
-            <table class="table table-hover">
-                <tbody><tr>
-                    <th>CF</th>
-                    <th>Nominativo</th>
-                    <th>Tipo</th>
-                    <th>Ultimo intervento</th>
-                    <th>Prossimo intervento</th>
-                    <th>Clienti</th>
-                    <th>Progetti</th>
-                    <th>Interventi pianificati</th>
-                </tr>
+            <table id="consulenti" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>CF</th>
+                        <th>Nominativo</th>
+                        <th>Tipo</th>
+                        <th>Mail</th>
+                        <th>Telefono</th>
+                        <th>Ultimo intervento</th>
+                        <th>Prossimo intervento</th>
+                        <th>Clienti</th>
+                        <th>Progetti</th>
+                        <th>Interventi pianificati</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach( $consulenti as $consulente)
                 <tr>
-                    <td>GNTNCL77P27C573Q</td>
-                    <td><a href="consulenti/create">Nicola Gentili</a></td>
-                    <td>Junior</td>
-                    <td>03/04/2016</td>
-                    <td><span class="label label-success">04/04/2016</span></td>
-                    <td>12</td>
-                    <td>24</td>
-                    <td>5</td>
+                    <td>{{ $consulente->codice_fiscale }}</td>
+                    <td>
+                        <a href="{{ action('ConsulenteController@edit',$consulente->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                        {{ $consulente->nome . " " . $consulente->cognome }}
+                    </td>
+                    <td>{{ $consulente->tipo }}</td>
+                    <td>{{ $consulente->mail }}</td>
+                    <td>{{ $consulente->mobile . " " . $consulente->mobile2  }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
-                <tr>
-                    <td>GNTNCL77P27C573Q</td>
-                    <td><a href="consulenti/create">Nicola Gentili</a></td>
-                    <td>Senior</td>
-                    <td>03/04/2016</td>
-                    <td><span class="label label-warning">18/04/2016</span></td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>2</td>
-                </tr>
-                <tr>
-                    <td>GNTNCL77P27C573Q</td>
-                    <td><a href="consulenti/create">Nicola Gentili</a></td>
-                    <td>Partner</td>
-                    <td>03/04/2016</td>
-                    <td><span class="label label-primary">04/04/2016</span></td>
-                    <td>12</td>
-                    <td>24</td>
-                    <td>9</td>
-                </tr>
-                <tr>
-                    <td>GNTNCL77P27C573Q</td>
-                    <td><a href="consulenti/create">Nicola Gentili</a></td>
-                    <td>Junior</td>
-                    <td>03/04/2016</td>
-                    <td><span class="label label-danger">non definito</span></td>
-                    <td>3</td>
-                    <td>6</td>
-                    <td>0</td>
-                </tr>
-                </tbody></table>
+                @endforeach
+                </tbody>
+            </table>
         </div>
         <!-- /.box-body -->
     </div>
 @endsection
-
+@section('page_scripts')
+    <script>
+        $(document).ready(function() {
+            var oTable = $('#consulenti').DataTable({
+                "scrollY": "600px",
+                "scrollCollapse": false,
+                "paging":         false,
+                "lengthChange": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+            $('.dataTables_filter').hide();
+            $('#consulenti_search').keyup(function(){
+                oTable.search($(this).val()).draw() ;
+            })
+        });
+    </script>
+@endsection

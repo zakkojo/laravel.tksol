@@ -20,7 +20,11 @@ class ConsulenteController extends Controller {
    */
   public function index()
   {
-    return view('consulenti.index');
+
+    $consulenti = Consulente::all();
+
+    return view('consulenti.index')->with(compact('consulenti'));
+
   }
 
   /**
@@ -66,7 +70,7 @@ class ConsulenteController extends Controller {
   public function edit($id)
   {
     $consulente = Consulente::findOrFail($id);
-      return view('consulenti.edit', compact('consulente'));
+    return view('consulenti.edit', compact('consulente'));
   }
 
   /**

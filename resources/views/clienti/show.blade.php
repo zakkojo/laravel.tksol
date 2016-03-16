@@ -48,18 +48,15 @@
                            cellspacing="0" width="100%">
                         <thead>
                         <tr>
+                            <td>Opzioni</td>
                             <td>Ragione Sociale</td>
                             <td>Città</td>
                             <td>Telefono</td>
-                            <td>Opzioni</td>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($cliente->rubrica as $contatto)
                             <tr>
-                                <td>{{ $contatto->descrizione }}</td>
-                                <td>{{ $contatto->citta }}</td>
-                                <td>{{ $contatto->telefono }}</td>
                                 <td>
                                     <?php if (count($contatto->user)) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
                                     <a onclick="toggleUser({{$contatto->id}})" id="consulente_{{$contatto->id}}"
@@ -72,6 +69,9 @@
                                                 class="glyphicon glyphicon-trash"></i></a>
 
                                 </td>
+                                <td>{{ $contatto->descrizione }}</td>
+                                <td>{{ $contatto->citta }}</td>
+                                <td>{{ $contatto->telefono }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -109,30 +109,28 @@
                            cellspacing="0" width="100%">
                         <thead>
                         <tr>
+                            <td>Opzioni</td>
                             <td>Progetto</td>
                             <td>Inizio</td>
-                            <td>Termine</td>
+                            <td>Durata</td>
                             <td>Stato</td>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($cliente->rubrica as $contatto)
+                        @foreach($cliente->contratti as $contratto)
                             <tr>
                                 <td>
-                                    <?php if (count($contatto->user)) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
-                                    <a onclick="toggleUser({{$contatto->id}})" id="consulente_{{$contatto->id}}"
-                                       data-skin="skin-blue" class="btn btn-xs {{$btnclass}}"><i
-                                                class="glyphicon glyphicon-user"></i></a>
-                                    <a href="{{ action('ContattoController@edit',$contatto->id) }}"
+                                    <a href="{{ action('ContattoController@edit',$contratto->id) }}"
                                        data-skin="skin-blue" class="btn btn-default btn-xs"><i
                                                 class="glyphicon glyphicon-edit"></i></a>
                                     <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i
                                                 class="glyphicon glyphicon-trash"></i></a>
 
                                 </td>
-                                <td>{{ $contatto->descrizione }}</td>
-                                <td>{{ $contatto->citta }}</td>
-                                <td>{{ $contatto->telefono }}</td>
+                                <td>{{ $contratto->progetto->nome }}</td>
+                                <td>{{ $contratto->data_avvio_progetto }}</td>
+                                <td>{{ $contratto->data_validita_contratto }}</td>
+                                <td>{{ $contratto->stato }}</td>
                             </tr>
                         @endforeach
                         </tbody>

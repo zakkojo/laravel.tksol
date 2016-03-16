@@ -94,14 +94,16 @@
         function toggleUser(id){
             var request = $.ajax({
                 url: "/ajax/toggleUser",
-                type: "get",
+                type: "post",
                 data: {'tipo_utente':1,'id':id},
                 dataType: "JSON"
             }).done(function( data ) {
-
-                if($('#consulente_'+id).hasClass('btn-primary')) $('#consulente_'+id).removeClass('btn-primary').addClass('btn-default');
-                else $('#consulente_'+id).removeClass('btn-default').addClass('btn-primary');
-                console.log(data['msg']);
+                if(data['status'] == 'success') {
+                    if ($('#consulente_' + id).hasClass('btn-primary')) $('#consulente_' + id).removeClass('btn-primary').addClass('btn-default');
+                    else $('#consulente_' + id).removeClass('btn-default').addClass('btn-primary');
+                    console.log(data['msg']);
+                }
+                else console.log(['Errore!!', data]);
             }).fail(function( jqXHR, textStatus ) {
                 alert( "Request failed: " + textStatus );
             });

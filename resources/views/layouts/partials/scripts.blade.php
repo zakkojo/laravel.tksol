@@ -25,10 +25,15 @@
 * @usage $("#todo-widget").todolist( options );
 */
 $(function () {
-$('input').iCheck({
-checkboxClass: 'icheckbox_square-blue',
-radioClass: 'iradio_square-blue',
-increaseArea: '20%' // optional
+    $('input').iCheck({
+    checkboxClass: 'icheckbox_square-blue',
+    radioClass: 'iradio_square-blue',
+    increaseArea: '20%' // optional
+    });
 });
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+    }
 });
 </script>

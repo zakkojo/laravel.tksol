@@ -101,11 +101,12 @@ class UserController extends Controller {
         if(count($utente->user)){
             $user = User::find($utente->user_id);
             $user->delete();
-            $msg = 'Accesso Disabilitato';
+            $msg = 'Accesso Disabilitato per: '.$user->email;
         }
         else{
             $utente->user()->withTrashed()->first()->restore();
-            $msg = 'Accesso Abilitato';
+            $user = User::find($utente->user_id);
+            $msg = 'Accesso Abilitato per: '.$user->email;
         }
 
         $response = array(

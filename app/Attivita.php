@@ -14,9 +14,14 @@ class Attivita extends Model {
 
 	protected $dates = ['deleted_at'];
 
-	public function subAttivitiva()
+	public function padre()
 	{
-		return $this->hasMany('Attivita', 'id_attivita');
+		return $this->belongsTo($this,'progetto_padre');
+	}
+
+	public function figli()
+	{
+		return $this->hasMany($this, 'progetto_padre');
 	}
 
 }

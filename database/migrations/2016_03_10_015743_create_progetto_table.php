@@ -9,6 +9,7 @@ class CreateProgettoTable extends Migration {
 	{
 		Schema::create('progetto', function(Blueprint $table) {
 			$table->increments('id');
+			$table->integer('progetto_padre');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->string('area', 40);

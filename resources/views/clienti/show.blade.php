@@ -120,7 +120,7 @@
                         @foreach($cliente->contratti as $contratto)
                             <tr>
                                 <td>
-                                    <a href="{{ action('ContattoController@edit',$contratto->id) }}"
+                                    <a href="{{ action('ContrattoController@edit',$contratto->id) }}"
                                        data-skin="skin-blue" class="btn btn-default btn-xs"><i
                                                 class="glyphicon glyphicon-edit"></i></a>
                                     <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i

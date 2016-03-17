@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Attivita extends Model {
 
@@ -11,11 +12,12 @@ class Attivita extends Model {
 	public $timestamps = true;
 
 	use SoftDeletes;
+    use NodeTrait;
 
 	protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'descrizione',
+        'descrizione','progetto_id',
     ];
 
     public function progetto()

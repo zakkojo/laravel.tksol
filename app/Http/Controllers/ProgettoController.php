@@ -1,7 +1,17 @@
 <?php namespace App\Http\Controllers;
 
-class ProgettoController extends Controller {
+use App\Http\Requests;
+use App\Http\Requests\ProgettiRequest;
+use App\Progetto;
+use App\Attivita;
 
+use Request;
+
+class ProgettoController extends Controller {
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
   /**
    * Display a listing of the resource.
    *
@@ -9,7 +19,9 @@ class ProgettoController extends Controller {
    */
   public function index()
   {
-    
+    $progetti = Progetto::all();
+
+    return view('progetti.index')->with(compact('progetti'));
   }
 
   /**
@@ -51,7 +63,7 @@ class ProgettoController extends Controller {
    */
   public function edit($id)
   {
-    
+    return Attivita::where('progetto_id',$id)->get()->toTree();
   }
 
   /**

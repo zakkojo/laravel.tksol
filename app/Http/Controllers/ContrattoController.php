@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use     Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class ContrattoController extends Controller
-{
+use App\Cliente;
+use App\Progetto;
+use App\Consulente;
+use App\Contratto;
+use App\Http\Requests\ContrattiRequest;
+
+
+class ContrattoController extends Controller {
+
     public function __construct()
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +37,11 @@ class ContrattoController extends Controller
      */
     public function create()
     {
+        $clienti = Cliente::all();
+        $progetti = Progetto::all();
+        $consulenti = Consulente::all();
 
+        return view('contratti.create', compact('clienti', 'progetti', 'consulenti'));
     }
 
     /**
@@ -37,15 +49,20 @@ class ContrattoController extends Controller
      *
      * @return Response
      */
-    public function store()
+    public function store(ContrattiRequest $request)
     {
 
+
+        $data = $request->all();
+        $ret = Contratto::create($data);
+            
+        return redirect()->action('ContrattoController@edit', $ret->id);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function show($id)
@@ -56,30 +73,37 @@ class ContrattoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function edit($id)
     {
+
+        $clienti = Cliente::all();
+        $progetti = Progetto::all();
+        $consulenti = Consulente::all();
         $contratto = Contratto::findOrFail($id);
-        return view('contratti.edit', compact('contratto'));
+        return view('contratti.edit', compact('contratto', 'clienti', 'progetti', 'consulenti'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
-    public function update($id)
+    public function update($id, Request $request)
     {
-
+        //return $request->all();
+        $contratto = Contratto::findOrFail($id);
+        $contratto->update($request->all());
+        return redirect()->action('ContrattoController@edit', $contratto->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function destroy($id)

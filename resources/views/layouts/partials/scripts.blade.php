@@ -13,6 +13,13 @@
 <!-- DataTables -->
 <script src="{{ asset('/plugins/datatables/jquery.dataTables.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('/plugins/datatables/dataTables.bootstrap.min.js') }}" type="text/javascript"></script>
+<!-- Select2 -->
+<script src="{{asset('/plugins/select2/select2.min.js')}}" type="text/javascript" ></script>
+<!-- Datepicker3 -->
+<script src="{{asset('/plugins/datepicker/bootstrap-datepicker.js')}}" type="text/javascript" ></script>
+<script src="{{asset('/plugins/datepicker/locales/bootstrap-datepicker.it.js')}}" type="text/javascript" ></script>
+
+
 
 
 <script>
@@ -35,5 +42,15 @@ $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
     }
+});
+$(document).ready(function() {
+    $('.select2').select2();
+    //Date picker
+    $('.datepicker').datepicker({
+        autoclose: true,
+        format: 'dd/mm/yyyy',
+        language: 'it',
+    });
+
 });
 </script>

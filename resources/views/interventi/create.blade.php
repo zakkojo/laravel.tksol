@@ -35,7 +35,7 @@
 
                 <div class="form-group">
                     <label>Cliente</label>
-                    <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                    <select id="selectTest" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
                         <option selected="selected">Cliente 1</option>
                         <option>Cliente 2</option>
                         <option>Cliente 3</option>
@@ -223,4 +223,11 @@
             </form>
         </div>
     </div>
+@endsection
+@section('page_scripts')
+    <script>
+        $(document).ready(function() {
+           $('.select2').select2();
+        });
+    </script>
 @endsection

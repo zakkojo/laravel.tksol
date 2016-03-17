@@ -14,14 +14,14 @@ class CreateContrattoTable extends Migration {
             $table->integer('cliente_id')->unsigned();
             $table->integer('progetto_id')->unsigned();
             $table->enum('stato', array('CONTACT','PROSPECT','FALL','ACTIVE','CLOSED'));
-            $table->text('note', 80);
-            $table->date('data_primo_contatto');
-            $table->date('data_avvio_contatto');
-            $table->date('data_chiusura_contatto');
+            $table->text('note');
+            $table->timestamp('data_primo_contatto');
+            $table->timestamp('data_avvio_progetto')->nullable();
+            $table->timestamp('data_chiusura_progetto')->nullable();
             $table->enum('modalita_fattura', array('CHIAVI_IN_MANO','TIME_CONSUMING'));
             $table->decimal('importo',10,2);
-            $table->date('data_validita_contratto');
-            $table->integer('periodicit_pagamenti');
+            $table->timestamp('data_validita_contratto')->nullable();
+            $table->integer('periodicita_pagamenti');
             $table->integer('capo_progetto');
         });
     }

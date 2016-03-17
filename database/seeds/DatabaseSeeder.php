@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call('ProgettoTableSeeder');
         $this->call('RolesTableSeeder');
         $this->call('AttivitaTableSeeder');
+        $this->call('ContrattoTableSeeder');
     }
 }

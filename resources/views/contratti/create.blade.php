@@ -2,15 +2,16 @@
 
 
 @section('htmlheader_title')
-   Nuovo Cliente
+   Nuovo Contratto
 @endsection
 @section('contentheader_title')
-    Nuovo Cliente
+    Nuovo Contratto
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
 
 @section('main-content')
+    <div class="row">
     @if (count($errors) > 0)
         <div class="alert alert-danger">
            <ul>
@@ -23,12 +24,16 @@
 
     <div class="col-md-8">
         <div class="box box-primary">
-            {!! Form::open(['url' => 'clienti']) !!}
-            @include('clienti.partials.clienteForm')
+            {!! Form::open(['url' => 'contratti']) !!}
+            @include('contratti.partials.contrattoForm')
             {!! Form::close() !!}
         </div>
     </div>
-
+    </div>
+@endsection
+@section('page_scripts')
+    <script>
+    </script>
 @endsection
 
 

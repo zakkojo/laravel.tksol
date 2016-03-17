@@ -86,7 +86,7 @@
                     <div class="box-tools">
                         <div class="btn-group btn-group-sm" role="group" aria-label="...">
                             <button type="button" class="btn btn-default"
-                                    onClick="location.href='{{ action('ClienteController@associa',$cliente->id) }}'"
+                                    onClick="location.href='{{ action('ContrattoController@create',['cli' => $cliente->id]) }}'"
                                     title="Aggiungi Nuovo ">
                                 <i class="fa fa-plus"></i>
                             </button>

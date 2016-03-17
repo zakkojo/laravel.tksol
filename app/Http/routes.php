@@ -49,10 +49,10 @@ Route::group(['middleware' => 'web'], function () {
     Route::resource('consulenti','ConsulenteController');
     Route::post('ajax/toggleUser', 'UserController@ajaxToggleUser');
     Route::resource('contatti','ContattoController');
+    Route::resource('contratti','ContrattoController');
     Route::resource('clienti','ClienteController');
     Route::resource('progetti','ProgettoController');
     Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');
 
     Route::resource('interventi', 'InterventoController');
-
 });

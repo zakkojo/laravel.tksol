@@ -12,7 +12,7 @@
                 </div>
                 <div class="pull-left info">
                     <p> @if(Auth::user()->tipo_utente == '1')
-                            {{ Auth::user()->consulente->nome }} {{ Auth::user()->consulente->cognome }}
+                  {{ Auth::user()->consulente->nome }} {{ Auth::user()->consulente->cognome }}
                         @else
                             {{ Auth::user()->contatto->descrizione }}
                         @endif</p>
@@ -35,12 +35,13 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
-            <li class="header">CONSULENTE</li>
+            <!--li class="header">CONSULENTE</li> -->
             <!-- Optionally, you can add icons to the links -->
-            <li><a href="/dashboard"><i class='fa fa-link glyphicon-dashboard'></i> <span>Dashboard</span></a></li>
-            <li><a href="/calendario"><i class='fa fa-link glyphicon-calendar'></i> <span>Calendario</span></a></li>
-            <li><a href="/consulenti"><i class='fa fa-link glyphicon-user'></i> <span>Consulenti</span></a></li>
+            <li><a href="/consulenti/dashboard_direzionale"><i class='fa fa-link glyphicon-dashboard'></i> <span>Dashboard direzionale</span></a></li>
+            <li><a href="/consulenti/{{ Auth::user()->consulente->id }}"><i class='fa fa-link glyphicon-dashboard'></i> <span>Dashboard consulente</span></a></li>
+            <li><a href="/clienti/dashboard"><i class='fa fa-link glyphicon-dashboard'></i> <span>Dashboard cliente</span></a></li>
             <li><a href="/progetti"><i class='fa fa-link glyphicon-bitcoin'></i> <span>Filiera</span></a></li>
+            <li><a href="/consulenti"><i class='fa fa-link glyphicon-user'></i> <span>Consulenti</span></a></li>
             <li><a href="/clienti"><i class='fa fa-link glyphicon-briefcase'></i> <span>Clienti</span></a></li>
             <!--li class="treeview">
                 <a href="#"><i class='fa fa-link'></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
@@ -49,11 +50,6 @@
                     <li><a href="#">Link in level 2</a></li>
                 </ul>
             </li-->
-            <li class="header">CLIENTE</li>
-            <!-- Optionally, you can add icons to the links -->
-            <li><a href="/calendario"><i class='fa fa-link'></i> <span>Calendario</span></a></li>
-            <li><a href="/dashboard"><i class='fa fa-link'></i> <span>Dashboard</span></a></li>
-            <li><a href="/consulenti"><i class='fa fa-link glyphicon-user'></i> <span>I miei consulenti</span></a></li>
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

@@ -2,6 +2,7 @@
 use App\Http\Requests;
 use App\Http\Requests\ConsulentiRequest;
 use App\Consulente;
+use App\Intervento;
 use App\User;
 
 use Request;
@@ -56,8 +57,6 @@ class ConsulenteController extends Controller {
 
   }
 
-
-
   /**
    * Display the specified resource.
    *
@@ -66,7 +65,10 @@ class ConsulenteController extends Controller {
    */
   public function show($id)
   {
-      return redirect()->action('ConsulenteController@edit', $id);
+      $consulente = Consulente::findOrFail($id);
+      $interventi = Intervento::all()->where('consulente_id','=',$consulente->id);
+      $consulente->interventi = $interventi;
+      return view('consulenti.show',compact('consulente'));
   }
 
   /**
@@ -98,7 +100,7 @@ class ConsulenteController extends Controller {
       return redirect()->action('ConsulenteController@index');
   }
 
-  /**
+    /**
    * Remove the specified resource from storage.
    *
    * @param  int  $id

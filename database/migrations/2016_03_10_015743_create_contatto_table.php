@@ -24,6 +24,8 @@ class CreateContattoTable extends Migration {
 			$table->string('citta', 50);
 			$table->string('cap', 10);
 			$table->string('provincia', 10);
+			$table->boolean('referente');
+			$table->boolean('fatturazione');
 		});
 	}
 

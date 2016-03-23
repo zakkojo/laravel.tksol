@@ -9,6 +9,7 @@ class CreateListinoProgettoTable extends Migration {
 	{
 		Schema::create('listinoProgetto', function(Blueprint $table) {
 			$table->increments('id');
+			$table->integer('progetto_id');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->integer('consulente_id');
@@ -18,7 +19,7 @@ class CreateListinoProgettoTable extends Migration {
 			$table->enum('tipo_iva', array('NORMALE', 'SPLIT'));
 			$table->float('rimborsi');
 			$table->float('fee');
-			$table->integer('id_sowftwarehouse');
+			$table->integer('softwarehouse_id');
 			$table->enum('tipo_vendita', array('LICENZA', 'NOLEGGIO'));
 			$table->date('scadenza');
 		});

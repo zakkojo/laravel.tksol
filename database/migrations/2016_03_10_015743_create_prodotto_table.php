@@ -11,9 +11,8 @@ class CreateProdottoTable extends Migration {
 			$table->increments('id');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->string('area', 40);
+			$table->string('codice', 20);
 			$table->string('nome', 50);
-			$table->integer('progetto_id')->unsigned();
 		});
 	}
 

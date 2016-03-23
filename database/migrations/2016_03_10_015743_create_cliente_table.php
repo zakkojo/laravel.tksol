@@ -9,8 +9,8 @@ class CreateClienteTable extends Migration {
 	{
 		Schema::create('cliente', function(Blueprint $table) {
 			$table->increments('id');
-			$table->string('codice_fiscale', 16)->unique();
-			$table->string('partita_iva', 11)->unique();
+			$table->string('codice_fiscale', 16);
+			$table->string('partita_iva', 11);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->string('ragione_sociale', 100);
@@ -23,7 +23,10 @@ class CreateClienteTable extends Migration {
 			$table->string('cap', 10);
 			$table->string('provincia', 10);
 			$table->string('telefono', 50);
-
+			$table->string('fax', 50);
+			$table->integer('softwarehouse_id');
+			$table->decimal('fatturato',10,2);
+			$table->text('note');
 		});
 	}
 

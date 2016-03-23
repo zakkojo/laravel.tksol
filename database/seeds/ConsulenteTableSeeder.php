@@ -19,8 +19,8 @@ class ConsulenteTableSeeder extends Seeder
         \DB::table('consulente')->insert(array (
             0 => 
             array (
-                'id' => '1',
-                'user_id' => '1',
+                'id' => 1,
+                'user_id' => 1,
                 'created_at' => NULL,
                 'updated_at' => NULL,
                 'deleted_at' => NULL,
@@ -40,8 +40,8 @@ class ConsulenteTableSeeder extends Seeder
             ),
             1 => 
             array (
-                'id' => '2',
-                'user_id' => '2',
+                'id' => 2,
+                'user_id' => 2,
                 'created_at' => NULL,
                 'updated_at' => NULL,
                 'deleted_at' => NULL,
@@ -61,8 +61,8 @@ class ConsulenteTableSeeder extends Seeder
             ),
             2 => 
             array (
-                'id' => '3',
-                'user_id' => '3',
+                'id' => 3,
+                'user_id' => 3,
                 'created_at' => '2016-03-15 20:12:17',
                 'updated_at' => '2016-03-15 20:12:17',
                 'deleted_at' => NULL,

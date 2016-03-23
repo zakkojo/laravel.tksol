@@ -37,27 +37,30 @@
         <table id="clienti" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0" width="100%">
             <thead>
             <tr>
-                <td>Ragione Sociale </td>
-                <td>Cliente</td>
-                <td>Software house</td>
+                <td>Codice Fiscale<br/>Partita IVA</td>
+                <td>Ragione Sociale</td>
+                <td>Settore</td>
+                <td>Fatturato</td>
                 <td>Città</td>
-                <td>Telefono</td>
+                <td>Rating</td>
                 <td>Opzioni</td>
             </tr>
             </thead>
             <tbody>
             @foreach($clienti as $cliente)
                 <tr>
-                    <td>{{ $cliente->ragione_sociale }}</td>
-                    <td>{{ $cliente->software_house }}</td>
-                    <td>{{ $cliente->cliente }}</td>
-                    <td>{{ $cliente->citta }}</td>
-                    <td>{{ $cliente->telefono }}</td>
+                    <td>{{ $cliente->codice_fiscale }}<br/>{{ $cliente->partita_iva }}</td>
+                    <td><a href="{{ action('ClienteController@show',$cliente->id) }}">{{ $cliente->ragione_sociale }}</a></td>
+                    <td>{{ $cliente->settore }}</td>
+                    <td class="pull-right"><i class="glyphicon glyphicon-euro"></i> {{ number_format($cliente->fatturato,0,',','.') }} mln</td>
+                    <td><a href="http://maps.google.com/?q={{ $cliente->indirizzo . ', ' . $cliente->citta . ', ' . $cliente->ragione_sociale}}" target="crm.tksol.map">
+                            <span class="glyphicon glyphicon-map-marker"></span>
+                            {{ $cliente->citta }}
+                        </a>
+                    </td>
+                    <td>{{ $cliente->rating }}</td>
                     <td>
-                        <a href="{{ action('ClienteController@show',$cliente->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a>
                         <a href="{{ action('ClienteController@edit',$cliente->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
-                        <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
-
                     </td>
                 </tr>
             @endforeach
@@ -70,7 +73,7 @@
 <script>
     $(document).ready(function() {
         var oTable = $('#clienti').DataTable({
-            "scrollY": "600px",
+            "scrollY": "280px",
             "scrollCollapse": false,
             "paging":         false,
             "lengthChange": false,

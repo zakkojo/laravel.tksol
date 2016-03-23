@@ -28,7 +28,7 @@
 <div class="col-md-8">
     <div class="box ">
         <div class="box-header">
-            <h3 class="box-title">Elenco consulenti</h3>
+            <h3 class="box-title">Prossimi interventi / Interventi da pianificare</h3>
 
             <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">

@@ -19,7 +19,7 @@ class InterventoController extends Controller {
    */
   public function create()
   {
-    
+    return view('interventi.create');
   }
 
   /**
@@ -40,7 +40,6 @@ class InterventoController extends Controller {
    */
   public function show($id)
   {
-    
   }
 
   /**

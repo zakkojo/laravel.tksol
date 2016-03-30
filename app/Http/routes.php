@@ -53,5 +53,6 @@ Route::group(['middleware' => 'web'], function () {
     Route::resource('progetti','ProgettoController');
     Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');
 
+    Route::resource('interventi', 'InterventoController');
 
 });

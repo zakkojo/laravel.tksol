@@ -13,6 +13,13 @@ class Contratto extends Model {
     public $timestamps = true;
 
     protected $fillable = [
+        'cliente_id',
+        'progetto_id',
+        'capo_progetto',
+        'stato',
+        'importo',
+        'modalita_fattura',
+        'periodicita_pagamenti',
         'note',
         'data_primo_contatto',
         'data_validita_contratto',
@@ -21,9 +28,6 @@ class Contratto extends Model {
     ];
 
     protected $nullable = [
-        'data_validita_contratto',
-        'data_avvio_progetto',
-        'data_chiusura_progetto',
     ];
     use SoftDeletes;
 
@@ -34,24 +38,25 @@ class Contratto extends Model {
 
     public function setDataPrimoContattoAttribute($date)
     {
-        if ($date!="") $this->attributes['data_primo_contatto'] = Carbon::createFromFormat('d/m/Y', $date);
+        $this->attributes['data_primo_contatto'] = Carbon::createFromFormat('d/m/Y', $date);
     }
 
-    public function setDataValiditaContratto($date)
+    public function setDataValiditaContrattoAttribute($date)
     {
-        $this->attributes['data_validita_contratto'] = Carbon::createFromFormat('d/m/Y', $date);
-
+        if($date != "") $this->attributes['data_validita_contratto'] = Carbon::createFromFormat('d/m/Y', $date);
+        else $this->attributes['data_validita_contratto'] = NULL;
     }
 
-    public function setDataAvvioProgetto($date)
+    public function setDataAvvioProgettoAttribute($date)
     {
-        $this->attributes['data_avvio_progetto'] = null;
-
+        if($date != "") $this->attributes['data_avvio_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
+        else $this->attributes['data_avvio_progetto'] = NULL;
     }
 
-    public function setDataChiusuraContratto($date)
+    public function setDataChiusuraProgettoAttribute($date)
     {
-        $this->attributes['data_chiusura_contratto'] = null;
+        if($date != "") $this->attributes['data_chiusura_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
+        else $this->attributes['data_chiusura_progetto'] = NULL;
     }
 
     public function getDataPrimoContattoAttribute($date)
@@ -60,19 +65,19 @@ class Contratto extends Model {
         else return null;
     }
 
-    public function getDataValiditaContratto($date)
+    public function getDataValiditaContrattoAttribute($date)
     {
         if ($date) return Carbon::parse($date)->format('d/m/Y');
         else return null;
     }
 
-    public function getDataAvvioProgetto($date)
+    public function getDataAvvioProgettoAttribute($date)
     {
         if ($date) return Carbon::parse($date)->format('d/m/Y');
         else return null;
     }
 
-    public function getDataChiusuraContratto($date)
+    public function getDataChiusuraContrattoAttribute($date)
     {
         if ($date) return Carbon::parse($date)->format('d/m/Y');
         else return null;

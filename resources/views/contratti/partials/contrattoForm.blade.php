@@ -1,46 +1,67 @@
+<?php
+if (isset($contratto)) $cli = $contratto->cliente_id;
+elseif (isset($_GET['cli'])) $cli = $_GET['cli'];
+else $cli = 0;
+
+if (isset($contratto)) $prog = $contratto->progetto_id;
+elseif (isset($_GET['prog'])) $prog = $_GET['prog'];
+else $prog = 0;
+
+if (isset($contratto)) $cons = $contratto->capo_progetto;
+elseif (isset($_GET['cons'])) $cons = $_GET['cons'];
+else $cons = 0;
+if (isset($contratto))
+{
+    $periodo = $contratto->periodicita_pagamenti;
+    $modalita = $contratto->modalita_fattura;
+} else
+{
+    $periodo = '';
+    $modalita = '';
+}
+?>
 <div class="box-body">
     <div class="form-group">
         <label>Cliente</label>
-        <select id="cliente_id" @if(! empty($_GET['cli'])) disabled @endif name="cliente_id"
+        <select id="cliente_id" @if($cli) disabled @endif name="cliente_id"
                 class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
                 aria-hidden="true">
             <option value=""></option>
             @foreach($clienti as $cliente)
-                @if((! empty($_GET['cli']) AND $_GET['cli'] == $cliente->id) OR $contratto->cliente_id ==$cliente->id )
+                @if($cli == $cliente->id )
                     <option selected value="{{$cliente->id}}">{{$cliente->ragione_sociale}}</option>
                 @else
-
                     <option value="{{$cliente->id}}">{{$cliente->ragione_sociale}}</option>
                 @endif
             @endforeach
         </select>
-        @if(! empty($_GET['cli']))<input type="hidden" name="cliente_id" value="{{$_GET['cli']}}">@endif
+        @if($cli)<input type="hidden" name="cliente_id" value="{{$cli}}">@endif
     </div>
     <div class="form-group">
         <label>Progetto</label>
-        <select id="progetto_id" @if(! empty($_GET['prog'])) disabled @endif name="progetto_id"
+        <select id="progetto_id" @if($prog) disabled @endif name="progetto_id"
                 class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
                 aria-hidden="true">
             <option value=""></option>
             @foreach($progetti as $progetto)
-                @if(! empty($_GET['prog']) AND $_GET['prog'] == $cliente->id)
+                @if($prog == $progetto->id)
                     <option selected value="{{$progetto->id}}">{{$progetto->area}} / {{$progetto->nome}}</option>
                 @else
                     <option value="{{$progetto->id}}">{{$progetto->area}} / {{$progetto->nome}}</option>
                 @endif
             @endforeach
         </select>
+        @if($prog)<input type="hidden" name="progetto_id" value="{{$prog}}">@endif
     </div>
     <div class="form-group">
         <label>Capo Progetto</label>
-        <select id="consulente_id" @if(! empty($_GET['cons'])) disabled @endif name="consulente_id"
-                class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
-                aria-hidden="true">
+        <select id="capo_progetto" name="capo_progetto" class="form-control select2 select2-hidden-accessible"
+                style="width: 100%;" tabindex="-1" aria-hidden="true">
             <option value=""></option>
             @foreach($consulenti as $consulente)
-                @if(! empty($_GET['cons']) AND $_GET['cons'] == $consulente->id)
+                @if($cons == $consulente->id)
                     <option selected value="{{$consulente->id}}">{{$consulente->cognome}} {{$consulente->nome}}</option>
-                @elseif( empty($_GET['cons']) AND Auth::user()->consulente->id == $consulente->id)
+                @elseif( $cons = 0 AND Auth::user()->consulente->id == $consulente->id)
                     <option selected value="{{$consulente->id}}">{{$consulente->cognome}} {{$consulente->nome}}</option>
                 @else
                     <option value="{{$consulente->id}}">{{$consulente->cognome}} {{$consulente->nome}}</option>
@@ -120,25 +141,19 @@
     </div>
     <div class="form-group">
         <label>Modalità Fatturazione</label>
-        <select id="modalita_fattura" name="modalita_fattura"
-                class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
-                aria-hidden="true">
-            <option value="{{ $contratto->modalita_fattura or  '' }}"> {{ $contratto->modalita_fattura or  '' }}</option>
-            <option value="CHIAVI_IN_MANO">Chiavi in Mano</option>
-            <option value="TIME_CONSUMING">Time Consuming</option>
-        </select>
+        {!! Form::select('modalita_fattura',
+            array(''=>'','CHIAVI_IN_MANO' => 'Chiavi in Mano','TIME_CONSUMING' => 'Time Consuming'),
+            $modalita,
+            ['id'=>'modalita_fattura','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
     </div>
     <div class="form-group">
         <label>Periodicità pagamenti</label>
-        <select id="periodicita_pagamenti" name="periodicita_pagamenti"
-                class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
-                aria-hidden="true">
-            <option value="{{ $contratto->periodicita_pagamenti or  '' }}"> {{ $contratto->periodicita_pagamenti or  '' }}</option>
-            <option value="1">Mensile</option>
-            <option value="3">Trimestrale</option>
-            <option value="6">Semestrale</option>
-            <option value="12">Annuale</option>
-        </select>
+        {!! Form::select('periodicita_pagamenti',
+            array(''=>'','1' => 'Mensile','3' => 'Trimestrale','6' => 'Semestrale','12' => 'Annuale'),
+            $periodo,
+            ['id'=>'periodicita_pagamenti','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
     </div>
 
 </div><!-- /.box-body -->

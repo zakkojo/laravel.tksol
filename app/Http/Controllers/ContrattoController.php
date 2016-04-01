@@ -51,11 +51,8 @@ class ContrattoController extends Controller {
      */
     public function store(ContrattiRequest $request)
     {
-
-
         $data = $request->all();
         $ret = Contratto::create($data);
-            
         return redirect()->action('ContrattoController@edit', $ret->id);
     }
 
@@ -78,7 +75,6 @@ class ContrattoController extends Controller {
      */
     public function edit($id)
     {
-
         $clienti = Cliente::all();
         $progetti = Progetto::all();
         $consulenti = Consulente::all();
@@ -92,7 +88,7 @@ class ContrattoController extends Controller {
      * @param  int $id
      * @return Response
      */
-    public function update($id, Request $request)
+    public function update($id, ContrattiRequest $request)
     {
         //return $request->all();
         $contratto = Contratto::findOrFail($id);

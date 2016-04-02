@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class RimborsoIntervento extends Model {
+class Rimborso extends Model {
 
 	protected $table = 'rimborsoIntervento';
 	public $timestamps = true;

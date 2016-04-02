@@ -2,10 +2,9 @@
 
 
 @section('htmlheader_title')
-   {{ $contratto->ragione_sociale }}
 @endsection
 @section('contentheader_title')
-        {{ $contratto->ragione_sociale}}
+    Gestione Attivita di Progetto
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -20,14 +19,13 @@
            </ul>
         </div>
     @endif
-
-    <div class="col-md-8">
-        <div class="box box-primary">
-            {!! Form::model($contratto, ['url' => 'contratti/'.$contratto->id, 'method' => 'PATCH' ]) !!}
-            @include('contratti.partials.contrattoForm')
-            {!! Form::close() !!}
-        </div>
+<div class="row">
+    <div class="col-md-6">
+        @include('progetti.partials.treeView')
     </div>
-
+    <div class="col-md-6">
+            @include('progetti.partials.contrattoForm')
+    </div>
+</div>
 @endsection
 

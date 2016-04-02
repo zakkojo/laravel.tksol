@@ -15,7 +15,6 @@ class CreateAttivitaTable extends Migration {
 			$table->unsignedInteger('_rgt');
 			$table->timestamps();
 			$table->softDeletes();
-			$table->integer('sequenza');
 			$table->string('descrizione', 100);
 		});
 	}

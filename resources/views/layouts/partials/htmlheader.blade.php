@@ -24,6 +24,11 @@
     <link href="{{ asset('/plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
     <!-- Datepicker3 -->
     <link href="{{ asset('/plugins/datepicker/datepicker3.css') }}" rel="stylesheet" type="text/css" />
+    <!-- wysihtml5 -->
+    <link href="{{ asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- Tree-View -->
+    <link href="{{ asset('/plugins/bootstrap-treeview/bootstrap-treeview.min.css') }}" rel="stylesheet" type="text/css" />
+
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

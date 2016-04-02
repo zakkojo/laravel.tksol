@@ -1,45 +1,62 @@
-<div class="box-body">
-    <div class="form-group">
-        {!! Form::textarea('note', null,['class'=>'form-control', 'id'=>'note']) !!}
-    </div>
-    <div class="form-group">
-        {!! Form::text('partita_iva', null,['class'=>'form-control', 'id'=>'partita_iva', 'placeholder'=>'Partita IVA']) !!}
-        {!! Form::text('codice_fiscale', null,['class'=>'form-control', 'id'=>'codice_fiscale', 'placeholder'=>'Codice Fiscale']) !!}
-    </div>
-    <div class="form-group">
-        {!! Form::text('telefono', null,['class'=>'form-control', 'id'=>'telefono', 'placeholder'=>'Telefono Principale']) !!}
-    </div>
-    <div class="form-group">
-        {!! Form::text('indirizzo', null,['class'=>'form-control', 'id'=>'indirizzo', 'placeholder'=>'Indirizzo']) !!}
-        {!! Form::text('citta', null,['class'=>'form-control', 'id'=>'citta', 'placeholder'=>'Città']) !!}
-        {!! Form::text('provincia', null,['class'=>'form-control', 'id'=>'provincia', 'placeholder'=>'Provincia']) !!}
-        {!! Form::text('cap', null,['class'=>'form-control', 'id'=>'cap', 'placeholder'=>'CAP']) !!}
-    </div>
-    <div class="form-group">
-        {!! Form::text('settore', null,['class'=>'form-control', 'id'=>'settore', 'placeholder'=>'Settore Aziendale']) !!}
-        {!! Form::text('rating', null,['class'=>'form-control', 'id'=>'rating', 'placeholder'=>'Rating']) !!}
+<style>
+    .vertical-container {
+        position: relative;
+        height: 14rem;
+        float: none;
+        display: table-cell;
+        vertical-align: top;
+    }
 
+    .pad {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .table-row {
+        display: table;
+    }
+</style>
+<div class="box box-primary">
+    <div class="box-header">
+        <h3 class="box-title">Modifica Attività</h3>
     </div>
-    <div class="row">
-        <div class="col-xs-8">
-            <div class="checkbox icheck">
-                <label>
-                    {!!  Form::checkbox('cliente', 'cliente') !!} Cliente
-                </label>
+    <!-- /.box-header -->
+
+    <!-- /.box-body -->
+    <div class="box-body">
+        <div class="table-row">
+            <div class="col-md-2 vertical-container">
+                <div class="btn-group-vertical pad">
+                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-up"></span></button>
+                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                </div>
             </div>
-        </div><!-- /.col -->
-        <div class="col-xs-8">
-            <div class="checkbox icheck">
-                <label>
-                    {!! Form::checkbox('softwarehouse', 'softwarehouse') !!} Softwarehouse
-                </label>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label>Ragione Sociale</label>
+                    <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
+                            aria-hidden="true">
+                        <option selected="selected">Roberto Spaccini</option>
+                        <option>Gianni Graffiedi</option>
+                        <option>...</option>
+                    </select>
+                    <label>Progetto</label>
+                    <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
+                            aria-hidden="true">
+                        <option selected="selected">Senior</option>
+                        <option>Junior</option>
+                    </select>
+                    <label>Descrizione</label>
+                    {!! Form::text('descrizione', null,['class'=>'form-control', 'id'=>'descrizione']) !!}
+                </div>
             </div>
-        </div><!-- /.col -->
+        </div>
     </div>
+    <!-- /.box-body -->
 
-</div>
-<!-- /.box-body -->
-
-<div class="box-footer">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="box-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
 </div>

@@ -44,7 +44,7 @@
                 <!-- /.box-body -->
                 <div class="box-body">
                     <table id="clienti"
-                           class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap"
+                           class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide"
                            cellspacing="0" width="100%">
                         <thead>
                         <tr>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="btn-group btn-group-sm" role="group" aria-label="...">
                             <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" id="clienti_search" name="table_search"
+                                <input type="text" id="contratti_search" name="table_search"
                                        class="form-control pull-right" placeholder="Search">
 
                                 <div class="input-group-btn">
@@ -105,7 +105,7 @@
                 </div>
                 <div class="box-body">
                     <table id="contratti"
-                           class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap"
+                           class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide"
                            cellspacing="0" width="100%">
                         <thead>
                         <tr>
@@ -152,7 +152,11 @@
                 "lengthChange": false,
                 "ordering": true,
                 "info": true,
-                "autoWidth": false
+                "autoWidth": false,
+                "fnDrawCallback":function(){
+                    $('#clienti').removeClass('hide');
+                }
+
             });
             $('#clienti_search').keyup(function () {
                 clientiTable.search($(this).val()).draw();
@@ -168,10 +172,13 @@
                 "autoWidth": false,
                 "columnDefs": [
                     { "width": "80px", "targets": 0 }
-                ]
+                ],
+                "fnDrawCallback":function(){
+                    $('#contratti').removeClass('hide');
+                }
             });
             $('.dataTables_filter').hide();
-            $('#clienti_search').keyup(function () {
+            $('#contratti_search').keyup(function () {
                 contrattiTable.search($(this).val()).draw();
             })
         });

@@ -23,7 +23,7 @@
     </div>
     <div class="box-body">
         <table id="listinoInterventi"
-               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0"
+               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide" cellspacing="0"
                width="100%">
             <thead>
             <tr>
@@ -71,7 +71,11 @@
                 "autoWidth": false,
                 "columnDefs": [
                     { "width": "80px", "targets": 0 }
-                ]
+                ],
+                "fnDrawCallback":function(){
+                    $('#clienti').removeClass('hide');
+                }
+
             });
             $('#interventi_search').keyup(function () {
                 clientiTable.search($(this).val()).draw();

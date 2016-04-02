@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-class RimborsoInterventoController extends Controller {
+class RimborsoController extends Controller {
 
   /**
    * Display a listing of the resource.
@@ -9,7 +9,7 @@ class RimborsoInterventoController extends Controller {
    */
   public function index()
   {
-    
+    return view('rimborsi.index');
   }
 
   /**
@@ -19,7 +19,7 @@ class RimborsoInterventoController extends Controller {
    */
   public function create()
   {
-    
+    return view('rimborsi.create');
   }
 
   /**
@@ -51,7 +51,7 @@ class RimborsoInterventoController extends Controller {
    */
   public function edit($id)
   {
-    
+    return view('rimborsi.edit');
   }
 
   /**

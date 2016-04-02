@@ -158,10 +158,12 @@ return [
 
         //
         Collective\Html\HtmlServiceProvider::class,
-	
-	Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
 
-	Orangehill\Iseed\IseedServiceProvider::class,
+        Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
+
+        Orangehill\Iseed\IseedServiceProvider::class,
+        
+        Barryvdh\Snappy\ServiceProvider::class,
 
     ],
 
@@ -212,7 +214,10 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 
-	'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
+        'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
+
+        'PDF'      => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'Image'    => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

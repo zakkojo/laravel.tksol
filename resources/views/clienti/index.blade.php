@@ -5,10 +5,7 @@
         Clienti
 @endsection
 @section('contentheader_title')
-        Clienti &nbsp;
-        <button type="button" class="btn btn-default navbar-btn" onClick="location.href='clienti/create'" title="Aggiungi Nuovo">
-            <i class="fa fa-plus"></i>&nbsp; Aggiungi Nuovo
-        </button>
+        Clienti
 @endsection
 
 @section('contentheader_breadcrumb')
@@ -42,8 +39,8 @@
         <!-- /.box-header -->
 
         <!-- /.box-body -->
-        <div class="box-body">
-        <table id="clienti" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0" width="100%">
+        <div class="box-body" style="min-height: 300px;">
+        <table id="clienti" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide" cellspacing="0" width="100%">
             <thead>
             <tr>
                 <td>Opzioni</td>
@@ -99,7 +96,10 @@
             "lengthChange": false,
             "ordering": true,
             "info": true,
-            "autoWidth": false
+            "autoWidth": false,
+            "fnDrawCallback":function(){
+                $('#clienti').removeClass('hide');
+            }
         });
         $('.dataTables_filter').hide();
         $('#clienti_search').keyup(function(){

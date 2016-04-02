@@ -21,10 +21,10 @@
             </div>
         </div>
     </div>
-    <div class="box-body">
+    <div class="box-body" style="min-height: 300px;">
         <table id="listinoProdotti"
-               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0"
-               width="100%">
+               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide"
+               cellspacing="0" width="100%">
             <thead>
             <tr>
                 <td>Opzioni</td>
@@ -42,8 +42,7 @@
                 <tr>
                     <td>
                         <a href="{{ action('ContrattoProdottoController@edit',[$contratto->id,$listinoProdotto->id]) }}"
-                           data-skin="skin-blue" class="btn btn-default btn-xs"><i
-                                    class="glyphicon glyphicon-edit"></i></a>
+                           data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                         <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i
                                     class="glyphicon glyphicon-trash"></i></a>
 
@@ -76,8 +75,12 @@
                 "info": true,
                 "autoWidth": false,
                 "columnDefs": [
-                    { "width": "80px", "targets": 0 }
-                ]
+                    {"width": "80px", "targets": 0}
+                ],
+                "fnDrawCallback": function () {
+                    $('#clienti').removeClass('hide');
+                }
+
             });
             $('#prodotti_search').keyup(function () {
                 clientiTable.search($(this).val()).draw();

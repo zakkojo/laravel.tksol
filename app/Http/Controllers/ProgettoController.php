@@ -31,7 +31,7 @@ class ProgettoController extends Controller {
    */
   public function create()
   {
-    
+    return view('progetti.edit');
   }
 
   /**
@@ -63,7 +63,8 @@ class ProgettoController extends Controller {
    */
   public function edit($id)
   {
-    return Attivita::where('progetto_id',$id)->get()->toTree();
+      $id = 2;
+    return view('progetti.edit');
   }
 
   /**

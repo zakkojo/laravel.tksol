@@ -2,10 +2,10 @@
 
 
 @section('htmlheader_title')
-    Nuovo Contratto
+    Nuovo Listino Interventi
 @endsection
 @section('contentheader_title')
-    Nuovo Contratto
+    Nuovo Listino Interventi
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -22,8 +22,8 @@
             </div>
         @endif
         <div class="box box-primary">
-            {!! Form::open(['url' => 'contratti']) !!}
-            @include('contratti.partials.contrattoForm')
+            {!! Form::open(['action' => ['ContrattoInterventoController@store', $contratto->id]]) !!}
+            @include('contrattiInterventi.partials.form')
             {!! Form::close() !!}
         </div>
     </div>

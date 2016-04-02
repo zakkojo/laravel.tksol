@@ -18,6 +18,12 @@ class Cliente extends Model {
 
 	protected $dates = ['deleted_at'];
 
+    static function getSoftwarehouse()
+    {
+        return Cliente::where('softwarehouse','=','1')->get();
+	}
+	
+
 	public function rubrica()
 	{
 		return $this->hasMany(Contatto::class);

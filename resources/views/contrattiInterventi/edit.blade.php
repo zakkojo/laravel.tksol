@@ -25,23 +25,9 @@
 
         <div class="row">
             <div class="box box-primary">
-                {!! Form::model($contratto, ['url' => 'contratti/'.$contratto->id, 'method' => 'PATCH' ]) !!}
-                @include('contratti.partials.contrattoForm')
+                {!! Form::model($listinoIntervento, ['action' => ['ContrattoInterventoController@update', $contratto->id,$listinoIntervento->id], 'method' => 'PATCH' ]) !!}
+                @include('contrattiInterventi.partials.form')
                 {!! Form::close() !!}
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="row">
-            <div class="col-md-12">
-                <?php  $listinoInterventi = $contratto->listinoInterventi; ?>
-                @include('contratti.partials.interventiTable')
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <?php $listinoProdotti = $contratto->listinoProdotti; ?>
-                @include('contratti.partials.prodottiTable')
             </div>
         </div>
     </div>

@@ -43,8 +43,10 @@ desired effect
 
         <!-- Main content -->
         <section class="content">
-            <!-- Your Page Content Here -->
+            <div class="row" style="margin: 0px; 15px;">
+                <!-- Your Page Content Here -->
             @yield('main-content')
+            </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 

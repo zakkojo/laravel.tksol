@@ -90,7 +90,7 @@ class Contratto extends Model {
 
     public function progetto()
     {
-        return $this->belongsTo(Progetto::class)->where('progetto_padre', 0);
+        return $this->belongsTo(Progetto::class);
     }
 
     public function listinoProdotti()

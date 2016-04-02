@@ -50,6 +50,8 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('ajax/toggleUser', 'UserController@ajaxToggleUser');
     Route::resource('contatti','ContattoController');
     Route::resource('contratti','ContrattoController');
+	Route::resource('contratti/{contratto_id}/listino_interventi','ContrattoInterventoController');
+	Route::resource('contratti/{contratto_id}/listino_prodotti','ContrattoProdottoController');
     Route::resource('clienti','ClienteController');
     Route::resource('progetti','ProgettoController');
     Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');

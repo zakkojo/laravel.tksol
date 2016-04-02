@@ -15,15 +15,15 @@ class CreateContrattoProdottoTable extends Migration {
         Schema::create('contratto_prodotto', function (Blueprint $table)
         {
             $table->increments('id');
-            $table->integer('contratto_id');
+            $table->integer('contratto_id')->unsigned();
+            $table->integer('prodotto_id')->unsigned();
+            $table->integer('softwarehouse_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
-            $table->string('descrizione', 40);
             $table->float('importo');
             $table->float('iva');
             $table->enum('tipo_iva', array('NORMALE', 'SPLIT'));
             $table->float('fee');
-            $table->integer('softwarehouse_id')->unsigned();
             $table->enum('tipo_vendita', array('LICENZA', 'NOLEGGIO'));
             $table->timestamp('scadenza');
         });

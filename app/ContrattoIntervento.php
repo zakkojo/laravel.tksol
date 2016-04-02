@@ -14,6 +14,15 @@ class ContrattoIntervento extends Model {
 
 	protected $dates = ['deleted_at'];
 
+	protected $fillable = [
+		'contratto_id',
+		'descrizione',
+		'tariffa_ora',
+		'iva',
+		'tipo_iva',
+		'ore_previste',
+	];
+
 	public function contratto()
 	{
 		return $this->belongsTo('Contratto');

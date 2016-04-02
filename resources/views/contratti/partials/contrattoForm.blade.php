@@ -2,14 +2,29 @@
 if (isset($contratto)) $cli = $contratto->cliente_id;
 elseif (isset($_GET['cli'])) $cli = $_GET['cli'];
 else $cli = 0;
+if ($cli) $cliDisabled = 'disabled';
+else $cliDisabled = 'enabled';
+$listClienti = $clienti->lists('ragione_sociale', 'id');
 
 if (isset($contratto)) $prog = $contratto->progetto_id;
 elseif (isset($_GET['prog'])) $prog = $_GET['prog'];
 else $prog = 0;
+if ($prog) $progDisabled = 'disabled';
+else $progDisabled = 'enabled';
+$listProgetto = $progetti->each(function ($progetto)
+{
+    return $progetto['areanome'] = $progetto['area'] . ' / ' . $progetto['nome'];
+})->lists('areanome', 'id');
 
 if (isset($contratto)) $cons = $contratto->capo_progetto;
 elseif (isset($_GET['cons'])) $cons = $_GET['cons'];
+elseif (Auth::user()->consulente->id) $cons = Auth::user()->consulente->id;
 else $cons = 0;
+$listConsuenti = $consulenti->each(function ($consulente)
+{
+    return $consulente['nomecognome'] = $consulente['nome'] . ' ' . $consulente['cognome'];
+})->lists('nomecognome', 'id');
+
 if (isset($contratto))
 {
     $periodo = $contratto->periodicita_pagamenti;
@@ -23,63 +38,37 @@ if (isset($contratto))
 <div class="box-body">
     <div class="form-group">
         <label>Cliente</label>
-        <select id="cliente_id" @if($cli) disabled @endif name="cliente_id"
-                class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
-                aria-hidden="true">
-            <option value=""></option>
-            @foreach($clienti as $cliente)
-                @if($cli == $cliente->id )
-                    <option selected value="{{$cliente->id}}">{{$cliente->ragione_sociale}}</option>
-                @else
-                    <option value="{{$cliente->id}}">{{$cliente->ragione_sociale}}</option>
-                @endif
-            @endforeach
-        </select>
+        {!! Form::select('cliente_id',
+            $listClienti,
+            $cli,
+            [$cliDisabled => $cliDisabled,'id'=>'cliente_id','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
         @if($cli)<input type="hidden" name="cliente_id" value="{{$cli}}">@endif
     </div>
     <div class="form-group">
         <label>Progetto</label>
-        <select id="progetto_id" @if($prog) disabled @endif name="progetto_id"
-                class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
-                aria-hidden="true">
-            <option value=""></option>
-            @foreach($progetti as $progetto)
-                @if($prog == $progetto->id)
-                    <option selected value="{{$progetto->id}}">{{$progetto->area}} / {{$progetto->nome}}</option>
-                @else
-                    <option value="{{$progetto->id}}">{{$progetto->area}} / {{$progetto->nome}}</option>
-                @endif
-            @endforeach
-        </select>
+        {!! Form::select('progetto_id',
+            $listProgetto,
+            $prog,
+            [$progDisabled => $progDisabled,'id'=>'progetto_id','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
         @if($prog)<input type="hidden" name="progetto_id" value="{{$prog}}">@endif
     </div>
     <div class="form-group">
         <label>Capo Progetto</label>
-        <select id="capo_progetto" name="capo_progetto" class="form-control select2 select2-hidden-accessible"
-                style="width: 100%;" tabindex="-1" aria-hidden="true">
-            <option value=""></option>
-            @foreach($consulenti as $consulente)
-                @if($cons == $consulente->id)
-                    <option selected value="{{$consulente->id}}">{{$consulente->cognome}} {{$consulente->nome}}</option>
-                @elseif( $cons = 0 AND Auth::user()->consulente->id == $consulente->id)
-                    <option selected value="{{$consulente->id}}">{{$consulente->cognome}} {{$consulente->nome}}</option>
-                @else
-                    <option value="{{$consulente->id}}">{{$consulente->cognome}} {{$consulente->nome}}</option>
-                @endif
-            @endforeach
-        </select>
+        {!! Form::select('capo_progetto',
+            $listConsuenti,
+            $cons,
+            ['id'=>'capo_progetto','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
     </div>
     <div class="form-group">
         <label>Stato Contratto</label>
-        <select id="stato" @if(! empty($_GET['cons'])) disabled @endif name="stato"
-                class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
-                aria-hidden="true">
-            <option @if(! empty($contratto->stato)) selected @endif value="CONTACT">Contact</option>
-            <option value="PROSPECT">Prospect</option>
-            <option value="FALL">Fall</option>
-            <option value="ACTIVE">Attivo</option>
-            <option value="CLOSED">Chiuso</option>
-        </select>
+        {!! Form::select('stato',
+            array('PROSPECT' => 'Prospect','FALL' => 'FALL','ACTIVE' => 'Attivo','CLOSED' => 'Chiuso'),
+            $modalita,
+            ['id'=>'stato','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
     </div>
     <div class="row">
         <div class="col-md-6">

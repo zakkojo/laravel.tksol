@@ -19,5 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call('AttivitaTableSeeder');
         $this->call('ContrattoTableSeeder');
         $this->call('ContattoTableSeeder');
+        $this->call('ContrattoInterventoTableSeeder');
+        $this->call('ProdottoTableSeeder');
+        $this->call('ContrattoProdottoTableSeeder');
     }
 }

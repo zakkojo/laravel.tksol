@@ -7,16 +7,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Prodotto extends Model {
 
-	protected $table = 'prodotto';
-	public $timestamps = true;
+    protected $table = 'prodotto';
+    public $timestamps = true;
 
-	use SoftDeletes;
+    use SoftDeletes;
 
-	protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at'];
 
-	public function listinoProdotto()
-	{
-		return $this->hasMany('ContrattoProdotto');
-	}
+    protected $fillable = [
+        'nome',
+        'codice',
+    ];
+
+    public function listinoProdotto()
+    {
+        return $this->hasMany('ContrattoProdotto');
+    }
 
 }

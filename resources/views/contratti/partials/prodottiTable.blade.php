@@ -54,7 +54,7 @@
                     </td>
                     <td>{{$listinoProdotto->iva}} %, {{ucfirst(strtolower($listinoProdotto->tipo_iva))}}</td>
                     <td>{{ $listinoProdotto->fee }}</td>
-                    <td>{{ $listinoProdotto->softwarehouse_id }}</td>
+                    <td>{{ $listinoProdotto->softwarehouse->ragione_sociale }}</td>
                     <td>{{ $listinoProdotto->tipo_vendita }}</td>
                     <td>{{ $listinoProdotto->scadenza }}</td>
                 </tr>

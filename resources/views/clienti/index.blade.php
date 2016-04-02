@@ -19,13 +19,22 @@
     <div class="box">
         <div class="box-header">
             <h3 class="box-title">Elenco clienti</h3>
-
             <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" id="clienti_search" name="table_search" class="form-control pull-right" placeholder="Search">
+                <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default"
+                            onClick="location.href='{{ action('ClienteController@create') }}'"
+                            title="Aggiungi Nuovo ">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+                <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" id="clienti_search" name="table_search" class="form-control pull-right"
+                               placeholder="Search">
 
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -37,18 +46,32 @@
         <table id="clienti" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0" width="100%">
             <thead>
             <tr>
+                <td>Opzioni</td>
                 <td>Codice Fiscale<br/>Partita IVA</td>
                 <td>Ragione Sociale</td>
                 <td>Settore</td>
                 <td>Fatturato</td>
                 <td>Città</td>
                 <td>Rating</td>
-                <td>Opzioni</td>
             </tr>
             </thead>
             <tbody>
             @foreach($clienti as $cliente)
                 <tr>
+                    <td>
+                        <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                            <button type="button" class="btn btn-default btn-xs"
+                                    onClick="location.href='{{ action('ClienteController@edit',$cliente->id) }}'"
+                                    title="Modifica">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-xs"
+                                    onClick=""
+                                    title="Elimina">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                        </div>
+                    </td>
                     <td>{{ $cliente->codice_fiscale }}<br/>{{ $cliente->partita_iva }}</td>
                     <td><a href="{{ action('ClienteController@show',$cliente->id) }}">{{ $cliente->ragione_sociale }}</a></td>
                     <td>{{ $cliente->settore }}</td>
@@ -59,9 +82,6 @@
                         </a>
                     </td>
                     <td>{{ $cliente->rating }}</td>
-                    <td>
-                        <a href="{{ action('ClienteController@edit',$cliente->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
-                    </td>
                 </tr>
             @endforeach
             </tbody>

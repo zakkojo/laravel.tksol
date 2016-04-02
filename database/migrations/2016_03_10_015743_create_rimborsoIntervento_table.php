@@ -9,6 +9,7 @@ class CreateRimborsoInterventoTable extends Migration {
 	{
 		Schema::create('rimborsoIntervento', function(Blueprint $table) {
 			$table->increments('id');
+			$table->integer('intervento_id')->unsigned();
 			$table->timestamps();
 			$table->softDeletes();
 			$table->string('tipo_spesa', 50);
@@ -16,8 +17,6 @@ class CreateRimborsoInterventoTable extends Migration {
 			$table->decimal('quantita');
 			$table->decimal('importo');
 			$table->string('note', 100);
-			$table->integer('intervento_id');
-			$table->integer('consulente_id');
 		});
 	}
 

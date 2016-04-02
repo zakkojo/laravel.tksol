@@ -14,9 +14,9 @@ class RimborsoIntervento extends Model {
 
 	protected $dates = ['deleted_at'];
 
-	public function rimborso()
+	public function intervento()
 	{
-		return $this->hasOne('ConsulenteIntervento', 'id_intervento', 'id_consulente');
+		return $this->belongsTo('Intervento');
 	}
 
 }

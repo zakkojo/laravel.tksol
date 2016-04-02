@@ -18,24 +18,15 @@ class Progetto extends Model {
         'area','nome',
     ];
 
-	public function delivery()
+	public function attivita()
 	{
-		return $this->hasMany(Attivita::class)->where('attivita_padre', 0);
+		return $this->hasMany(Attivita::class);
 	}
-
-	public function padre()
-	{
-		return $this->belongsTo($this,'progetto_padre');
-	}
-
-    public function figli()
-    {
-        return $this->hasMany($this, 'progetto_padre');
-    }
 
     public function contratti()
     {
         return $this->hasMany(Contratto::class);
     }
+
 }
 

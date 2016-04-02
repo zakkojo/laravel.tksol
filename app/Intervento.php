@@ -16,19 +16,23 @@ class Intervento extends Model {
 
 	protected $dates = ['deleted_at'];
 
-	public function intervento_progetto()
+	public function attivita()
 	{
-		return $this->belongsTo('ProgettoCliente', 'id_cliente', 'id_progetto');
+		return $this->belongsTo('Attivita');
 	}
 
-	public function consulenti()
+	public function consulente()
 	{
-		return $this->hasMany('ConsulenteIntervento', 'id_intervento');
+		return $this->belongsTo('Consulente');
 	}
 
-	public function tipo()
+	public function listinoInterventi()
 	{
-		return $this->belongsTo('TipoIntervento', 'id_tipo_intervento');
+		return $this->belongsTo('ContrattoIntervento');
 	}
 
+    public function rimborsi()
+    {
+        return $this->hasMany('RimborsoIntervento');
+    }
 }

@@ -23,4 +23,9 @@ class Consulente extends Model {
 
 	protected $dates = ['deleted_at'];
 
+    public function interventi()
+    {
+        return $this->hasMany(Intervento::class);
+	}
+
 }

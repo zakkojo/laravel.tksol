@@ -2,10 +2,10 @@
 
 
 @section('htmlheader_title')
-    {{ $contratto->ragione_sociale }}
+    {{ $contratto->cliente->ragione_sociale }}
 @endsection
 @section('contentheader_title')
-    {{ $contratto->ragione_sociale}}
+    Contratto {{ $contratto->cliente->ragione_sociale}}
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -21,7 +21,7 @@
         </div>
     @endif
 
-    <div class="col-md-8">
+    <div class="col-md-4">
         <div class="row">
             <div class="box box-primary">
                 {!! Form::model($contratto, ['url' => 'contratti/'.$contratto->id, 'method' => 'PATCH' ]) !!}
@@ -30,6 +30,23 @@
             </div>
         </div>
     </div>
-
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <?php  $interventi = $contratto->progetto->prodotti; ?>
+                    @include('contratti.partials.interventiTable')
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <?php $prodotti = $contratto->progetto->interventi; ?>
+                    @include('contratti.partials.prodottiTable')
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 

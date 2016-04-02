@@ -9,6 +9,7 @@ class CreateProdottoTable extends Migration {
 	{
 		Schema::create('prodotto', function(Blueprint $table) {
 			$table->increments('id');
+			$table->integer('listino_id')->unsigned();
 			$table->timestamps();
 			$table->softDeletes();
 			$table->string('codice', 20);

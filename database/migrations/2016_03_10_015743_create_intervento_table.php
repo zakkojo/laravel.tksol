@@ -9,16 +9,16 @@ class CreateInterventoTable extends Migration {
 	{
 		Schema::create('intervento', function(Blueprint $table) {
 			$table->increments('id');
+			$table->integer('listino_id')->unsigned();
+			$table->integer('attivita_id')->unsigned();
+			$table->integer('consulente_id')->unsigned();
 			$table->softDeletes();
 			$table->enum('stato', array('TEMPLATE', 'PIANIFICATO', 'CONSUNTIVO'));
-			$table->date('data_intervento');
+			$table->timestamp('data_intervento');
 			$table->boolean('fatturabile');
 			$table->text('attivitaSvolte');
 			$table->text('note');
-			$table->integer('cliente_id')->unsigned();
-			$table->integer('progetto_id')->unsigned();
-			$table->integer('attivita_id')->unsigned();
-			$table->integer('tipoIntervento_id');
+
 			$table->text('attivitaPianificate');
 			$table->text('attivitaCaricoCliente');
 			$table->text('problemiAperti');

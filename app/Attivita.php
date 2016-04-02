@@ -22,17 +22,7 @@ class Attivita extends Model {
 
     public function progetto()
     {
-        return $this->hasOne($this, 'attivita_padre');
+        return $this->belongsTo(Progetto::class);
     }
-
-	public function padre()
-	{
-		return $this->belongsTo($this,'attivita_padre');
-	}
-
-	public function figli()
-	{
-		return $this->hasMany($this, 'attivita_padre');
-	}
 
 }

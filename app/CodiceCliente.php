@@ -14,9 +14,9 @@ class CodiceCliente extends Model {
 
 	protected $dates = ['deleted_at'];
 
-	public function codici()
+	public function cliente()
 	{
-		return $this->hasOne('Cliente', 'id_cliente');
+		return $this->belongsTo(Cliente::class);
 	}
 
 }

@@ -14,9 +14,9 @@ class Prodotto extends Model {
 
 	protected $dates = ['deleted_at'];
 
-	public function incluso()
+	public function listinoProdotto()
 	{
-		return $this->hasMany('Progetto', 'id_progetto');
+		return $this->hasMany('ContrattoProdotto');
 	}
 
 }

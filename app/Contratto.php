@@ -93,4 +93,14 @@ class Contratto extends Model {
         return $this->belongsTo(Progetto::class)->where('progetto_padre', 0);
     }
 
+    public function listinoProdotti()
+    {
+        return $this->hasMany(ContrattoProdotto::class);
+    }
+
+    public function listinoInterventi()
+    {
+        return $this->hasMany(ContrattoIntervento::class);
+    }
+
 }

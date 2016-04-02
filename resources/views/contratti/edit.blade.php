@@ -34,7 +34,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
-                    <?php  $interventi = $contratto->progetto->prodotti; ?>
+                    <?php  $listinoInterventi = $contratto->listinoProdotti; ?>
                     @include('contratti.partials.interventiTable')
                 </div>
             </div>
@@ -42,7 +42,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
-                    <?php $prodotti = $contratto->progetto->interventi; ?>
+                    <?php $listinoProdotti = $contratto->listinoInterventi; ?>
                     @include('contratti.partials.prodottiTable')
                 </div>
             </div>

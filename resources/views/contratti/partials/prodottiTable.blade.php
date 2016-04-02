@@ -11,20 +11,20 @@
     </tr>
     </thead>
     <tbody>
-    @foreach($prodotti as $prodotto)
+    @foreach($listinoProdotti as $listinoProdotto)
         <tr>
-            <td>{{ $prodotto->codice_fiscale }}<br/>{{ $prodotto->partita_iva }}</td>
-            <td><a href="{{ action('ClienteController@show',$prodotto->id) }}">{{ $prodotto->ragione_sociale }}</a></td>
-            <td>{{ $prodotto->settore }}</td>
-            <td class="pull-right"><i class="glyphicon glyphicon-euro"></i> {{ number_format($prodotto->fatturato,0,',','.') }} mln</td>
-            <td><a href="http://maps.google.com/?q={{ $cliente->indirizzo . ', ' . $prodotto->citta . ', ' . $prodotto->ragione_sociale}}" target="crm.tksol.map">
+            <td>{{ $listinoProdotto->codice_fiscale }}<br/>{{ $listinoProdotto->partita_iva }}</td>
+            <td><a href="{{ action('ClienteController@show',$listinoProdotto->id) }}">{{ $listinoProdotto->ragione_sociale }}</a></td>
+            <td>{{ $listinoProdotto->settore }}</td>
+            <td class="pull-right"><i class="glyphicon glyphicon-euro"></i> {{ number_format($listinoProdotto->fatturato,0,',','.') }} mln</td>
+            <td><a href="http://maps.google.com/?q={{ $cliente->indirizzo . ', ' . $listinoProdotto->citta . ', ' . $listinoProdotto->ragione_sociale}}" target="crm.tksol.map">
                     <span class="glyphicon glyphicon-map-marker"></span>
-                    {{ $prodotto->citta }}
+                    {{ $listinoProdotto->citta }}
                 </a>
             </td>
-            <td>{{ $prodotto->rating }}</td>
+            <td>{{ $listinoProdotto->rating }}</td>
             <td>
-                <a href="{{ action('ClienteController@edit',$prodotto->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                <a href="{{ action('ClienteController@edit',$listinoProdotto->id) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
             </td>
         </tr>
     @endforeach

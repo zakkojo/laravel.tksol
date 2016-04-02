@@ -29,22 +29,6 @@
                 {!! Form::close() !!}
             </div>
         </div>
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box box-primary">
-                            @include('contratti.partials.interventiTable')
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box box-primary">
-                            @include('contratti.partials.prodottiTable')
-                        </div>
-                    </div>
-                </div>
-            </div>
     </div>
 @endsection
 @section('page_scripts')

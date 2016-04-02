@@ -12,7 +12,7 @@ class CreateContrattoProdottoTable extends Migration {
      */
     public function up()
     {
-        Schema::create('contrattoProdotto', function (Blueprint $table)
+        Schema::create('contratto_prodotto', function (Blueprint $table)
         {
             $table->increments('id');
             $table->integer('contratto_id');
@@ -36,6 +36,6 @@ class CreateContrattoProdottoTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('contrattoProdotto');
+        Schema::drop('contratto_prodotto');
     }
 }

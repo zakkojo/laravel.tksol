@@ -5,6 +5,8 @@ use App\Http\Requests\ClientiRequest;
 use App\Cliente;
 
 use Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Input;
 
 
 class ClienteController extends Controller {
@@ -104,8 +106,7 @@ class ClienteController extends Controller {
   }
 
     public function ajaxGetProgetti(){
-        $cliente = Cliente::findOrFail(Input::get('cliente_id'));
-        return $cliente->progetti;
+        return  Cliente::join('contratto','contratto.cliente_id','=','cliente.id')->join('progetto','progetto.id','=','contratto.progetto_id')->where('cliente.id','=',Input::get('cliente_id'))->getQuery()->get();
     }
   
 }

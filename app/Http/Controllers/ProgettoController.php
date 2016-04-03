@@ -6,6 +6,8 @@ use App\Progetto;
 use App\Attivita;
 
 use Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Input;
 
 class ProgettoController extends Controller
 {

@@ -15,9 +15,10 @@ class Progetto extends Model {
 	protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'area','nome',
+        'area','nome', 'codice',
     ];
 
+    
 	public function attivita()
 	{
 		return $this->hasMany(Attivita::class);

@@ -31,7 +31,7 @@ class ProgettoController extends Controller {
    */
   public function create()
   {
-    return view('progetti.edit');
+    return view('progetti.create');
   }
 
   /**
@@ -39,9 +39,11 @@ class ProgettoController extends Controller {
    *
    * @return Response
    */
-  public function store()
+  public function store(ProgettiRequest $request)
   {
-    
+      $data = $request->all();
+      $progetto = Progetto::create($data);
+      return redirect()->action('ProgettoController@edit', compact('progetto'));
   }
 
   /**
@@ -52,7 +54,7 @@ class ProgettoController extends Controller {
    */
   public function show($id)
   {
-    
+
   }
 
   /**
@@ -63,8 +65,9 @@ class ProgettoController extends Controller {
    */
   public function edit($id)
   {
-      $id = 2;
-    return view('progetti.edit');
+      $progetto = Progetto::findOrFail($id);
+      $listAttivita = Attivita::getDataTree($id);
+    return view('progetti.edit',compact('progetto','listAttivita'));
   }
 
   /**
@@ -75,7 +78,7 @@ class ProgettoController extends Controller {
    */
   public function update($id)
   {
-    
+
   }
 
   /**
@@ -86,9 +89,9 @@ class ProgettoController extends Controller {
    */
   public function destroy($id)
   {
-    
+
   }
-  
+
 }
 
 ?>

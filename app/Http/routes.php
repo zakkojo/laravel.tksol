@@ -54,6 +54,12 @@ Route::group(['middleware' => 'web'], function () {
 	Route::resource('contratti/{contratto_id}/listino_prodotti','ContrattoProdottoController');
     Route::resource('clienti','ClienteController');
     Route::resource('progetti','ProgettoController');
+    Route::post('attivita','AttivitaController@store');
+    Route::patch('attivita','AttivitaController@update');
+    Route::get('attivita/{id}/destroy','AttivitaController@destroy');
+    Route::get('ajax/attivita/moveDown', 'AttivitaController@ajaxMoveDown');
+    Route::get('ajax/attivita/moveUp', 'AttivitaController@ajaxMoveUp');
+    Route::get('ajax/attivita/getDataTree', 'AttivitaController@ajaxGetDataTree');
     Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');
 
     Route::resource('interventi', 'InterventoController');

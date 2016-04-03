@@ -4,7 +4,7 @@
 @section('htmlheader_title')
 @endsection
 @section('contentheader_title')
-    Gestione Attivita di Progetto
+    Gestione Attività di Progetto
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -20,11 +20,13 @@
         </div>
     @endif
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         @include('progetti.partials.treeView')
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5">
+        {!! Form::model($progetto, ['url' => 'attivita', 'method' => 'PATCH' ]) !!}
             @include('progetti.partials.contrattoForm')
+        {!! Form::close() !!}
     </div>
 </div>
 @endsection

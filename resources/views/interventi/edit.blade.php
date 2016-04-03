@@ -25,10 +25,30 @@
         <div class="col-md-6">
             <div class="row">
                 <div class="col-md-12">
-                    @include('interventi.partials.pianificaForm')
+                    @include('interventi.partials.progettocliente')
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    @include('interventi.partials.consulente')
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    @include('interventi.partials.intervento')
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    @include('rimborsi.partials.indexTable')
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @include('interventi.partials.textarea')
     </div>
     <button type="submit" class="btn btn-block btn-primary">Submit</button>
 @endsection

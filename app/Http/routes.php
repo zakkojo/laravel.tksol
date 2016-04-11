@@ -48,19 +48,31 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::resource('consulenti','ConsulenteController');
     Route::post('ajax/toggleUser', 'UserController@ajaxToggleUser');
+    Route::get('ajax/consulenti/getConsulente', 'ConsulenteController@ajaxGetConsulente');
+
     Route::resource('contatti','ContattoController');
+
     Route::resource('contratti','ContrattoController');
 	Route::resource('contratti/{contratto_id}/listino_interventi','ContrattoInterventoController');
 	Route::resource('contratti/{contratto_id}/listino_prodotti','ContrattoProdottoController');
+
     Route::resource('clienti','ClienteController');
+    Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');
+    Route::get('ajax/clienti/getCliente', 'ClienteController@ajaxGetCliente');
+    Route::get('ajax/clienti/getProgetti', 'ClienteController@ajaxGetProgetti');
+
+
     Route::resource('progetti','ProgettoController');
+    Route::get('ajax/progetti/getAttivita', 'ProgettoController@ajaxGetAttivita');
+
     Route::post('attivita','AttivitaController@store');
     Route::patch('attivita','AttivitaController@update');
     Route::get('attivita/{id}/destroy','AttivitaController@destroy');
     Route::get('ajax/attivita/moveDown', 'AttivitaController@ajaxMoveDown');
     Route::get('ajax/attivita/moveUp', 'AttivitaController@ajaxMoveUp');
     Route::get('ajax/attivita/getDataTree', 'AttivitaController@ajaxGetDataTree');
-    Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');
+
+
 
     Route::resource('interventi', 'InterventoController');
     Route::resource('rimborsi','RimborsoController');

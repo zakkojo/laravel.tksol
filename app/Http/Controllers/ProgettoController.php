@@ -7,90 +7,98 @@ use App\Attivita;
 
 use Request;
 
-class ProgettoController extends Controller {
-  public function __construct()
-  {
-    $this->middleware('auth');
-  }
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
-  public function index()
-  {
-    $progetti = Progetto::all();
+class ProgettoController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-    return view('progetti.index')->with(compact('progetti'));
-  }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $progetti = Progetto::all();
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-    return view('progetti.create');
-  }
+        return view('progetti.index')->with(compact('progetti'));
+    }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store(ProgettiRequest $request)
-  {
-      $data = $request->all();
-      $progetto = Progetto::create($data);
-      return redirect()->action('ProgettoController@edit', compact('progetto'));
-  }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return view('progetti.create');
+    }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id)
-  {
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store(ProgettiRequest $request)
+    {
+        $data = $request->all();
+        $progetto = Progetto::create($data);
+        return redirect()->action('ProgettoController@edit', compact('progetto'));
+    }
 
-  }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function show($id)
+    {
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-      $progetto = Progetto::findOrFail($id);
-      $listAttivita = Attivita::getDataTree($id);
-    return view('progetti.edit',compact('progetto','listAttivita'));
-  }
+    }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id)
-  {
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $progetto = Progetto::findOrFail($id);
+        $listAttivita = Attivita::getDataTree($id);
+        return view('progetti.edit', compact('progetto', 'listAttivita'));
+    }
 
-  }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function update($id)
+    {
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
+    }
 
-  }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+
+    }
+
+    public function ajaxGetAttivita()
+    {
+        $progetto = Progetto::findOrFail(Input::get('progetto_id'));
+        return $progetto->attivita;
+    }
 
 }
 

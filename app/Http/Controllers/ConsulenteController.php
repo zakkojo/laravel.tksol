@@ -24,11 +24,8 @@ class ConsulenteController extends Controller {
    */
   public function index()
   {
-
     $consulenti = Consulente::all();
-
     return view('consulenti.index')->with(compact('consulenti'));
-
   }
 
   /**
@@ -110,7 +107,13 @@ class ConsulenteController extends Controller {
   {
     
   }
-  
+
+
+    public function ajaxGetConsulente(){
+        $consulente = Consulente::findOrFail(Input::get('id'));
+        return $consulente;
+    }
+
 }
 
 ?>

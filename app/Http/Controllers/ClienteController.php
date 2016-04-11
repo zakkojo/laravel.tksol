@@ -102,6 +102,11 @@ class ClienteController extends Controller {
   {
     
   }
+
+    public function ajaxGetProgetti(){
+        $cliente = Cliente::findOrFail(Input::get('cliente_id'));
+        return $cliente->progetti;
+    }
   
 }
 

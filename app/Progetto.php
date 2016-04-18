@@ -29,5 +29,10 @@ class Progetto extends Model {
         return $this->hasMany(Contratto::class);
     }
 
+    public function getDescrizioneAttribute()
+    {
+        return $this->area.' / '.$this->nome;
+	}
+
 }
 

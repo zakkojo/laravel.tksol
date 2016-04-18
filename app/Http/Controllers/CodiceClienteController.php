@@ -1,7 +1,6 @@
 <?php namespace App\Http\Controllers;
 
 class CodiceClienteController extends Controller {
-
   /**
    * Display a listing of the resource.
    *

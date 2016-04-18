@@ -78,7 +78,7 @@
                     {"width": "80px", "targets": 0}
                 ],
                 "fnDrawCallback": function () {
-                    $('#clienti').removeClass('hide');
+                    $('#listinoProdotti').removeClass('hide');
                 }
 
             });

@@ -73,7 +73,7 @@
                     { "width": "80px", "targets": 0 }
                 ],
                 "fnDrawCallback":function(){
-                    $('#clienti').removeClass('hide');
+                    $('#listinoInterventi').removeClass('hide');
                 }
 
             });

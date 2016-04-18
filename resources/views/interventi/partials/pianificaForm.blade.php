@@ -3,10 +3,10 @@
 if (isset($_GET['cons'])) $cons = $_GET['cons'];
 elseif (Auth::user()->consulente->id) $cons = Auth::user()->consulente->id;
 else $cons = 0;
-$listConsuenti = $consulenti->each(function ($consulente)
+$listConsulenti = $consulenti->each(function ($consulente)
 {
-    return $consulente['nomecognome'] = $consulente['nome'] . ' ' . $consulente['cognome'];
-})->lists('nomecognome', 'id');
+    return $consulente['consulente'] = $consulente['nome'] . ' ' . $consulente['cognome'].' / '.$consulente['tipo'];
+})->lists('consulente', 'id');
 $consulente = $consulenti->find($cons);
 
 if (isset($contratto)) $cli = $contratto->cliente_id;
@@ -29,7 +29,7 @@ $listProgetto = $progetti->each(function ($progetto)
 ?>
 <div class="box box-primary">
     <div class="box-header with-border">
-        <h3 class="box-title">Consulente</h3>
+        <h3 id="form_title" class="box-title">Consulente</h3>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
             </button>
@@ -39,15 +39,11 @@ $listProgetto = $progetti->each(function ($progetto)
         <div class="form-group">
             <label>Consulente</label>
             {!! Form::select('consulente',
-            $listConsuenti,
+            $listConsulenti,
             $consulente->id,
             ['id'=>'consulente','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
         !!}
 
-        </div>
-        <div class="form-group">
-            <label>Tipo</label>
-            <select id="consulente_tipo"></select>
         </div>
         <div class="form-group">
             <label>Cliente</label>
@@ -59,55 +55,67 @@ $listProgetto = $progetti->each(function ($progetto)
         </div>
         <div class="form-group">
             <label>Contratto/Progetto</label>
-            <select id="progetto"></select>
+            <select id="progetto" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group">
             <label>Attività</label>
-            <select id="attivita"></select>
+            <select id="attivita" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
         </div>
     </div>
 </div>
 @section('page_scripts')
-    @parent
     <script>
         $('document').ready(function () {
             //Consulente->Tipo
             $('#consulente').change(function () {
                 $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
                         .done(function (data) {
-                            $('#consulente_tipo').val('data.tipo');
+                            $('#consulente_tipo')
+                                    .append($("<option></option>")
+                                            .attr('value', data.tipo)
+                                            .text(data.tipo));
                         });
             });
             //Cliente->Progetto
             $('#cliente').change(function () {
-                alert('cliente'+$('#cliente').val());
+                $('#progetto').html('');
+                $('#attivita').html('');
                 if ($('#cliente').val()) {
                     $.get('{{action('ClienteController@ajaxGetProgetti')}}', {cliente_id: $('#cliente').val()})
                             .done(function (data) {
-                                $('#progetto').html('');
-                                $('#attivita').html('');
+                                var c = 0;
                                 $.each(data, function (id, dettagli) {
+                                    c++;
                                     $('#progetto')
                                             .append($("<option></option>")
                                                     .attr('value', dettagli.id)
                                                     .text(dettagli.area + ' / ' + dettagli.nome));
+                                    if (c == '1') {
+                                        $('#progetto').select2('val', dettagli.id);
+                                    }
                                 });
+                                $('#progetto').trigger("change");
+                                drawCalendar();
                             });
                 }
-                $('#progetto').trigger("change");
             });
             //Progetto->Attivita
             $('#progetto').change(function () {
-                alert($('#progetto').val());
+                $('#attivita').html('');
                 if ($('#progetto').val()) {
                     $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
                             .done(function (data) {
+                                var c = 0;
                                 $('#attivita').html('');
                                 $.each(data, function (id, dettagli) {
-                                    $('#attivita')
+                                    c++;
+                                    lastoption = $('#attivita')
                                             .append($("<option></option>")
-                                                    .attr('value', id)
-                                                    .text(dettagli.area + ' / ' + dettagli.nome));
+                                                    .attr('value', dettagli.id)
+                                                    .text(dettagli.descrizione));
+                                    if (c == '1') {
+                                        $('#attivita').select2("val", dettagli.id);
+                                    }
                                 });
                             });
 
@@ -115,8 +123,7 @@ $listProgetto = $progetti->each(function ($progetto)
             });
             $('#consulente').trigger("change");
             $('#cliente').trigger("change");
-            $('#progetto').trigger("change");
 
         });
     </script>
-@endsection
+@append

@@ -4,11 +4,7 @@ use App\Http\Requests\ProdottiRequest;
 use App\Prodotto;
 
 class ProdottoController extends Controller {
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    
 
     /**
      * Display a listing of the resource.

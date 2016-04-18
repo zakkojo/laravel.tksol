@@ -75,6 +75,7 @@ Route::group(['middleware' => 'web'], function () {
 
 
     Route::resource('interventi', 'InterventoController');
+    Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
     Route::resource('rimborsi','RimborsoController');
     Route::resource('prodotti','ProdottoController');
 });

@@ -22,6 +22,11 @@
 <script src="{{asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}" type="text/javascript" ></script>
 <!-- Tree-View -->
 <script src="{{asset('/plugins/bootstrap-treeview/bootstrap-treeview.min.js')}}" type="text/javascript" ></script>
+<!-- FullCalendar -->
+<script src="{{asset('/plugins/fullcalendar/moment-with-locales.min.js')}}" type="text/javascript" >
+    moment().locale('it');
+</script>
+<script src="{{asset('/plugins/fullcalendar/fullcalendar.min.js')}}" type="text/javascript" ></script>
 
 
 
@@ -55,6 +60,5 @@ $(document).ready(function() {
         format: 'dd/mm/yyyy',
         language: 'it',
     });
-
 });
 </script>

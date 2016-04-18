@@ -26,7 +26,6 @@ class Attivita extends Model {
         return $this->belongsTo(Progetto::class);
     }
 
-
     public static function getDataTree($progetto_id)
     {
         Attivita::where(['progetto_id' => $progetto_id])->fixTree();

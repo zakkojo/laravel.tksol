@@ -25,12 +25,12 @@ class ContrattoIntervento extends Model {
 
 	public function contratto()
 	{
-		return $this->belongsTo('Contratto');
+		return $this->belongsTo(Contratto::class);
 	}
 
 	public function interventi()
 	{
-		return $this->hasMany('Intervento');
+		return $this->hasMany(Intervento::class);
 	}
 
 }

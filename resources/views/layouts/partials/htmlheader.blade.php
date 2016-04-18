@@ -28,6 +28,9 @@
     <link href="{{ asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Tree-View -->
     <link href="{{ asset('/plugins/bootstrap-treeview/bootstrap-treeview.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- FullCalendar -->
+    <link href="{{ asset('/plugins/fullcalendar/fullcalendar.min.css') }}" rel="stylesheet" type="text/css" />
+
 
 
 

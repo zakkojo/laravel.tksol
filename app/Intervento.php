@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\ContrattoIntervento;
+use App\Contratto;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -18,21 +21,22 @@ class Intervento extends Model {
 
 	public function attivita()
 	{
-		return $this->belongsTo('Attivita');
+		return $this->belongsTo(Attivita::class);
 	}
 
 	public function consulente()
 	{
-		return $this->belongsTo('Consulente');
+		return $this->belongsTo(Consulente::class);
 	}
 
 	public function listinoInterventi()
 	{
-		return $this->belongsTo('ContrattoIntervento');
+		return $this->belongsTo(ContrattoIntervento::class,'listino_id','id');
 	}
 
     public function rimborsi()
     {
-        return $this->hasMany('RimborsoIntervento');
+        return $this->hasMany(RimborsoIntervento::class);
     }
+    
 }

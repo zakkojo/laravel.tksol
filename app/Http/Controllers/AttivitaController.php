@@ -7,12 +7,6 @@ use App\Progetto;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 class AttivitaController extends Controller {
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *

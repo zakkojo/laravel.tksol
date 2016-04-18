@@ -8,6 +8,7 @@ use App\Intervento;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use DB;
+use Illuminate\Support\Facades\Route;
 
 class InterventoController extends Controller {
 
@@ -103,19 +104,23 @@ class InterventoController extends Controller {
             {
                 $where[0][] = ['consulente_id' => $consulente_id];
                 $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->get();
-            } elseif ($progetto_id)
+            }
+            elseif ($progetto_id)
             {
                 $calendario = Intervento::with(['listinoInterventi.contratto.progetto' => function ($query) use ($progetto_id)
                 {
                     $query->where('id', '=', $progetto_id);
                 }])->where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->get();
-            } else $calenrio = [];
+            }
+            else $calendario = [];
 
             $calendario->each(function ($evento)
             {
                 if ($evento['stato'] == 'PIANIFICATO')
                 {
                     $intervento = Intervento::findOrFail($evento['id']);
+                    $evento['contratto_id'] = ''.$intervento->listinoInterventi->contratto->id;
+                    $evento['progetto_id'] = ''.$intervento->listinoInterventi->contratto->progetto->id;
                     $evento['title'] = 'P:' . $intervento->consulente->nominativo .
                         '|' . $intervento->listinoInterventi->contratto->progetto->descrizione .
                         '|' . $intervento->attivita->descrizione;
@@ -135,21 +140,23 @@ class InterventoController extends Controller {
 
     public function ajaxCreateIntervento()
     {
+        $headers = Route::getCurrentRequest()->header();
         $data = [
-            //'' => Input::get('contratto'),
-            'listino_id'    => Input::get('listinoContratto'),
-            'attivita_id'   => Input::get('attivita'),
+            'listino_id' => Input::get('listinoContratto'),
+            'attivita_id' => Input::get('attivita'),
             'consulente_id' => Input::get('consulente'),
-            'data_start'    => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
-            'data_end'      => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
+            'data_start' => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
+            'data_end' => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
         ];
-
-        $request = InterventiRequest::create( 'interventi', 'POST', $data );
-        $response = Route::dispatch( $request );
+        $request = InterventiRequest::create('/interventi', 'POST', $data);
+        $request->headers = $headers;
+        //$response = Route::dispatch($request);
+        $response = Intervento::create($data);
 
         if ($response) return ['status' => 'success'];
         return ['status' => 'fail'];
     }
+
 }
 
 ?>

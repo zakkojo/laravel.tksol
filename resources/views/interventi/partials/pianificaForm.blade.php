@@ -56,7 +56,7 @@ $listProgetto = $progetti->each(function ($progetto)
         <div class="form-group">
             <label>Contratto/Progetto</label>
             <select id="progetto" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
-            <input  type="hidden" id="contratto" name="contratto">
+            <input type="hidden" id="contratto" name="contratto">
         </div>
         <div class="form-group">
             <label>Attività</label>
@@ -64,7 +64,8 @@ $listProgetto = $progetti->each(function ($progetto)
         </div>
         <div class="form-group">
             <label>Listino</label>
-            <select id="listinoContratto" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
+            <select id="listinoContratto" style="width:100%"
+                    class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group">
             <label>Data</label>
@@ -86,92 +87,89 @@ $listProgetto = $progetti->each(function ($progetto)
 @section('page_scripts')
     <script>
         $('document').ready(function () {
+            drawCalendar();
+            $('#consulente').trigger('change');
+            $('#cliente').trigger('change');
             //Consulente->Tipo
-            $('#consulente').change(function () {
-                $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
+        });
+        $('#consulente').change(function () {
+            globale_consulente = $('#consulente').val();
+            $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
+                    .done(function (data) {
+                        $('#consulente_tipo')
+                                .append($("<option></option>")
+                                        .attr('value', data.tipo)
+                                        .text(data.tipo));
+                        updateConsulenteSource();
+                    });
+        });
+        //Cliente->Progetto
+        $('#cliente').change(function () {
+            $('#progetto').html('');
+            $('#contratto').val('');
+            if ($('#cliente').val()) {
+                $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val()})
                         .done(function (data) {
-                            $('#consulente_tipo')
-                                    .append($("<option></option>")
-                                            .attr('value', data.tipo)
-                                            .text(data.tipo));
+
+                            var c = 0;
+                            $.each(data.contratti, function (id, contratto) {
+                                c++;
+                                $('#progetto')
+                                        .append($("<option></option>")
+                                                .attr('value', contratto.progetto.id)
+                                                .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
+                                if (c == '1') {
+                                    $('#contratto').val(contratto.id);
+                                    $('#progetto').select2('val', contratto.progetto.id);
+                                }
+                            });
+                            if (c == 0) $('#progetto').select2('val', '');
+                            globale_progetto = $('#progetto').val();
+                            updateProgettoSource();
                         });
-            });
-            //Cliente->Progetto
-            $('#cliente').change(function () {
-                $('#progetto').html('');
-                $('#attivita').html('');
-                if ($('#cliente').val()) {
-                    $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val()})
-                            .done(function (data) {
-                                var c = 0;
-                                $.each(data.contratti, function (id, contratto) {
-                                    c++;
-                                    $('#progetto')
-                                            .append($("<option></option>")
-                                                    .attr('value', contratto.progetto.id)
-                                                    .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
-                                    if (c == '1') {
-                                        $('#progetto').select2('val', contratto.progetto.id);
-                                        $('#contratto').val(contratto.id);
-                                    }
-                                });
-                                $('#progetto').trigger("change");
-                                drawCalendar();
-                            });
-                }
-            });
+            }
+        });
 
-            $('#progetto').change(function () {
-                //Progetto->Attivita
-                $('#attivita').html('');
-                if ($('#progetto').val()) {
-                    $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
-                            .done(function (data) {
-                                var c = 0;
-                                $('#attivita').html('');
-                                $.each(data, function (id, dettagli) {
-                                    c++;
-                                    lastoption = $('#attivita')
-                                            .append($("<option></option>")
-                                                    .attr('value', dettagli.id)
-                                                    .text(dettagli.descrizione));
-                                    if (c == '1') {
-                                        $('#attivita').select2("val", dettagli.id);
-                                    }
-                                });
+        $('#progetto').change(function () {
+            $('#attivita').html('');
+            $('#attivita').select2('val', '');
+            globale_progetto = $('#progetto').val();
+            //Progetto->Attivita
+            if ($('#progetto').val()) {
+                $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
+                        .done(function (data) {
+                            var c = 0;
+                            $.each(data, function (id, dettagli) {
+                                c++;
+                                lastoption = $('#attivita')
+                                        .append($("<option></option>")
+                                                .attr('value', dettagli.id)
+                                                .text(dettagli.descrizione));
+                                if (c == '1') {
+                                    $('#attivita').select2("val", dettagli.id);
+                                }
                             });
-                }
-                else {
-                    $('#attivita').select2('val','');
-                    $('#attivita').html('');
-                }
-                //Contratto->Listino
-                $('#listinoContratto').html('');
-                if ($('#contratto').val()) {
-                    $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
-                            .done(function (data) {
-                                var c = 0;
-                                $('#listinoContratto').html('');
-                                $.each(data, function (id, dettagli) {
-                                    c++;
-                                    lastoption = $('#listinoContratto')
-                                            .append($("<option></option>")
-                                                    .attr('value', dettagli.id)
-                                                    .text(dettagli.descrizione));
-                                    if (c == '1') {
-                                        $('#listinoContratto').select2("val", dettagli.id);
-                                    }
-                                });
+                        });
+            }
+            //Contratto->Listino
+            $('#listinoContratto').html('');
+            $('#listinoContratto').select2('val', '');
+            if ($('#contratto').val()) {
+                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
+                        .done(function (data) {
+                            var c = 0;
+                            $.each(data, function (id, dettagli) {
+                                c++;
+                                lastoption = $('#listinoContratto')
+                                        .append($("<option></option>")
+                                                .attr('value', dettagli.id)
+                                                .text(dettagli.descrizione));
+                                if (c == '1') {
+                                    $('#listinoContratto').select2("val", dettagli.id);
+                                }
                             });
-                }
-                else {
-                    $('#listinoContratto').select2('val','');
-                    $('#listinoContratto').html('');
-                }
-            });
-            $('#consulente').trigger("change");
-            $('#cliente').trigger("change");
-
+                        });
+            }
         });
     </script>
 @append

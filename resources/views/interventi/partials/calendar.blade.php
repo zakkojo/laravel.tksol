@@ -3,8 +3,9 @@
 </div>
 @section('page_scripts')
     <script>
+        var globale_progetto;
+        var globale_consulente;
         function drawCalendar() {
-            var $progetto = $('#progetto').val();
             $('#calendar').fullCalendar({
                 allDaySlot: false,
                 firstHour: 8,
@@ -29,32 +30,6 @@
                 editable: true,
                 selectable: true,
                 selectHelper: true,
-                eventSources: [
-                    {
-                        url: '/ajax/interventi/getCalendar',
-                        type: 'GET',
-                        data: {
-                            consulente_id: $('#consulente').val()
-                        },
-                        error: function (data) {
-                            alert(JSON.stringify(data));
-                        },
-                        color: 'yellow',   // a non-ajax option
-                        textColor: 'black' // a non-ajax option
-                    },
-                    {
-                        url: '/ajax/interventi/getCalendar',
-                        type: 'GET',
-                        data: {
-                            progetto_id: $progetto
-                        },
-                        error: function () {
-                            //alert('there was an error while fetching events!');
-                        },
-                        color: 'red',   // a non-ajax option
-                        textColor: 'black' // a non-ajax option
-                    }
-                ],
                 select: function (start, end, resource) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     $('#form_title').text('Nuovo Intervento');
@@ -94,6 +69,16 @@
                     $('#data').val(moment(event.start).format('L'));
                     $('#ora_start').val(event.start.format('HH:mm'));
                     $('#ora_end').val(event.end.format('HH:mm'));
+                },
+                eventClick: function(calEvent, jsEvent, view) {
+                    console.log(calEvent);
+                    $('#contratto').val(calEvent.contratto_id);
+                    $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');;
+                    $('#attivita').val(calEvent.attivita_id).trigger('change.select2');;
+                    $('#consulente').val(calEvent.consulente_id).trigger('change.select2');;
+                    $('#data').val(calEvent.data_start);
+                    $('#ora_start').val(calEvent.data_start);
+                    $('#ora_end').val(calEvent.data_end);
                 }
             });
         }
@@ -113,12 +98,52 @@
                 dataType: "JSON"
             }).done(function (data) {
                 if (data['status'] == 'success') {
+                    $('#calendar').fullCalendar('removeEvents', 'new');
                     $('#calendar').fullCalendar('refetchEvents');
                 }
                 else console.log(['Errore!!', data]);
             }).fail(function (jqXHR, textStatus) {
                 alert("Request failed: " + textStatus);
             });
+        }
+
+        function updateProgettoSource() {
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=12');
+            if ($('#progetto').val()) {
+                $('#calendar').fullCalendar('addEventSource',
+                        {
+                            id: 'progettoEvents',
+                            url: '/ajax/interventi/getCalendar?id=12',
+                            type: 'GET',
+                            data: {
+                                progetto_id: globale_progetto
+                            },
+                            error: function () {
+                                alert('there was an error while fetching events!');
+                            },
+                            color: 'red',   // a non-ajax option
+                            textColor: 'black' // a non-ajax option
+                        }
+                )
+            }
+        }
+        function updateConsulenteSource() {
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=1');
+            $('#calendar').fullCalendar('addEventSource',
+                    {
+                        id: 'consulenteEvents',
+                        url: '/ajax/interventi/getCalendar?id=1',
+                        type: 'GET',
+                        data: {
+                            consulente_id: globale_consulente
+                        },
+                        error: function () {
+                            alert('there was an error while fetching events!');
+                        },
+                        color: 'yellow',   // a non-ajax option
+                        textColor: 'black' // a non-ajax option
+                    }
+            )
         }
     </script>
 @append

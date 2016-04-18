@@ -97,12 +97,12 @@ class InterventoController extends Controller {
             $progetto_id = Input::get('progetto_id');
             if ($consulente_id){
                 $where[0][] = ['consulente_id' => $consulente_id];
-                $calendario = Intervento::where('data_intervento', '>=', $data_start)->where('data_intervento', '<=', $data_end)->where($where)->get();
+                $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->get();
             }
             elseif ($progetto_id) {
                 $calendario = Intervento::with(['listinoInterventi.contratto.progetto' => function ($query) use ($progetto_id) {
                     $query->where('id', '=', $progetto_id);
-                }])->where('data_intervento', '>=', $data_start)->where('data_intervento', '<=', $data_end)->get();
+                }])->where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->get();
             }
             else $calenrio = [];
 
@@ -114,7 +114,8 @@ class InterventoController extends Controller {
                     $evento['title'] = 'P:' . $intervento->consulente->nominativo.
                         '|'.$intervento->listinoInterventi->contratto->progetto->descrizione.
                         '|'.$intervento->attivita->descrizione;
-                    $evento['start'] = $evento['data_intervento'];
+                    $evento['start'] = $evento['data_start'];
+                    $evento['end'] = $evento['data_end'];
                     $evento['className'] = 'pianificato';
                     return $evento;
                 }

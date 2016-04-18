@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-block btn-primary">Submit</button>
+
 @endsection
 @section('page_scripts')
 

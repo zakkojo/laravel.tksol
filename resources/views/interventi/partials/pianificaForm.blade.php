@@ -5,7 +5,7 @@ elseif (Auth::user()->consulente->id) $cons = Auth::user()->consulente->id;
 else $cons = 0;
 $listConsulenti = $consulenti->each(function ($consulente)
 {
-    return $consulente['consulente'] = $consulente['nome'] . ' ' . $consulente['cognome'].' / '.$consulente['tipo'];
+    return $consulente['consulente'] = $consulente['nome'] . ' ' . $consulente['cognome'] . ' / ' . $consulente['tipo'];
 })->lists('consulente', 'id');
 $consulente = $consulenti->find($cons);
 
@@ -61,6 +61,21 @@ $listProgetto = $progetti->each(function ($progetto)
             <label>Attività</label>
             <select id="attivita" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
         </div>
+        <div class="form-group">
+            <label>Data</label>
+            <input type="text" id="data" style="width:100%" readonly class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Ora Inizio</label>
+            <input type="text" id="ora_start" style="width:100%" readonly class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Ora Fine</label>
+            <input type="text" id="ora_end" style="width:100%" readonly class="form-control">
+        </div>
+    </div>
+    <div class="box-footer">
+        <button type="submit" onclick="createIntervento()" class="btn btn-block btn-primary">Submit</button>
     </div>
 </div>
 @section('page_scripts')

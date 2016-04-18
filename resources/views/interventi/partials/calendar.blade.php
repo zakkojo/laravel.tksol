@@ -33,6 +33,7 @@
                 select: function (start, end, resource) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     $('#form_title').text('Nuovo Intervento');
+                    $('#intervento_id').val('').trigger("change");
                     $('#data').val(moment(start).format('L'));
                     if (moment(start).format('HHmm') == '0000') {
                         ora_start = moment(start).add('8', 'h');
@@ -62,23 +63,54 @@
                     start: '00:00',
                     end: '24:00',
                 },
+                eventResizeStart: function (calEvent, delta, revertFunc) {
+                    $('#calendar').fullCalendar('removeEvents', 'new');
+                    $('#form_title').text('Modifica Intervento ' + calEvent.id);
+                    $('#intervento_id').val(calEvent.id).trigger("change");
+                    $('#contratto').val(calEvent.contratto_id);
+                    $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
+                    $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
+                    $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                    $('#data').val(calEvent.start.format('L'));
+                    $('#ora_start').val(calEvent.start.format('HH:mm'));
+                    $('#ora_end').val(calEvent.end.format('HH:mm'));
+                },
                 eventResize: function (event, delta, revertFunc) {
                     $('#ora_end').val(event.end.format('HH:mm'));
+                    updateIntervento();
+                },
+                eventDragStart: function (calEvent, delta, revertFunc) {
+                    $('#calendar').fullCalendar('removeEvents', 'new');
+                    $('#form_title').text('Modifica Intervento ' + calEvent.id);
+                    $('#intervento_id').val(calEvent.id).trigger("change");
+                    $('#contratto').val(calEvent.contratto_id);
+                    $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
+                    $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
+                    $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                    $('#data').val(calEvent.start.format('L'));
+                    $('#ora_start').val(calEvent.start.format('HH:mm'));
+                    $('#ora_end').val(calEvent.end.format('HH:mm'));
                 },
                 eventDrop: function (event, delta, revertFunc) {
                     $('#data').val(moment(event.start).format('L'));
                     $('#ora_start').val(event.start.format('HH:mm'));
                     $('#ora_end').val(event.end.format('HH:mm'));
+                    updateIntervento();
                 },
-                eventClick: function(calEvent, jsEvent, view) {
-                    console.log(calEvent);
+                eventClick: function (calEvent, jsEvent, view) {
+                    $('#calendar').fullCalendar('removeEvents', 'new');
+                    $('#form_title').text('Modifica Intervento ' + calEvent.id);
+                    $('#intervento_id').val(calEvent.id).trigger("change");
                     $('#contratto').val(calEvent.contratto_id);
-                    $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');;
-                    $('#attivita').val(calEvent.attivita_id).trigger('change.select2');;
-                    $('#consulente').val(calEvent.consulente_id).trigger('change.select2');;
-                    $('#data').val(calEvent.data_start);
-                    $('#ora_start').val(calEvent.data_start);
-                    $('#ora_end').val(calEvent.data_end);
+                    $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
+                    $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
+                    $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                    $('#data').val(calEvent.start.format('L'));
+                    $('#ora_start').val(calEvent.start.format('HH:mm'));
+                    $('#ora_end').val(calEvent.end.format('HH:mm'));
+                },
+                eventRender: function (event, element) {
+                    element.find('.fc-title').append("<br/>" + event.description);
                 }
             });
         }
@@ -91,9 +123,9 @@
             postData.data = $('#data').val();
             postData.ora_start = $('#ora_start').val();
             postData.ora_end = $('#ora_end').val();
-            var request = $.ajax({
+            $.ajax({
                 url: "/ajax/interventi/createIntervento",
-                type: "get",
+                type: "POST",
                 data: postData,
                 dataType: "JSON"
             }).done(function (data) {
@@ -106,7 +138,31 @@
                 alert("Request failed: " + textStatus);
             });
         }
-
+        function updateIntervento() {
+            var postData = {};
+            postData.id = $('#intervento_id').val().trigger("change");
+            postData.contratto = $('#contratto').val();
+            postData.listinoContratto = $('#listinoContratto').val();
+            postData.attivita = $('#attivita').val();
+            postData.consulente = $('#consulente').val();
+            postData.data = $('#data').val();
+            postData.ora_start = $('#ora_start').val();
+            postData.ora_end = $('#ora_end').val();
+            postData._method = 'PATCH';
+            $.ajax({
+                url: "/ajax/interventi/updateIntervento",
+                type: "POST",
+                data: postData,
+                dataType: "JSON"
+            }).done(function (data) {
+                if (data['status'] == 'success') {
+                    $('#calendar').fullCalendar('refetchEvents');
+                }
+                else console.log(['Errore!!', data]);
+            }).fail(function (jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
+        }
         function updateProgettoSource() {
             $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=12');
             if ($('#progetto').val()) {
@@ -144,6 +200,25 @@
                         textColor: 'black' // a non-ajax option
                     }
             )
+        }
+
+        function annullaCreateIntervento() {
+            $('#calendar').fullCalendar('removeEvents', 'new');
+        }
+        function deleteIntervento() {
+            $.ajax({
+                url: "/ajax/interventi/deleteIntervento",
+                type: "POST",
+                data: {_method: 'DELETE', id: $('#intervento_id').val()},
+                dataType: "JSON"
+            }).done(function (data) {
+                if (data['status'] == 'success') {
+                    $('#calendar').fullCalendar('refetchEvents');
+                }
+                else console.log(['Errore!!', data]);
+            }).fail(function (jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
         }
     </script>
 @append

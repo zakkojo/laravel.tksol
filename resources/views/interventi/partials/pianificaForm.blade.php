@@ -45,6 +45,7 @@ $listProgetto = $progetti->each(function ($progetto)
         !!}
 
         </div>
+        <input type="hidden" id="intervento_id" name="intervento_id">
         <div class="form-group">
             <label>Cliente</label>
             {!! Form::select('cliente_id',
@@ -56,7 +57,7 @@ $listProgetto = $progetti->each(function ($progetto)
         <div class="form-group">
             <label>Contratto/Progetto</label>
             <select id="progetto" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
-            <input type="hidden" id="contratto" name="contratto">
+            <input type="hidden" id="contratto" name="contratto" value="">
         </div>
         <div class="form-group">
             <label>Attività</label>
@@ -81,7 +82,30 @@ $listProgetto = $progetti->each(function ($progetto)
         </div>
     </div>
     <div class="box-footer">
-        <button type="submit" onclick="createIntervento()" class="btn btn-block btn-primary">Submit</button>
+        <div id="pulsanti_create" style="display:none">
+            <div class="btn-group btn-group-justified">
+                <div type="Annulla"
+                     onclick="annullaCreateIntervento()"
+                     class="btn btn-default"><i class="fa fa-remove"></i> Annulla
+                </div>
+                <div type="Pianifica"
+                     onclick="updateIntervento()"
+                     class="btn  btn-primary"><i class="fa fa-calendar"></i> Pianifica
+                </div>
+            </div>
+        </div>
+        <div id="pulsanti_update">
+            <div class="btn-group btn-group-justified">
+                <div type="Elimina"
+                        onclick="deleteIntervento()"
+                        class="btn btn-danger"><i class="fa fa-trash"></i> Elimina
+                </div>
+                <div type="Modifica"
+                     onclick="updateIntervento()"
+                     class="btn  btn-primary"><i class="fa fa-calendar"></i> Modifica
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @section('page_scripts')
@@ -171,5 +195,18 @@ $listProgetto = $progetti->each(function ($progetto)
                         });
             }
         });
-    </script>
-@append
+
+        $('#intervento_id').change(function () {
+            if ($('#intervento_id').val() == ""){
+                $('#pulsanti_update').hide();
+                $('#pulsanti_create').show();
+            }
+            else {
+                $('#pulsanti_update').show();
+                $('#pulsanti_create').hide();
+            }
+        });
+
+
+
+    </script>@append

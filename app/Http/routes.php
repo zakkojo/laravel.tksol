@@ -53,13 +53,15 @@ Route::group(['middleware' => 'web'], function () {
     Route::resource('contatti','ContattoController');
 
     Route::resource('contratti','ContrattoController');
+    Route::get('ajax/contratti/listinoInterventi', 'ContrattoController@ajaxGetListinoInterventi');
+
 	Route::resource('contratti/{contratto_id}/listino_interventi','ContrattoInterventoController');
 	Route::resource('contratti/{contratto_id}/listino_prodotti','ContrattoProdottoController');
 
     Route::resource('clienti','ClienteController');
     Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');
     Route::get('ajax/clienti/getCliente', 'ClienteController@ajaxGetCliente');
-    Route::get('ajax/clienti/getProgetti', 'ClienteController@ajaxGetProgetti');
+    Route::get('ajax/clienti/getContratti', 'ClienteController@ajaxGetContratti');
 
 
     Route::resource('progetti','ProgettoController');
@@ -76,6 +78,9 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::resource('interventi', 'InterventoController');
     Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
+    Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
+    Route::get('ajax/interventi/createIntervento', 'InterventoController@ajaxCreateIntervento');
+
     Route::resource('rimborsi','RimborsoController');
     Route::resource('prodotti','ProdottoController');
 });

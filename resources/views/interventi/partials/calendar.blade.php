@@ -10,6 +10,10 @@
                 firstHour: 8,
                 slotMinutes: 30,
                 axisFormat: 'HH:mm',
+                timeFormat: {
+                    agenda: 'H:mm'
+                },
+
                 lang: 'it',
                 header: {
                     left: 'prev,next today',
@@ -78,13 +82,43 @@
                 selectConstraint: {
                     start: '00:00',
                     end: '24:00',
+                },
+                eventConstraint: {
+                    start: '00:00',
+                    end: '24:00',
+                },
+                eventResize: function (event, delta, revertFunc) {
+                    $('#ora_end').val(event.end.format('HH:mm'));
+                },
+                eventDrop: function (event, delta, revertFunc) {
+                    $('#data').val(moment(event.start).format('L'));
+                    $('#ora_start').val(event.start.format('HH:mm'));
+                    $('#ora_end').val(event.end.format('HH:mm'));
                 }
             });
         }
         function createIntervento() {
-            evento = $('#calendar').fullCalendar('clientEvents','new');
-            data_start = evento[0].start._i;
-            data_end = evento[0].end._i;
+            var postData = {};
+            postData.contratto = $('#contratto').val();
+            postData.listinoContratto = $('#listinoContratto').val();
+            postData.attivita = $('#attivita').val();
+            postData.consulente = $('#consulente').val();
+            postData.data = $('#data').val();
+            postData.ora_start = $('#ora_start').val();
+            postData.ora_end = $('#ora_end').val();
+            var request = $.ajax({
+                url: "/ajax/interventi/createIntervento",
+                type: "get",
+                data: postData,
+                dataType: "JSON"
+            }).done(function (data) {
+                if (data['status'] == 'success') {
+                    $('#calendar').fullCalendar('refetchEvents');
+                }
+                else console.log(['Errore!!', data]);
+            }).fail(function (jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
         }
     </script>
 @append

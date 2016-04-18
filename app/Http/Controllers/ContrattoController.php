@@ -7,6 +7,7 @@ use App\Progetto;
 use App\Consulente;
 use App\Contratto;
 use App\Http\Requests\ContrattiRequest;
+use Illuminate\Support\Facades\Input;
 
 
 class ContrattoController extends Controller {
@@ -97,5 +98,15 @@ class ContrattoController extends Controller {
     public function destroy($id)
     {
 
+    }
+
+    public function ajaxGetListinoInterventi()
+    {
+        $contratto = Contratto::findOrFail(Input::get('contratto_id'));
+        return $contratto->listinoInterventi;
+    }
+
+    public function ajaxGetProgetti(){
+        return Contratto::with('progetto')->where('id',Input::get('contratto_id'))->get();
     }
 }

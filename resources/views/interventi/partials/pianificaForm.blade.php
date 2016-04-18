@@ -56,10 +56,15 @@ $listProgetto = $progetti->each(function ($progetto)
         <div class="form-group">
             <label>Contratto/Progetto</label>
             <select id="progetto" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
+            <input  type="hidden" id="contratto" name="contratto">
         </div>
         <div class="form-group">
             <label>Attività</label>
             <select id="attivita" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
+        </div>
+        <div class="form-group">
+            <label>Listino</label>
+            <select id="listinoContratto" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group">
             <label>Data</label>
@@ -96,17 +101,18 @@ $listProgetto = $progetti->each(function ($progetto)
                 $('#progetto').html('');
                 $('#attivita').html('');
                 if ($('#cliente').val()) {
-                    $.get('{{action('ClienteController@ajaxGetProgetti')}}', {cliente_id: $('#cliente').val()})
+                    $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val()})
                             .done(function (data) {
                                 var c = 0;
-                                $.each(data, function (id, dettagli) {
+                                $.each(data.contratti, function (id, contratto) {
                                     c++;
                                     $('#progetto')
                                             .append($("<option></option>")
-                                                    .attr('value', dettagli.id)
-                                                    .text(dettagli.area + ' / ' + dettagli.nome));
+                                                    .attr('value', contratto.progetto.id)
+                                                    .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
                                     if (c == '1') {
-                                        $('#progetto').select2('val', dettagli.id);
+                                        $('#progetto').select2('val', contratto.progetto.id);
+                                        $('#contratto').val(contratto.id);
                                     }
                                 });
                                 $('#progetto').trigger("change");
@@ -114,8 +120,9 @@ $listProgetto = $progetti->each(function ($progetto)
                             });
                 }
             });
-            //Progetto->Attivita
+
             $('#progetto').change(function () {
+                //Progetto->Attivita
                 $('#attivita').html('');
                 if ($('#progetto').val()) {
                     $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
@@ -133,7 +140,33 @@ $listProgetto = $progetti->each(function ($progetto)
                                     }
                                 });
                             });
-
+                }
+                else {
+                    $('#attivita').select2('val','');
+                    $('#attivita').html('');
+                }
+                //Contratto->Listino
+                $('#listinoContratto').html('');
+                if ($('#contratto').val()) {
+                    $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
+                            .done(function (data) {
+                                var c = 0;
+                                $('#listinoContratto').html('');
+                                $.each(data, function (id, dettagli) {
+                                    c++;
+                                    lastoption = $('#listinoContratto')
+                                            .append($("<option></option>")
+                                                    .attr('value', dettagli.id)
+                                                    .text(dettagli.descrizione));
+                                    if (c == '1') {
+                                        $('#listinoContratto').select2("val", dettagli.id);
+                                    }
+                                });
+                            });
+                }
+                else {
+                    $('#listinoContratto').select2('val','');
+                    $('#listinoContratto').html('');
                 }
             });
             $('#consulente').trigger("change");

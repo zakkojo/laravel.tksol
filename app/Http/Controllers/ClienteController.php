@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Requests\ClientiRequest;
 use App\Cliente;
+use App\Contratto;
 
 use Request;
 use Illuminate\Support\Facades\Response;
@@ -99,9 +100,9 @@ class ClienteController extends Controller {
     
   }
 
-    public function ajaxGetProgetti(){
-        return  Cliente::join('contratto','contratto.cliente_id','=','cliente.id')->join('progetto','progetto.id','=','contratto.progetto_id')->where('cliente.id','=',Input::get('cliente_id'))->getQuery()->get();
-    }
+    public function ajaxGetContratti(){
+        return Cliente::with('contratti.progetto')->where('id',Input::get('cliente_id'))->first();
+    }    
   
 }
 

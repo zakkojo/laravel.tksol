@@ -10,33 +10,38 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Intervento extends Model {
 
-	protected $table = 'intervento';
-	public $timestamps = false;
+    protected $table = 'intervento';
+    public $timestamps = false;
 
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
+    protected $fillable = [
+        'listino_id',
+        'attivita_id',
+        'consulente_id',
+        'data_start',
+        'data_end',
+    ];
 
-	use SoftDeletes;
+    public function attivita()
+    {
+        return $this->belongsTo(Attivita::class);
+    }
 
-	protected $dates = ['deleted_at'];
+    public function consulente()
+    {
+        return $this->belongsTo(Consulente::class);
+    }
 
-	public function attivita()
-	{
-		return $this->belongsTo(Attivita::class);
-	}
-
-	public function consulente()
-	{
-		return $this->belongsTo(Consulente::class);
-	}
-
-	public function listinoInterventi()
-	{
-		return $this->belongsTo(ContrattoIntervento::class,'listino_id','id');
-	}
+    public function listinoInterventi()
+    {
+        return $this->belongsTo(ContrattoIntervento::class, 'listino_id', 'id');
+    }
 
     public function rimborsi()
     {
         return $this->hasMany(RimborsoIntervento::class);
     }
-    
+
 }

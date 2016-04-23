@@ -89,7 +89,7 @@ $listProgetto = $progetti->each(function ($progetto)
                      class="btn btn-default"><i class="fa fa-remove"></i> Annulla
                 </div>
                 <div type="Pianifica"
-                     onclick="updateIntervento()"
+                     onclick="createIntervento()"
                      class="btn  btn-primary"><i class="fa fa-calendar"></i> Pianifica
                 </div>
             </div>

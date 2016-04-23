@@ -140,7 +140,7 @@
         }
         function updateIntervento() {
             var postData = {};
-            postData.id = $('#intervento_id').val().trigger("change");
+            postData.id = $('#intervento_id').val();
             postData.contratto = $('#contratto').val();
             postData.listinoContratto = $('#listinoContratto').val();
             postData.attivita = $('#attivita').val();

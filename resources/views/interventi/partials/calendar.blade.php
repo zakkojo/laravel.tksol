@@ -34,6 +34,7 @@
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     $('#form_title').text('Nuovo Intervento');
                     $('#intervento_id').val('').trigger("change");
+                    $('#attivitaPianificate').html('');
                     $('#data').val(moment(start).format('L'));
                     if (moment(start).format('HHmm') == '0000') {
                         ora_start = moment(start).add('8', 'h');
@@ -71,6 +72,7 @@
                     $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
                     $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
                     $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                    $('#attivitaPianificate').html(calEvent.attivitaPianificate);
                     $('#data').val(calEvent.start.format('L'));
                     $('#ora_start').val(calEvent.start.format('HH:mm'));
                     $('#ora_end').val(calEvent.end.format('HH:mm'));
@@ -87,6 +89,7 @@
                     $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
                     $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
                     $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                    $('#attivitaPianificate').html(calEvent.attivitaPianificate);
                     $('#data').val(calEvent.start.format('L'));
                     $('#ora_start').val(calEvent.start.format('HH:mm'));
                     $('#ora_end').val(calEvent.end.format('HH:mm'));
@@ -105,12 +108,14 @@
                     $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
                     $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
                     $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                    $('#attivitaPianificate').html(calEvent.attivitaPianificate);
                     $('#data').val(calEvent.start.format('L'));
                     $('#ora_start').val(calEvent.start.format('HH:mm'));
                     $('#ora_end').val(calEvent.end.format('HH:mm'));
                 },
                 eventRender: function (event, element) {
                     element.find('.fc-title').append("<br/>" + event.description);
+                    element.find('.fc-title').append('<div onclick="openIntervento('+event.id+')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
                 }
             });
         }
@@ -123,6 +128,7 @@
             postData.data = $('#data').val();
             postData.ora_start = $('#ora_start').val();
             postData.ora_end = $('#ora_end').val();
+            postData.attivitaPianificate = $('#attivitaPianificate').html();
             $.ajax({
                 url: "/ajax/interventi/createIntervento",
                 type: "POST",
@@ -148,6 +154,7 @@
             postData.data = $('#data').val();
             postData.ora_start = $('#ora_start').val();
             postData.ora_end = $('#ora_end').val();
+            postData.attivitaPianificate = $('#attivitaPianificate').html();
             postData._method = 'PATCH';
             $.ajax({
                 url: "/ajax/interventi/updateIntervento",
@@ -219,6 +226,10 @@
             }).fail(function (jqXHR, textStatus) {
                 alert("Request failed: " + textStatus);
             });
+        }
+
+        function openIntervento(id){
+            window.open('/interventi/'+id+'/edit','_self');
         }
     </script>
 @append

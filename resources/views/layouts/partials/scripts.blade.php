@@ -27,8 +27,8 @@
     moment().locale('it');
 </script>
 <script src="{{asset('/plugins/fullcalendar/fullcalendar.min.js')}}" type="text/javascript" ></script>
-
-
+<!-- Laravel -->
+<script src="{{asset('/plugins/laravel/laravel.js')}}" type="text/javascript" ></script>
 
 
 <script>

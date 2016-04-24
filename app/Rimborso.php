@@ -13,6 +13,13 @@ class Rimborso extends Model {
 	use SoftDeletes;
 
 	protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'tipo_spesa',
+        'um',
+        'quantita',
+        'importo',
+        'intervento_id',
+    ];
 
 	public function intervento()
 	{

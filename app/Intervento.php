@@ -22,6 +22,7 @@ class Intervento extends Model {
         'consulente_id',
         'data_start',
         'data_end',
+        'attivitaPianificate',
     ];
 
     public function attivita()
@@ -41,7 +42,7 @@ class Intervento extends Model {
 
     public function rimborsi()
     {
-        return $this->hasMany(RimborsoIntervento::class);
+        return $this->hasMany(Rimborso::class);
     }
 
 }

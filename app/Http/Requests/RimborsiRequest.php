@@ -2,10 +2,8 @@
 
 namespace App\Http\Requests;
 
-Use App\Intervento;
-
-class InterventiRequest extends Request {
-
+class RimborsiRequest extends Request
+{
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +11,7 @@ class InterventiRequest extends Request {
      */
     public function authorize()
     {
-        return true;
+       return true;
     }
 
     /**
@@ -29,25 +27,30 @@ class InterventiRequest extends Request {
             case 'GET':
             case 'DELETE':
             {
-                return [];
+                return [
+                    
+                ];
             }
             case 'POST':
             {
                 return [
-                    'listino_id'    => 'required|numeric',
-                    'attivita_id'   => 'required|numeric',
-                    'consulente_id' => 'required|numeric',
-                    'data_start'    => 'required|date',
-                    'data_end'      => 'required|date',
+                    'intervento_id'=> 'required',
+                    'tipo_spesa'=> 'required',
+                    'um'=> 'required',
+                    'quantita' => 'required|numeric',
+                    'importo' => 'required|numeric',
                 ];
             }
             case 'PUT':
             case 'PATCH':
             {
                 return [
-                    'progetto_id' => 'required|numeric',
-                    'listino_id'  => 'required|numeric',
-                    'attivita_id' => 'required|numeric',
+                    'id' => 'required',
+                    'intervento_id'=> 'required',
+                    'tipo_spesa'=> 'required',
+                    'um'=> 'required',
+                    'quantita' => 'required|numeric',
+                    'importo' => 'required|numeric',
                 ];
             }
             default:

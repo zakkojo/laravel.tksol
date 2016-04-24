@@ -2,10 +2,10 @@
 
 
 @section('htmlheader_title')
-    Nuovo Intervento
+    Dettaglio Intervento
 @endsection
 @section('contentheader_title')
-    Rapportino
+    Dettaglio Intervento
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -21,36 +21,20 @@
             </ul>
         </div>
     @endif
+    {!! Form::model($intervento, ['action' => ['InterventoController@update', $intervento->id], 'method' => 'PATCH' ]) !!}
     <div class="row">
         <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-12">
-                    @include('interventi.partials.progettocliente')
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @include('interventi.partials.consulente')
-                </div>
-            </div>
+            @include('interventi.partials.riepilogoForm')
         </div>
         <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-12">
-                    @include('interventi.partials.intervento')
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    @include('rimborsi.partials.indexTable')
-                </div>
-            </div>
+            @include('rimborsi.partials.indexTable')
         </div>
     </div>
     <div class="row">
         @include('interventi.partials.textarea')
     </div>
     <button type="submit" class="btn btn-block btn-primary">Submit</button>
+    {!! Form::close() !!}
 @endsection
 @section('page_scripts')
 

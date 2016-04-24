@@ -16,7 +16,7 @@ class CreateRimborsoInterventoTable extends Migration {
 			$table->string('um', 10);
 			$table->decimal('quantita');
 			$table->decimal('importo');
-			$table->string('note', 100);
+			$table->text('note');
 		});
 	}
 

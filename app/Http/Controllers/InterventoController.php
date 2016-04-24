@@ -4,12 +4,10 @@ use App\Cliente;
 use App\Consulente;
 use App\Http\Requests\AjaxInterventiRequest;
 use App\Http\Requests\InterventiRequest;
-use App\Progetto;
 use App\Intervento;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use DB;
-use Illuminate\Support\Facades\Route;
 
 class InterventoController extends Controller {
 
@@ -32,9 +30,8 @@ class InterventoController extends Controller {
     {
         $consulenti = Consulente::all();
         $clienti = Cliente::all();
-        $progetti = Progetto::all();
 
-        return view('interventi.create', compact('consulenti', 'clienti', 'progetti'));
+        return view('interventi.planning', compact('consulenti', 'clienti'));
     }
 
     /**
@@ -67,7 +64,12 @@ class InterventoController extends Controller {
      */
     public function edit($id)
     {
+        $intervento = Intervento::findOrFail($id);
+        $consulente = $intervento->consulente;
+        $cliente = $intervento->listinoInterventi->contratto->cliente;
+        $rimborsi = $intervento->rimborsi;
 
+        return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi'));
     }
 
     /**
@@ -78,7 +80,7 @@ class InterventoController extends Controller {
      */
     public function update($id)
     {
-
+        dd(Input::all());
     }
 
     /**
@@ -115,16 +117,17 @@ class InterventoController extends Controller {
 
             $calendario->each(function ($evento)
             {
-                if ($evento['stato'] == 'PIANIFICATO')
+                if ($evento['stato'] != 'Consuntivo')
                 {
                     $intervento = Intervento::findOrFail($evento['id']);
                     $evento['contratto_id'] = '' . $intervento->listinoInterventi->contratto->id;
                     $evento['progetto_id'] = '' . $intervento->listinoInterventi->contratto->progetto->id;
                     $evento['title'] = $intervento->consulente->nominativo;
-                    $evento['description'] = '<span class="description">'.
+                    $evento['description'] = '<span class="description">' .
                         $intervento->listinoInterventi->contratto->cliente->ragione_sociale .
                         '<br/>' . $intervento->listinoInterventi->contratto->progetto->nome .
-                        '<br/>' . $intervento->attivita->descrizione.'</span>';
+                        '<br/>' . $intervento->attivita->descrizione . '</span>';
+                    $evento['attivitaPianificate'] = htmlspecialchars_decode($intervento->attivitaPianificate);
                     $evento['start'] = $evento['data_start'];
                     $evento['end'] = $evento['data_end'];
                     $evento['className'] = 'pianificato';
@@ -143,14 +146,16 @@ class InterventoController extends Controller {
     {
         $input = $request->all();
         $data = [
-            'listino_id'    => Input::get('listinoContratto'),
-            'attivita_id'   => Input::get('attivita'),
-            'consulente_id' => Input::get('consulente'),
-            'data_start'    => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
-            'data_end'      => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
+            'listino_id'          => Input::get('listinoContratto'),
+            'attivita_id'         => Input::get('attivita'),
+            'consulente_id'       => Input::get('consulente'),
+            'attivitaPianificate' => Input::get('attivitaPianificate'),
+            'data_start'          => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
+            'data_end'            => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
         ];
         $response = Intervento::create($data);
         if ($response) return ['status' => 'success'];
+
         return ['status' => 'fail'];
     }
 
@@ -158,11 +163,12 @@ class InterventoController extends Controller {
     {
         $input = $request->all();
         $data = [
-            'listino_id'    => Input::get('listinoContratto'),
-            'attivita_id'   => Input::get('attivita'),
-            'consulente_id' => Input::get('consulente'),
-            'data_start'    => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
-            'data_end'      => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
+            'listino_id'          => Input::get('listinoContratto'),
+            'attivita_id'         => Input::get('attivita'),
+            'consulente_id'       => Input::get('consulente'),
+            'attivitaPianificate' => Input::get('attivitaPianificate'),
+            'data_start'          => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
+            'data_end'            => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
         ];
         $intervento = Intervento::findOrFail(Input::get('id'));
         $response = $intervento->update($data);
@@ -171,7 +177,7 @@ class InterventoController extends Controller {
 
         return ['status' => 'fail'];
     }
-    
+
     public function ajaxDeleteIntervento(AjaxInterventiRequest $request)
     {
         $response = Intervento::destroy(Input::get('id'));

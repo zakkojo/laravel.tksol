@@ -83,7 +83,9 @@ Route::group(['middleware' => 'web'], function () {
     Route::patch('ajax/interventi/updateIntervento', 'InterventoController@ajaxUpdateIntervento');
     Route::delete('ajax/interventi/deleteIntervento', 'InterventoController@ajaxDeleteIntervento');
 
+    Route::resource('interventi/{intervento_id}/rimborsi','RimborsoController');
 
-    Route::resource('rimborsi','RimborsoController');
+
+
     Route::resource('prodotti','ProdottoController');
 });

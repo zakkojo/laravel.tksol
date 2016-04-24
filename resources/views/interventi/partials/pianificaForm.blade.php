@@ -21,11 +21,6 @@ elseif (isset($_GET['prog'])) $prog = $_GET['prog'];
 else $prog = 0;
 if ($prog) $progDisabled = 'disabled';
 else $progDisabled = 'enabled';
-$listProgetto = $progetti->each(function ($progetto)
-{
-    return $progetto['areanome'] = $progetto['area'] . ' / ' . $progetto['nome'];
-})->lists('areanome', 'id');
-
 ?>
 <div class="box box-primary">
     <div class="box-header with-border">
@@ -69,144 +64,163 @@ $listProgetto = $progetti->each(function ($progetto)
                     class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group">
-            <label>Data</label>
-            <input type="text" id="data" style="width:100%" readonly class="form-control">
+            <label>Descrizione</label>
+            <div id="attivitaPianificate" name="attivitaPianificate" class="wysihtml5"
+                 style="width: 100%; height: 150px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
+                 placeholder="">
+
+            </div>
         </div>
-        <div class="form-group">
-            <label>Ora Inizio</label>
-            <input type="text" id="ora_start" style="width:100%" readonly class="form-control">
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label>Data</label>
+                <input type="text" id="data" style="width:100%" readonly class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label>Ora Inizio</label>
+                <input type="text" id="ora_start" style="width:100%" readonly class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label>Ora Fine</label>
+                <input type="text" id="ora_end" style="width:100%" readonly class="form-control">
+            </div>
         </div>
-        <div class="form-group">
-            <label>Ora Fine</label>
-            <input type="text" id="ora_end" style="width:100%" readonly class="form-control">
-        </div>
-    </div>
-    <div class="box-footer">
-        <div id="pulsanti_create" style="display:none">
-            <div class="btn-group btn-group-justified">
-                <div type="Annulla"
-                     onclick="annullaCreateIntervento()"
-                     class="btn btn-default"><i class="fa fa-remove"></i> Annulla
+        <div class="box-footer">
+            <div id="pulsanti_create" style="display:none">
+                <div class="btn-group btn-group-justified">
+                    <div type="Annulla" onclick="annullaCreateIntervento()" class="btn btn-default"><i
+                                class="fa fa-remove"></i> Annulla
+                    </div>
+                    <div type="Pianifica" onclick="createIntervento()" class="btn  btn-primary"><i
+                                class="fa fa-calendar"></i> Pianifica
+                    </div>
                 </div>
-                <div type="Pianifica"
-                     onclick="createIntervento()"
-                     class="btn  btn-primary"><i class="fa fa-calendar"></i> Pianifica
+            </div>
+            <div id="pulsanti_update">
+                <div class="btn-group btn-group-justified">
+                    <div type="Elimina" onclick="deleteIntervento()" class="btn btn-danger"><i class="fa fa-trash"></i>
+                        Elimina
+                    </div>
+                    <div type="Modifica" onclick="updateIntervento()" class="btn  btn-primary"><i
+                                class="fa fa-calendar"></i> Modifica
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="pulsanti_update">
-            <div class="btn-group btn-group-justified">
-                <div type="Elimina"
-                        onclick="deleteIntervento()"
-                        class="btn btn-danger"><i class="fa fa-trash"></i> Elimina
-                </div>
-                <div type="Modifica"
-                     onclick="updateIntervento()"
-                     class="btn  btn-primary"><i class="fa fa-calendar"></i> Modifica
-                </div>
-            </div>
-        </div>
     </div>
-</div>
-@section('page_scripts')
-    <script>
-        $('document').ready(function () {
-            drawCalendar();
-            $('#consulente').trigger('change');
-            $('#cliente').trigger('change');
-            //Consulente->Tipo
-        });
-        $('#consulente').change(function () {
-            globale_consulente = $('#consulente').val();
-            $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
-                    .done(function (data) {
-                        $('#consulente_tipo')
-                                .append($("<option></option>")
-                                        .attr('value', data.tipo)
-                                        .text(data.tipo));
-                        updateConsulenteSource();
-                    });
-        });
-        //Cliente->Progetto
-        $('#cliente').change(function () {
-            $('#progetto').html('');
-            $('#contratto').val('');
-            if ($('#cliente').val()) {
-                $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val()})
+    @section('page_scripts')
+        <script>
+            $('document').ready(function () {
+                $('.wysihtml5').wysihtml5({
+                    toolbar: {
+                        "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+                        "emphasis": true, //Italics, bold, etc. Default true
+                        "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+                        "html": false, //Button which allows you to edit the generated HTML. Default false
+                        "link": false, //Button to insert a link. Default true
+                        "image": false, //Button to insert an image. Default true,
+                        "color": false, //Button to change color of font
+                        "blockquote": false, //Blockquote
+                        "size": 'sm' //default: none, other options are xs, sm, lg
+                    }
+                });
+
+                drawCalendar();
+                $('#consulente').trigger('change');
+                $('#cliente').trigger('change');
+                //Consulente->Tipo
+            });
+            $('#consulente').change(function () {
+                globale_consulente = $('#consulente').val();
+                $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
                         .done(function (data) {
-
-                            var c = 0;
-                            $.each(data.contratti, function (id, contratto) {
-                                c++;
-                                $('#progetto')
-                                        .append($("<option></option>")
-                                                .attr('value', contratto.progetto.id)
-                                                .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
-                                if (c == '1') {
-                                    $('#contratto').val(contratto.id);
-                                    $('#progetto').select2('val', contratto.progetto.id);
-                                }
-                            });
-                            if (c == 0) $('#progetto').select2('val', '');
-                            globale_progetto = $('#progetto').val();
-                            updateProgettoSource();
+                            $('#consulente_tipo')
+                                    .append($("<option></option>")
+                                            .attr('value', data.tipo)
+                                            .text(data.tipo));
+                            updateConsulenteSource();
                         });
-            }
-        });
+            });
+            //Cliente->Progetto
+            $('#cliente').change(function () {
+                $('#progetto').html('');
+                $('#contratto').val('');
+                if ($('#cliente').val()) {
+                    $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val()})
+                            .done(function (data) {
 
-        $('#progetto').change(function () {
-            $('#attivita').html('');
-            $('#attivita').select2('val', '');
-            globale_progetto = $('#progetto').val();
-            //Progetto->Attivita
-            if ($('#progetto').val()) {
-                $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
-                        .done(function (data) {
-                            var c = 0;
-                            $.each(data, function (id, dettagli) {
-                                c++;
-                                lastoption = $('#attivita')
-                                        .append($("<option></option>")
-                                                .attr('value', dettagli.id)
-                                                .text(dettagli.descrizione));
-                                if (c == '1') {
-                                    $('#attivita').select2("val", dettagli.id);
-                                }
+                                var c = 0;
+                                $.each(data.contratti, function (id, contratto) {
+                                    c++;
+                                    $('#progetto')
+                                            .append($("<option></option>")
+                                                    .attr('value', contratto.progetto.id)
+                                                    .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
+                                    if (c == '1') {
+                                        $('#contratto').val(contratto.id);
+                                        $('#progetto').select2('val', contratto.progetto.id);
+                                    }
+                                });
+                                if (c == 0) $('#progetto').select2('val', '');
+                                globale_progetto = $('#progetto').val();
+                                updateProgettoSource();
                             });
-                        });
-            }
-            //Contratto->Listino
-            $('#listinoContratto').html('');
-            $('#listinoContratto').select2('val', '');
-            if ($('#contratto').val()) {
-                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
-                        .done(function (data) {
-                            var c = 0;
-                            $.each(data, function (id, dettagli) {
-                                c++;
-                                lastoption = $('#listinoContratto')
-                                        .append($("<option></option>")
-                                                .attr('value', dettagli.id)
-                                                .text(dettagli.descrizione));
-                                if (c == '1') {
-                                    $('#listinoContratto').select2("val", dettagli.id);
-                                }
+                }
+            });
+
+            $('#progetto').change(function () {
+                $('#attivita').html('');
+                $('#attivita').select2('val', '');
+                globale_progetto = $('#progetto').val();
+                //Progetto->Attivita
+                if ($('#progetto').val()) {
+                    $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
+                            .done(function (data) {
+                                var c = 0;
+                                $.each(data, function (id, dettagli) {
+                                    c++;
+                                    lastoption = $('#attivita')
+                                            .append($("<option></option>")
+                                                    .attr('value', dettagli.id)
+                                                    .text(dettagli.descrizione));
+                                    if (c == '1') {
+                                        $('#attivita').select2("val", dettagli.id);
+                                    }
+                                });
                             });
-                        });
-            }
-        });
+                }
+                //Contratto->Listino
+                $('#listinoContratto').html('');
+                $('#listinoContratto').select2('val', '');
+                if ($('#contratto').val()) {
+                    $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
+                            .done(function (data) {
+                                var c = 0;
+                                $.each(data, function (id, dettagli) {
+                                    c++;
+                                    lastoption = $('#listinoContratto')
+                                            .append($("<option></option>")
+                                                    .attr('value', dettagli.id)
+                                                    .text(dettagli.descrizione));
+                                    if (c == '1') {
+                                        $('#listinoContratto').select2("val", dettagli.id);
+                                    }
+                                });
+                            });
+                }
+            });
 
-        $('#intervento_id').change(function () {
-            if ($('#intervento_id').val() == ""){
-                $('#pulsanti_update').hide();
-                $('#pulsanti_create').show();
-            }
-            else {
-                $('#pulsanti_update').show();
-                $('#pulsanti_create').hide();
-            }
-        });
+            $('#intervento_id').change(function () {
+                if ($('#intervento_id').val() == "") {
+                    $('#pulsanti_update').hide();
+                    $('#pulsanti_create').show();
+                }
+                else {
+                    $('#pulsanti_update').show();
+                    $('#pulsanti_create').hide();
+                }
+            });
 
 
-
-    </script>@append
+        </script>
+    @append

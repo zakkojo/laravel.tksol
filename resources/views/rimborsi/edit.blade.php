@@ -2,7 +2,7 @@
 
 
 @section('htmlheader_title')
-    Nuovo Rimborso
+    Rimborso
 @endsection
 @section('contentheader_title')
     Rimborso
@@ -23,7 +23,7 @@
                 </div>
             @endif
             <div class="box box-primary">
-                {!! Form::open(['action' => ['RimborsoController@store',$intervento->id]]) !!}
+                {!! Form::model($rimborso, ['action' => ['RimborsoController@update', $rimborso->intervento_id,$rimborso->id], 'method' => 'PATCH' ]) !!}
                 @include('rimborsi.partials.form')
                 {!! Form::close() !!}
             </div>

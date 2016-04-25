@@ -41,6 +41,7 @@ else $progDisabled = 'enabled';
 
         </div>
         <input type="hidden" id="intervento_id" name="intervento_id">
+        <input type="hidden" id="stampaIntervento" name="stampaIntervento" value="{{ session()->get('stampaIntervento') ?: '0' }}">
         <div class="form-group">
             <label>Cliente</label>
             {!! Form::select('cliente_id',

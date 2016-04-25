@@ -55,6 +55,9 @@ class InterventoController extends Controller {
      */
     public function show($id)
     {
+        $intervento = Intervento::findOrFail($id);
+        if ($intervento->stampa == 0) return redirect()->action('InterventoController@edit', $id);
+        return view('interventi.inviaStampa', compact('intervento'));
     }
 
     /**
@@ -98,11 +101,13 @@ class InterventoController extends Controller {
         $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
         $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
         $intervento->save();
-        if (Input::get('stampa') == 1){
-            session()->flash('attivita',Input::get('problemiAperti'));
-            return redirect()->action('InterventoController@create', ['stampa' => $id]);
-        }
-        else {
+        if (Input::get('stampa') == 1)
+        {
+            session()->flash('attivita', Input::get('problemiAperti'));
+            session()->flash('stampaIntervento', $id);
+            return redirect()->action('InterventoController@create');
+        } else
+        {
             return redirect()->action('InterventoController@edit', $id);
         }
     }
@@ -169,6 +174,7 @@ class InterventoController extends Controller {
     public function ajaxCreateIntervento(AjaxInterventiRequest $request)
     {
         $input = $request->all();
+
         $data = [
             'listino_id'          => Input::get('listinoContratto'),
             'attivita_id'         => Input::get('attivita'),
@@ -177,8 +183,23 @@ class InterventoController extends Controller {
             'data_start'          => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
             'data_end'            => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
         ];
+
         $response = Intervento::create($data);
-        if ($response) return ['status' => 'success'];
+        if ($response)
+        {
+            if ($id_padre = Input::get('stampaIntervento'))
+            {
+                $intervento = Intervento::findOrFail($id_padre);
+                $intervento->stampa = 1;
+                if ($intervento->save()) {
+                    return ['status' => 'success', 'action'=>'stampa', 'id_padre'=>$id_padre];
+                }
+                else return ['status' => 'fail'];
+            }
+            else return ['status' => 'success', 'msg' => Input::get('stampaIntervento')];
+
+            return ['status' => 'success'];
+        }
 
         return ['status' => 'fail'];
     }

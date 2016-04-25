@@ -115,7 +115,7 @@
                 },
                 eventRender: function (event, element) {
                     element.find('.fc-title').append("<br/>" + event.description);
-                    element.find('.fc-title').append('<div onclick="openIntervento('+event.id+')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
+                    element.find('.fc-title').append('<div onclick="openIntervento(' + event.id + ')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
                 }
             });
         }
@@ -129,6 +129,8 @@
             postData.ora_start = $('#ora_start').val();
             postData.ora_end = $('#ora_end').val();
             postData.attivitaPianificate = $('#attivitaPianificate').html();
+            postData.stampaIntervento = $('#stampaIntervento').val();
+            console.log(postData);
             $.ajax({
                 url: "/ajax/interventi/createIntervento",
                 type: "POST",
@@ -136,12 +138,14 @@
                 dataType: "JSON"
             }).done(function (data) {
                 if (data['status'] == 'success') {
+                    console.log(data);
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     $('#calendar').fullCalendar('refetchEvents');
+                    if (data['action'] == 'stampa') window.location.href = '/interventi/' + data['id_padre'];
                 }
                 else console.log(['Errore!!', data]);
-            }).fail(function (jqXHR, textStatus) {
-                alert("Request failed: " + textStatus);
+            }).fail(function (jqXHR, textStatus, data) {
+                alert("Request failed: " + data);
             });
         }
         function updateIntervento() {
@@ -228,8 +232,8 @@
             });
         }
 
-        function openIntervento(id){
-            window.open('/interventi/'+id+'/edit','_self');
+        function openIntervento(id) {
+            window.open('/interventi/' + id + '/edit', '_self');
         }
     </script>
 @append

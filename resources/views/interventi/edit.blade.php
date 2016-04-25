@@ -33,6 +33,7 @@
     <div class="row">
         @include('interventi.partials.textarea')
     </div>
+    @if($intervento->stampa == 0 )
     <div class="btn-group btn-block">
         <button type="aggiorna" class="col-md-6 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
         </button>
@@ -40,6 +41,11 @@
             Stampa
         </button>
     </div>
+    @elseif($intervento->stampa == 1 )
+        <a href="{{ action('InterventoController@show',$intervento->id) }}" type="stampa" value="stampa" class="btn-block btn btn-primary"><i class="fa fa-calendar"></i>
+            Invio e Stampa
+        </a>
+    @endif
     {!! Form::close() !!}
 @endsection
 @section('page_scripts')

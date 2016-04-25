@@ -29,8 +29,5 @@
             {!! Form::close() !!}
         </div>
     </div>
-
-@include('consulenti.partials.consulenteWidget')
-
 @endsection
 

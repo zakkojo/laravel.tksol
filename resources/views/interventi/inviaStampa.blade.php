@@ -80,7 +80,7 @@
         </div>
         <div class="col-md-8 embed-responsive embed-responsive-16by9" style="margin-top:-55px;padding-bottom:49%">
             <embed class="embed-responsive-item" width="100%"
-                   src="http://webirst3.irst.dom/portale_irst/ufficio_personale/ajax/stampa.php?cf=BLZWLM82M12C357S"
+                   src="{{action('InterventoController@stampa',$intervento->id)}}"
                    name="plugin" type="application/pdf" internalinstanceid="5" title="">
         </div>
     </div>

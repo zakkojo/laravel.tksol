@@ -5,6 +5,7 @@ use App\Consulente;
 use App\Http\Requests\AjaxInterventiRequest;
 use App\Http\Requests\InterventiRequest;
 use App\Intervento;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use DB;
@@ -74,6 +75,14 @@ class InterventoController extends Controller {
         $rimborsi = $intervento->rimborsi;
 
         return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi'));
+    }
+
+    public function stampa($id)
+    {
+        $intervento = Intervento::findOrFail($id);
+
+        $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
+        return $pdf->inline();
     }
 
     /**

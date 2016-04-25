@@ -34,7 +34,7 @@
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     $('#form_title').text('Nuovo Intervento');
                     $('#intervento_id').val('').trigger("change");
-                    $('#attivitaPianificate').html('');
+                    $('#attivitaPianificate').html('{!! session()->get('attivita')!!}');
                     $('#data').val(moment(start).format('L'));
                     if (moment(start).format('HHmm') == '0000') {
                         ora_start = moment(start).add('8', 'h');

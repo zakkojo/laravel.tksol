@@ -21,7 +21,7 @@
             </ul>
         </div>
     @endif
-    {!! Form::model($intervento, ['action' => ['InterventoController@update', $intervento->id], 'method' => 'PATCH' ]) !!}
+    {!! Form::model($intervento, ['action' => ['InterventoController@update', $intervento->id], 'method' => 'PATCH','class'=>'riepilogoForm' ]) !!}
     <div class="row">
         <div class="col-md-6">
             @include('interventi.partials.riepilogoForm')
@@ -33,9 +33,23 @@
     <div class="row">
         @include('interventi.partials.textarea')
     </div>
-    <button type="submit" class="btn btn-block btn-primary">Submit</button>
+    <div class="btn-group btn-block">
+        <button type="aggiorna" class="col-md-6 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
+        </button>
+        <button type="stampa" value="stampa" class="stampaButton col-md-6 btn btn-primary"><i class="fa fa-calendar"></i>
+            Stampa
+        </button>
+    </div>
     {!! Form::close() !!}
 @endsection
 @section('page_scripts')
-
+    <script>
+        var submitvalue;
+        $('.stampaButton').click(function () {
+            $('<input />').attr('type', 'hidden')
+                    .attr('name', "stampa")
+                    .attr('value', "1")
+                    .appendTo('.riepilogoForm');
+        });
+    </script>
 @endsection

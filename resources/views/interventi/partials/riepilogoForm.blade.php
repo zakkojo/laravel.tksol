@@ -13,14 +13,16 @@
                     class="form-control select2 select2-hidden-accessible">
                 <option value="{{$consulente->id}}">{{$consulente['nome'] . ' ' . $consulente['cognome'] . ' / ' . $consulente['tipo']}}</option>
             </select>
+            <input type="hidden" id="consulente_id" name="consulente_id" value="{{$consulente->id}}">
         </div>
-        <input type="hidden" id="intervento_id" name="intervento_id">
+        <input type="hidden" id="intervento_id" name="intervento_id" value="{{$intervento->id}}">
         <div class="form-group">
             <label>Cliente</label>
             <select id="cliente" name="cliente" style="width:100%" disabled
                     class="form-control select2 select2-hidden-accessible">
                 <option value="{{$cliente->id}}">{{$cliente['ragione_sociale']}}</option>
             </select>
+            <input type="hidden" id="cliente_id" name="cliente_id" value="{{$cliente->id}}">
         </div>
         <div class="form-group">
             <label>Contratto/Progetto</label>
@@ -29,7 +31,8 @@
         </div>
         <div class="form-group">
             <label>Attività</label>
-            <select id="attivita" name="attivita" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
+            <select id="attivita" name="attivita" style="width:100%"
+                    class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group">
             <label>Listino</label>
@@ -59,15 +62,14 @@
             </select>
         </div>
         <div class="form-group">
-            <label>Fatturabile</label>
+            <?php $fatturabile = ($intervento->fatturabile == '1') ? 'checked' : '' ?>
             <label>
-                <div class="icheckbox_flat-green" aria-checked="false" aria-disabled="false"
-                     style="position: relative;"><input type="checkbox" class="flat-red"
-                                                        style="position: absolute; opacity: 0;">
-                    <ins class="iCheck-helper"
-                         style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins>
+                <div class="icheckbox_flat-green" style="position: relative; margin-right:10px;"><input
+                           {{ $fatturabile }} name="fatturabile" type="checkbox" class="flat-red"
+                            style="position: absolute; opacity: 0;">
                 </div>
             </label>
+            <label>Fatturabile</label>
         </div>
     </div>
 </div>

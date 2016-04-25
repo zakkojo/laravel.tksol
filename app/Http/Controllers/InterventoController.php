@@ -28,6 +28,7 @@ class InterventoController extends Controller {
      */
     public function create()
     {
+
         $consulenti = Consulente::all();
         $clienti = Cliente::all();
 
@@ -78,9 +79,32 @@ class InterventoController extends Controller {
      * @param  int $id
      * @return Response
      */
-    public function update($id)
+    public function update(InterventiRequest $request, $id)
     {
-        dd(Input::all());
+        $intervento = Intervento::findOrFail($id);
+        $intervento->listino_id = Input::get('listinoContratto');
+        $intervento->consulente_id = Input::get('consulente_id');
+        $intervento->attivita_id = Input::get('attivita');
+
+        $intervento->attivitaPianificate = Input::get('attivitaPianificate');
+        $intervento->attivitaSvolte = Input::get('attivitaSvolte');
+        $intervento->attivitaCaricoCliente = Input::get('attivitaCaricoCliente');
+        $intervento->problemiAperti = Input::get('problemiAperti');
+        $intervento->stato = Input::get('stato');
+
+        if (Input::get('fatturabile') == 'on') $fatturabile = 1; else $fatturabile = 0;
+        $intervento->fatturabile = $fatturabile;
+
+        $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
+        $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
+        $intervento->save();
+        if (Input::get('stampa') == 1){
+            session()->flash('attivita',Input::get('problemiAperti'));
+            return redirect()->action('InterventoController@create', ['stampa' => $id]);
+        }
+        else {
+            return redirect()->action('InterventoController@edit', $id);
+        }
     }
 
     /**

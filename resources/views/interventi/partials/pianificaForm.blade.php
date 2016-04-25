@@ -68,7 +68,7 @@ else $progDisabled = 'enabled';
             <div id="attivitaPianificate" name="attivitaPianificate" class="wysihtml5"
                  style="width: 100%; height: 150px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                  placeholder="">
-
+                {!! session()->get('attivita')!!}
             </div>
         </div>
         <div class="form-group row">
@@ -222,5 +222,4 @@ else $progDisabled = 'enabled';
             });
 
 
-        </script>
-    @append
+        </script>@append

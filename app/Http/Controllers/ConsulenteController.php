@@ -68,12 +68,13 @@ class ConsulenteController extends Controller {
         $prossimiInterventi = Intervento::where('consulente_id', '=', $consulente->id)->where('data_start', '>=', date('Y-m-d'));
         //$rapportiniDaInviare = Intervento::where('consulente_id', '=', $consulente->id)->where('stampa', '<', '2');
         $contrattiSenzaInterventi = DB::select("
-            SELECT c.id,ragione_sociale, pro.nome, data_start FROM contratto c
+            SELECT c.id,ragione_sociale, pro.nome, min(data_start) data_start FROM contratto c
             JOIN cliente cli ON (c.cliente_id = cli.id)
             JOIN progetto pro ON (c.progetto_id = pro.id)
             LEFT JOIN contratto_intervento ci on (c.id = ci.contratto_id) 
             LEFT JOIN intervento i ON (i.listino_id = ci.id) 
             WHERE capo_progetto = '".$consulente->id."' AND (data_start >= '".Carbon::now()->addMonths(2)."' OR data_start is null)
+            GROUP BY c.id,ragione_sociale, pro.nome
         ");
 
         return view('consulenti.show', compact('consulente', 'prossimiInterventi', 'rapportiniDaInviare', 'contrattiSenzaInterventi'));

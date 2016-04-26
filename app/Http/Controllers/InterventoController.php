@@ -125,6 +125,7 @@ class InterventoController extends Controller {
 
     public function invia($id)
     {
+        $recipients = Input::get('recipients');
         $intervento = Intervento::findOrFail($id);
         $user = Auth::user();
         $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
@@ -132,14 +133,18 @@ class InterventoController extends Controller {
         $base_path = base_path();
         $pdf->save($base_path.'/resources/tmp/rapportino_'.$id.'.pdf', true);
 
-        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $id,$base_path) {
+        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $id,$base_path,$recipients) {
             $m->from('rapportini@tksol.net', 'Rapportini Teikos Solutions');
             $m->replyTo($user->email, $user->consulente->nominativo);
-            $m->to($user->email, $user->consulente->nominativo);
+            foreach ($recipients as $recipient){
+                $m->to($recipient);
+            }
             $m->bcc($user->email, $user->consulente->nominativo);
             $m->subject('Rapportino Teikos Solutions');
             $m->attach($base_path.'/resources/tmp/rapportino_'.$id.'.pdf');
         });
+
+        return ['status' => 'success'];
     }
     /**
      * Remove the specified resource from storage.

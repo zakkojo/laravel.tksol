@@ -23,6 +23,7 @@
                             <div class="col-xs-12 col-sm-1">
                                 <div class="icheckbox_flat-green" style="margin:20px 2px 0 -10px"><input
                                             name="fatturabile" type="checkbox" class="flat-red"
+                                            value="{{$intervento->listinoInterventi->contratto->cliente->email}}"
                                             style="position: absolute; opacity: 0;">
                                 </div>
                             </div>
@@ -47,7 +48,7 @@
                                 <div class="col-xs-12 col-sm-1">
                                     <div class="icheckbox_flat-green" style="margin:20px 2px 0 -10px"><input
                                                 name="fatturabile" type="checkbox" class="flat-red"
-                                                style="position: absolute; opacity: 0;">
+                                                value="{{$contatto->email}}" style="position: absolute; opacity: 0;">
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-9">
@@ -66,22 +67,16 @@
                     </ul>
                 </div>
                 <div class="box-footer">
-                    <div class="btn-group btn-group-justified">
-                        <div type="Elimina" onclick="deleteIntervento()" class="btn btn-danger"><i
-                                    class="fa fa-trash"></i>
-                            Elimina
-                        </div>
-                        <div type="Modifica" onclick="updateIntervento()" class="btn  btn-primary"><i
-                                    class="fa fa-calendar"></i> Modifica
-                        </div>
+                    <div type="Modifica" onclick="inviaRapportino()" class="btn  btn-primary"><i
+                                class="fa fa-envelope"></i>&nbsp; Invia Email
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-8 embed-responsive embed-responsive-16by9" style="margin-top:-55px;padding-bottom:49%">
             <embed class="embed-responsive-item" width="100%"
-                   src="{{action('InterventoController@stampa',$intervento->id)}}"
-                   name="plugin" type="application/pdf" internalinstanceid="5" title="">
+                   src="{{action('InterventoController@stampa',$intervento->id)}}" name="plugin" type="application/pdf"
+                   internalinstanceid="5" title="">
         </div>
     </div>
 @endsection
@@ -101,5 +96,26 @@
             NdivH = NwinH * divH / winH;
             $('.embed-responsive-16by9').css('padding-bottom', NdivH + 'px');
         });
+
+        function inviaRapportino() {
+            var emails = $("input:checkbox:checked").map(function () {
+                if($(this).val()!='on') return $(this).val();
+            }).get();
+            $.ajax({
+                url: "{{action('InterventoController@invia',$intervento->id)}}",
+                type: "get",
+                data: {recipients: emails},
+                dataType: "JSON"
+            }).done(function (data) {
+                if (data['status'] == 'success') {
+                    alert('email inviata');
+                }
+                else console.log(['Errore!!', data]);
+            }).fail(function (jqXHR, textStatus) {
+                console.log("Request failed: " + textStatus);
+            });
+        }
+
+
     </script>
 @endsection

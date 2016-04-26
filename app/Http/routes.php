@@ -32,9 +32,9 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/login','Auth\AuthController@showLoginForm');
     Route::post('/login','Auth\AuthController@login');
     Route::get('/logout','Auth\AuthController@logout');
+    Route::get('/registrazioneSegreta','Auth\AuthController@showRegistrationForm');
 // Password reset link request routes...
     Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
-
 // Password reset routes...
     Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
     Route::post('password/reset', 'Auth\PasswordController@reset');

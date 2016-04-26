@@ -1,117 +1,122 @@
 <?php namespace App\Http\Controllers;
+
 use App\Http\Requests;
 use App\Consulente;
 use App\Contatto;
 use App\User;
 
+use Illuminate\Support\Facades\Password;
 use Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller {
 
-  /**
-   * Display a listing of the resource.
-   *
-   * @return Response
-   */
-  public function index()
-  {
-    
-  }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return Response
-   */
-  public function create()
-  {
-    return view('utenti.create');
-  }
+    }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @return Response
-   */
-  public function store()
-  {
-    $data = Request::all();
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return view('utenti.create');
+    }
 
-    return $data;
-  }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        $data = Request::all();
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function show($id)
-  {
-    
-  }
+        return $data;
+    }
 
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-    
-  }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function show($id)
+    {
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id)
-  {
-    
-  }
+    }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function destroy($id)
-  {
-    
-  }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function update($id)
+    {
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+
+    }
 
     public function ajaxToggleUser()
     {
-        if(Input::get('tipo_utente') == 1){
-            $utente =  Consulente::findOrFail(Input::get('id'));
+        if (Input::get('tipo_utente') == 1)
+        {
+            $utente = Consulente::findOrFail(Input::get('id'));
+        } elseif (Input::get('tipo_utente') == 2)
+        {
+            $utente = Contatto::findOrFail(Input::get('id'));
         }
-        elseif(Input::get('tipo_utente') == 2) {
-            $utente =  Contatto::findOrFail(Input::get('id'));
-        }
-        if(count($utente->user)){
+        if (count($utente->user))
+        {
             $user = User::find($utente->user_id);
             $user->delete();
-            $msg = 'Accesso Disabilitato per: '.$user->email;
-        }
-        else{
+            $msg = 'Accesso Disabilitato per: ' . $user->email;
+        } else
+        {
             $utente->user()->withTrashed()->first()->restore();
             $user = User::find($utente->user_id);
-            $msg = 'Accesso Abilitato per: '.$user->email;
+            $msg = 'Accesso Abilitato per: ' . $user->email;
+            Password::sendResetLink(['email' => $user->email]);
         }
-
         $response = array(
             'status' => 'success',
-            'msg' => $msg,
+            'msg'    => $msg,
         );
-        return Response::json( $response );
+
+        return Response::json($response);
     }
-  
+
 }
 
 ?>

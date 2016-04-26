@@ -67,9 +67,11 @@
                     </ul>
                 </div>
                 <div class="box-footer">
-                    <div type="Modifica" onclick="inviaRapportino()" class="btn  btn-primary"><i
+                    <div id="inviaBtn" type="Modifica" onclick="inviaRapportino()" class="btn  btn-primary"><i
                                 class="fa fa-envelope"></i>&nbsp; Invia Email
                     </div>
+                    <span id="invioOK" style="display:none" class="label label-success"><i class="fa fa-check"></i> Inviato</span>
+                    <span id="invioKO" style="display:none" class="label label-danger"><i class="fa fa-remove"></i> Errore</span>
                 </div>
             </div>
         </div>
@@ -98,8 +100,9 @@
         });
 
         function inviaRapportino() {
+            $('#inviaBtn').attr("disabled","disabled");
             var emails = $("input:checkbox:checked").map(function () {
-                if($(this).val()!='on') return $(this).val();
+                if ($(this).val() != 'on') return $(this).val();
             }).get();
             $.ajax({
                 url: "{{action('InterventoController@invia',$intervento->id)}}",
@@ -109,10 +112,17 @@
             }).done(function (data) {
                 if (data['status'] == 'success') {
                     alert('email inviata');
+                    $("#invioOK").fadeIn().delay(5000).fadeOut();
                 }
-                else console.log(['Errore!!', data]);
+                else {
+                    console.log(['Errore!!', data]);
+                    $("#invioKO").fadeIn().delay(5000).fadeOut();
+                }
             }).fail(function (jqXHR, textStatus) {
                 console.log("Request failed: " + textStatus);
+                $("#invioKO").fadeIn().delay(5000).fadeOut();
+            }).always(function () {
+                $('#inviaBtn').attr("disabled",false);
             });
         }
 

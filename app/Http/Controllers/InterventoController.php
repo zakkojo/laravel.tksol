@@ -137,7 +137,7 @@ class InterventoController extends Controller {
             $m->from('rapportini@tksol.net', 'Rapportini Teikos Solutions');
             $m->replyTo($user->email, $user->consulente->nominativo);
             foreach ($recipients as $recipient){
-                $m->to($recipient);
+                if($recipient) $m->to($recipient);
             }
             $m->bcc($user->email, $user->consulente->nominativo);
             $m->subject('Rapportino Teikos Solutions');

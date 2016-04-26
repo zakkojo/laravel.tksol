@@ -7,8 +7,10 @@ use App\Http\Requests\InterventiRequest;
 use App\Intervento;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use DB;
+use Illuminate\Support\Facades\Mail;
 
 class InterventoController extends Controller {
 
@@ -77,14 +79,6 @@ class InterventoController extends Controller {
         return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi'));
     }
 
-    public function stampa($id)
-    {
-        $intervento = Intervento::findOrFail($id);
-
-        $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
-        return $pdf->inline();
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -121,6 +115,32 @@ class InterventoController extends Controller {
         }
     }
 
+    public function stampa($id)
+    {
+        $intervento = Intervento::findOrFail($id);
+
+        $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
+        return $pdf->inline();
+    }
+
+    public function invia($id)
+    {
+        $intervento = Intervento::findOrFail($id);
+        $user = Auth::user();
+        $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
+
+        $base_path = base_path();
+        $pdf->save($base_path.'/resources/tmp/rapportino_'.$id.'.pdf', true);
+
+        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $id,$base_path) {
+            $m->from('rapportini@tksol.net', 'Rapportini Teikos Solutions');
+            $m->replyTo($user->email, $user->consulente->nominativo);
+            $m->to($user->email, $user->consulente->nominativo);
+            $m->bcc($user->email, $user->consulente->nominativo);
+            $m->subject('Rapportino Teikos Solutions');
+            $m->attach($base_path.'/resources/tmp/rapportino_'.$id.'.pdf');
+        });
+    }
     /**
      * Remove the specified resource from storage.
      *

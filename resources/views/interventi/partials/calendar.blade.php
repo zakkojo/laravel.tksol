@@ -190,7 +190,7 @@
                             error: function () {
                                 alert('there was an error while fetching events!');
                             },
-                            color: '#FF3F43',   // a non-ajax option
+                            color: '#F9595C',   // a non-ajax option
                             textColor: 'black' // a non-ajax option
                         }
                 )

@@ -101,6 +101,7 @@
                     updateIntervento();
                 },
                 eventClick: function (calEvent, jsEvent, view) {
+                    if (calEvent.stampa == 0){
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     $('#form_title').text('Modifica Intervento ' + calEvent.id);
                     $('#intervento_id').val(calEvent.id).trigger("change");
@@ -112,6 +113,7 @@
                     $('#data').val(calEvent.start.format('L'));
                     $('#ora_start').val(calEvent.start.format('HH:mm'));
                     $('#ora_end').val(calEvent.end.format('HH:mm'));
+                    }
                 },
                 eventRender: function (event, element) {
                     element.find('.fc-title').append("<br/>" + event.description);
@@ -188,7 +190,7 @@
                             error: function () {
                                 alert('there was an error while fetching events!');
                             },
-                            color: 'red',   // a non-ajax option
+                            color: '#FF3F43',   // a non-ajax option
                             textColor: 'black' // a non-ajax option
                         }
                 )
@@ -207,12 +209,33 @@
                         error: function () {
                             alert('there was an error while fetching events!');
                         },
-                        color: 'yellow',   // a non-ajax option
+                        color: '#92E1C0',   // a non-ajax option
                         textColor: 'black' // a non-ajax option
                     }
             )
         }
-
+        function updateConsuntivoSource() {
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=9');
+            if ($('#progetto').val()) {
+                $('#calendar').fullCalendar('addEventSource',
+                        {
+                            id: 'consuntivoEvents',
+                            url: '/ajax/interventi/getCalendar?id=9',
+                            type: 'GET',
+                            data: {
+                                progetto_id: globale_progetto,
+                                stampa: 1
+                            },
+                            error: function () {
+                                alert('there was an error while fetching events!');
+                            },
+                            color: '#EAAFB0',   // a non-ajax option
+                            textColor: '#777777',
+                            editable: false
+                        }
+                )
+            }
+        }
         function annullaCreateIntervento() {
             $('#calendar').fullCalendar('removeEvents', 'new');
         }

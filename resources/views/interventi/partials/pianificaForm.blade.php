@@ -165,6 +165,7 @@ else $progDisabled = 'enabled';
                                 if (c == 0) $('#progetto').select2('val', '');
                                 globale_progetto = $('#progetto').val();
                                 updateProgettoSource();
+                                updateConsuntivoSource();
                             });
                 }
             });

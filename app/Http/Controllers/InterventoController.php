@@ -21,7 +21,7 @@ class InterventoController extends Controller {
      */
     public function index()
     {
-
+        return redirect()->action('InterventoController@create');
     }
 
     /**
@@ -60,6 +60,7 @@ class InterventoController extends Controller {
     {
         $intervento = Intervento::findOrFail($id);
         if ($intervento->stampa == 0) return redirect()->action('InterventoController@edit', $id);
+
         return view('interventi.inviaStampa', compact('intervento'));
     }
 
@@ -101,13 +102,14 @@ class InterventoController extends Controller {
         if (Input::get('fatturabile') == 'on') $fatturabile = 1; else $fatturabile = 0;
         $intervento->fatturabile = $fatturabile;
 
-        $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
-        $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
+        $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'));
+        $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'));
         $intervento->save();
         if (Input::get('stampa') == 1)
         {
             session()->flash('attivita', Input::get('problemiAperti'));
             session()->flash('stampaIntervento', $id);
+
             return redirect()->action('InterventoController@create');
         } else
         {
@@ -120,6 +122,7 @@ class InterventoController extends Controller {
         $intervento = Intervento::findOrFail($id);
 
         $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
+
         return $pdf->inline();
     }
 
@@ -131,21 +134,24 @@ class InterventoController extends Controller {
         $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
 
         $base_path = base_path();
-        $pdf->save($base_path.'/resources/tmp/rapportino_'.$id.'.pdf', true);
+        $pdf->save($base_path . '/resources/tmp/rapportino_' . $id . '.pdf', true);
 
-        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $id,$base_path,$recipients) {
+        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $id, $base_path, $recipients)
+        {
             $m->from('rapportini@tksol.net', 'Rapportini Teikos Solutions');
             $m->replyTo($user->email, $user->consulente->nominativo);
-            foreach ($recipients as $recipient){
-                if($recipient) $m->to($recipient);
+            foreach ($recipients as $recipient)
+            {
+                if ($recipient) $m->to($recipient);
             }
             $m->bcc($user->email, $user->consulente->nominativo);
             $m->subject('Rapportino Teikos Solutions');
-            $m->attach($base_path.'/resources/tmp/rapportino_'.$id.'.pdf');
+            $m->attach($base_path . '/resources/tmp/rapportino_' . $id . '.pdf');
         });
 
         return ['status' => 'success'];
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -166,21 +172,24 @@ class InterventoController extends Controller {
         {
             $consulente_id = Input::get('consulente_id');
             $progetto_id = Input::get('progetto_id');
+            if (Input::get('stampa')) $stampa = 1;
+            else $stampa = 0;
+
             if ($consulente_id)
             {
                 $where[0][] = ['consulente_id' => $consulente_id];
-                $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->get();
+                $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('stampa', $stampa)->get();
             } elseif ($progetto_id)
             {
                 $calendario = Intervento::with(['listinoInterventi.contratto.progetto' => function ($query) use ($progetto_id)
                 {
                     $query->where('id', '=', $progetto_id);
-                }])->where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->get();
+                }])->where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where('stampa', $stampa)->get();
             } else $calendario = [];
 
-            $calendario->each(function ($evento)
+            if ($calendario != [])
             {
-                if ($evento['stato'] != 'Consuntivo')
+                $calendario->each(function ($evento)
                 {
                     $intervento = Intervento::findOrFail($evento['id']);
                     $evento['contratto_id'] = '' . $intervento->listinoInterventi->contratto->id;
@@ -196,13 +205,13 @@ class InterventoController extends Controller {
                     $evento['className'] = 'pianificato';
 
                     return $evento;
-                }
-            });
+                });
+            }
 
             return $calendario;
         }
 
-        return ['msg' => 'errore'];
+        return ['msg' => 'errore', 'start' => $data_start];
     }
 
     public function ajaxCreateIntervento(AjaxInterventiRequest $request)
@@ -225,12 +234,11 @@ class InterventoController extends Controller {
             {
                 $intervento = Intervento::findOrFail($id_padre);
                 $intervento->stampa = 1;
-                if ($intervento->save()) {
-                    return ['status' => 'success', 'action'=>'stampa', 'id_padre'=>$id_padre];
-                }
-                else return ['status' => 'fail'];
-            }
-            else return ['status' => 'success', 'msg' => Input::get('stampaIntervento')];
+                if ($intervento->save())
+                {
+                    return ['status' => 'success', 'action' => 'stampa', 'id_padre' => $id_padre];
+                } else return ['status' => 'fail'];
+            } else return ['status' => 'success', 'msg' => Input::get('stampaIntervento')];
 
             return ['status' => 'success'];
         }

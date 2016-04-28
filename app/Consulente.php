@@ -33,4 +33,8 @@ class Consulente extends Model {
         return $this->nome . ' ' . $this->cognome;
     }
 
+    public function contratti()
+    {
+        return $this->belongsToMany(Contratto::class)->withPivot('note','ruolo');
+    }
 }

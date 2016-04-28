@@ -37,7 +37,7 @@ class ContrattoInterventoController extends Controller {
   {
       $data = $request->all();
       $ret = ContrattoIntervento::create($data);
-      return redirect()->action('ContrattoController@edit', $data->contratto_id);
+      return redirect()->action('ContrattoController@edit', $data['contratto_id']);
   }
 
   /**

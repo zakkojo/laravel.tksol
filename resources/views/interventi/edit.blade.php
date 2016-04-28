@@ -35,11 +35,13 @@
     </div>
     @if($intervento->stampa == 0 )
     <div class="btn-group btn-block">
-        <button type="aggiorna" class="col-md-6 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
+        @if(Auth::User()->id == $consulente->id OR $user->tipo == 'Partner')
+            <button type="aggiorna" class="col-md-6 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
         </button>
         <button type="stampa" value="stampa" class="stampaButton col-md-6 btn btn-primary"><i class="fa fa-calendar"></i>
-            Stampa
+            Salva e Stampa
         </button>
+        @endif
     </div>
     @elseif($intervento->stampa == 1 )
         <a href="{{ action('InterventoController@show',$intervento->id) }}" type="stampa" value="stampa" class="btn-block btn btn-primary"><i class="fa fa-calendar"></i>

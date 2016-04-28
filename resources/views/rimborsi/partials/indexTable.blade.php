@@ -3,11 +3,13 @@
         <h3 class="box-title">Rimborsi</h3>
         <div class="box-tools">
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                <button type="button" class="btn btn-default"
-                        onClick="location.href='{{ action('RimborsoController@create',$intervento->id) }}'"
-                        title="Aggiungi Nuovo ">
-                    <i class="fa fa-plus"></i>
-                </button>
+                @if(Auth::User()->id == $consulente->id OR $user->tipo == 'Partner')
+                    <button type="button" class="btn btn-default"
+                            onClick="location.href='{{ action('RimborsoController@create',$intervento->id) }}'"
+                            title="Aggiungi Nuovo ">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                @endif
             </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
                 <div class="input-group input-group-sm" style="width: 150px;">

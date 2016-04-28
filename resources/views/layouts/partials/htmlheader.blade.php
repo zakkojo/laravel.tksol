@@ -24,6 +24,8 @@
     <link href="{{ asset('/plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
     <!-- Datepicker3 -->
     <link href="{{ asset('/plugins/datepicker/datepicker3.css') }}" rel="stylesheet" type="text/css" />
+    <!-- ClockPicker -->
+    <link href="{{ asset('/plugins/clockpicker/clockpicker.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- wysihtml5 -->
     <link href="{{ asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- Tree-View -->

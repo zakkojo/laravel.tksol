@@ -94,6 +94,11 @@ class Contratto extends Model {
         return $this->belongsTo(Progetto::class);
     }
 
+    public function consulenti()
+    {
+        return $this->belongsToMany(Consulente::class)->withPivot('note','ruolo');
+    }
+    
     public function listinoProdotti()
     {
         return $this->hasMany(ContrattoProdotto::class);
@@ -103,5 +108,7 @@ class Contratto extends Model {
     {
         return $this->hasMany(ContrattoIntervento::class);
     }
+
+    
 
 }

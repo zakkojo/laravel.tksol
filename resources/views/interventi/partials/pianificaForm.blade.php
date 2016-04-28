@@ -24,7 +24,7 @@ else $progDisabled = 'enabled';
 ?>
 <div class="box box-primary">
     <div class="box-header with-border">
-        <h3 id="form_title" class="box-title">Consulente</h3>
+        <h3 id="form_title" class="box-title">Pianifica</h3>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
             </button>
@@ -37,18 +37,18 @@ else $progDisabled = 'enabled';
             $listConsulenti,
             $consulente->id,
             ['id'=>'consulente','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
-        !!}
-
+            !!}
         </div>
         <input type="hidden" id="intervento_id" name="intervento_id">
-        <input type="hidden" id="stampaIntervento" name="stampaIntervento" value="{{ session()->get('stampaIntervento') ?: '0' }}">
+        <input type="hidden" id="stampaIntervento" name="stampaIntervento"
+               value="{{ session()->get('stampaIntervento') ?: '0' }}">
         <div class="form-group">
             <label>Cliente</label>
             {!! Form::select('cliente_id',
             $listClienti,
             $cli,
             [$cliDisabled => $cliDisabled,'id'=>'cliente','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
-        !!}
+            !!}
         </div>
         <div class="form-group">
             <label>Contratto/Progetto</label>
@@ -65,7 +65,7 @@ else $progDisabled = 'enabled';
                     class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group">
-            <label>Descrizione</label>
+            <label>Attività Pianificate</label>
             <div id="attivitaPianificate" name="attivitaPianificate" class="wysihtml5"
                  style="width: 100%; height: 150px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                  placeholder="">
@@ -89,9 +89,9 @@ else $progDisabled = 'enabled';
         <div class="box-footer">
             <div id="pulsanti_create" style="display:none">
                 <div class="btn-group btn-group-justified">
-                    <div type="Annulla" onclick="annullaCreateIntervento()" class="btn btn-default"><i
+                    <!--div type="Annulla" onclick="annullaCreateIntervento()" class="btn btn-default"><i
                                 class="fa fa-remove"></i> Annulla
-                    </div>
+                    </div-->
                     <div type="Pianifica" onclick="createIntervento()" class="btn  btn-primary"><i
                                 class="fa fa-calendar"></i> Pianifica
                     </div>
@@ -99,10 +99,13 @@ else $progDisabled = 'enabled';
             </div>
             <div id="pulsanti_update">
                 <div class="btn-group btn-group-justified">
-                    <div type="Elimina" onclick="deleteIntervento()" class="btn btn-danger"><i class="fa fa-trash"></i>
-                        Elimina
-                    </div>
-                    <div type="Modifica" onclick="updateIntervento()" class="btn  btn-primary"><i
+                    @if(1==0)
+                        <div type="Elimina" onclick="deleteIntervento()" class="btn btn-danger"><i
+                                    class="fa fa-trash"></i>
+                            Elimina
+                        </div>
+                    @endif
+                    <div type="Modifica" onclick="updateIntervento()" class="btnModifica btn  btn-primary"><i
                                 class="fa fa-calendar"></i> Modifica
                     </div>
                 </div>
@@ -147,11 +150,14 @@ else $progDisabled = 'enabled';
                 $('#progetto').html('');
                 $('#contratto').val('');
                 if ($('#cliente').val()) {
-                    $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val()})
+                    $.get('{{action('ClienteController@ajaxGetContratti')}}', {
+                                cliente_id: $('#cliente').val(),
+                                user: '{{Auth::user()->id}}'
+                            })
                             .done(function (data) {
 
                                 var c = 0;
-                                $.each(data.contratti, function (id, contratto) {
+                                $.each(data, function (id, contratto) {
                                     c++;
                                     $('#progetto')
                                             .append($("<option></option>")

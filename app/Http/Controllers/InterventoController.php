@@ -2,6 +2,7 @@
 
 use App\Cliente;
 use App\Consulente;
+use App\Contratto;
 use App\Http\Requests\AjaxInterventiRequest;
 use App\Http\Requests\InterventiRequest;
 use App\Intervento;
@@ -76,8 +77,9 @@ class InterventoController extends Controller {
         $consulente = $intervento->consulente;
         $cliente = $intervento->listinoInterventi->contratto->cliente;
         $rimborsi = $intervento->rimborsi;
+        $user = Consulente::findOrFail(Auth::User()->id);
 
-        return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi'));
+        return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi','user'));
     }
 
     /**
@@ -102,8 +104,8 @@ class InterventoController extends Controller {
         if (Input::get('fatturabile') == 'on') $fatturabile = 1; else $fatturabile = 0;
         $intervento->fatturabile = $fatturabile;
 
-        $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'));
-        $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'));
+        $intervento->data_start_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start_reale'));
+        $intervento->data_end_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end_reale'));
         $intervento->save();
         if (Input::get('stampa') == 1)
         {
@@ -272,6 +274,21 @@ class InterventoController extends Controller {
         if ($response) return ['status' => 'success'];
 
         return ['status' => 'fail'];
+    }
+
+    public function ajaxGetPermissionUpdateIntervento()
+    {
+        
+        $user = Input::get('user_id');
+
+        $res = Contratto::where('id',Input::get('contratto_id'))->whereHas('consulenti', function ($query) use ($user)
+        {
+            $query->where('consulente_id', $user);
+        })->count();
+        
+        if ($res) return ['status'=>'success','result'=>true];
+        else return ['status'=>'success','result'=>false];
+
     }
 
 }

@@ -18,6 +18,8 @@
 <!-- Datepicker3 -->
 <script src="{{asset('/plugins/datepicker/bootstrap-datepicker.js')}}" type="text/javascript" ></script>
 <script src="{{asset('/plugins/datepicker/locales/bootstrap-datepicker.it.js')}}" type="text/javascript" ></script>
+<!-- ClockPicker -->
+<script src="{{asset('/plugins/clockpicker/clockpicker.min.js')}}" type="text/javascript" ></script>
 <!-- wysightml5 -->
 <script src="{{asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}" type="text/javascript" ></script>
 <!-- Tree-View -->

@@ -2,10 +2,10 @@
 
 
 @section('htmlheader_title')
-    Programma Interventi
+    Pianifica Interventi
 @endsection
 @section('contentheader_title')
-    Programma Interventi
+    Pianifica Interventi
 @endsection
 @section('contentheader_breadcrumb')
 @endsection

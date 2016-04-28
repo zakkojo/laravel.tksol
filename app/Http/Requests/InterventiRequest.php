@@ -51,8 +51,8 @@ class InterventiRequest extends Request {
                     "intervento_id"         => 'required|numeric',
                     
                     "data"                  => 'required',
-                    "ora_start"             => 'required',
-                    "ora_end"               => 'required',
+                    "ora_start_reale"             => 'required',
+                    "ora_end_reale"               => 'required',
                     "stato"                 => 'required',
                     
                     //"attivitaPianificate"   => "0",

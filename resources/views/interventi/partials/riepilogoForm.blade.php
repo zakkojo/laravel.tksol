@@ -46,11 +46,15 @@
             </div>
             <div class="col-md-4">
                 <label>Ora Inizio</label>
-                <input type="text" id="ora_start" name="ora_start" style="width:100%" readonly class="form-control">
+                <input type="text" id="ora_start_reale" onkeydown="return false;" name="ora_start_reale" style="width:100%"
+                       class="form-control clockpicker">
+                <input type="hidden" id="ora_start" name="ora_start" style="width:100%" readonly class="form-control">
             </div>
             <div class="col-md-4">
                 <label>Ora Fine</label>
-                <input type="text" id="ora_end" name="ora_end" style="width:100%" readonly class="form-control">
+                <input type="text" id="ora_end_reale" onkeydown="return false;" name="ora_end_reale" style="width:100%"
+                       class="form-control clockpicker">
+                <input type="hidden" id="ora_end" name="ora_end" style="width:100%" readonly class="form-control">
             </div>
         </div>
         <div class="form-group">
@@ -65,7 +69,7 @@
             <?php $fatturabile = ($intervento->fatturabile == '1') ? 'checked' : '' ?>
             <label>
                 <div class="icheckbox_flat-green" style="position: relative; margin-right:10px;"><input
-                           {{ $fatturabile }} name="fatturabile" type="checkbox" class="flat-red"
+                            {{ $fatturabile }} name="fatturabile" type="checkbox" class="flat-red"
                             style="position: absolute; opacity: 0;">
                 </div>
             </label>
@@ -83,6 +87,21 @@
             ora_end = moment('{{$intervento->data_end}}');
             $('#ora_start').val(ora_start.format('HH:mm'));
             $('#ora_end').val(ora_end.format('HH:mm'));
+
+            if ('{{$intervento->data_start_reale}}' == '0000-00-00 00:00:00')  $('#ora_start_reale').val(ora_start.format('HH:mm'));
+            else $('#ora_start_reale').val(moment('{{$intervento->data_start_reale}}').format('HH:mm'));
+
+            if ('{{$intervento->data_start_reale}}' == '0000-00-00 00:00:00')  $('#ora_end_reale').val(ora_end.format('HH:mm'));
+            else $('#ora_end_reale').val(moment('{{$intervento->data_end_reale}}').format('HH:mm'));
+
+            console.log('{{$intervento->data_start_reale}}');
+
+            $('.clockpicker').clockpicker({
+                placement: 'top',
+                align: 'left',
+                donetext: 'OK'
+            });
+
         });
 
         $('#consulente').change(function () {
@@ -100,11 +119,11 @@
             $('#progetto').html('');
             $('#contratto').val('');
             if ($('#cliente').val()) {
-                $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val()})
+                $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val(), user: {{$consulente->id}}})
                         .done(function (data) {
 
                             var c = 0;
-                            $.each(data.contratti, function (id, contratto) {
+                            $.each(data, function (id, contratto) {
                                 c++;
                                 $('#progetto')
                                         .append($("<option></option>")

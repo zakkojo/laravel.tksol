@@ -112,121 +112,121 @@ else $progDisabled = 'enabled';
             </div>
         </div>
     </div>
-    @section('page_scripts')
-        <script>
-            $('document').ready(function () {
-                $('.wysihtml5').wysihtml5({
-                    toolbar: {
-                        "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
-                        "emphasis": true, //Italics, bold, etc. Default true
-                        "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
-                        "html": false, //Button which allows you to edit the generated HTML. Default false
-                        "link": false, //Button to insert a link. Default true
-                        "image": false, //Button to insert an image. Default true,
-                        "color": false, //Button to change color of font
-                        "blockquote": false, //Blockquote
-                        "size": 'sm' //default: none, other options are xs, sm, lg
-                    }
-                });
-
-                drawCalendar();
-                $('#consulente').trigger('change');
-                $('#cliente').trigger('change');
-                //Consulente->Tipo
+</div>
+@section('page_scripts')
+    <script>
+        $('document').ready(function () {
+            $('.wysihtml5').wysihtml5({
+                toolbar: {
+                    "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+                    "emphasis": true, //Italics, bold, etc. Default true
+                    "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+                    "html": false, //Button which allows you to edit the generated HTML. Default false
+                    "link": false, //Button to insert a link. Default true
+                    "image": false, //Button to insert an image. Default true,
+                    "color": false, //Button to change color of font
+                    "blockquote": false, //Blockquote
+                    "size": 'sm' //default: none, other options are xs, sm, lg
+                }
             });
-            $('#consulente').change(function () {
-                globale_consulente = $('#consulente').val();
-                $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
+
+            drawCalendar();
+            $('#consulente').trigger('change');
+            $('#cliente').trigger('change');
+            //Consulente->Tipo
+        });
+
+        $('#consulente').change(function () {
+            globale_consulente = $('#consulente').val();
+            $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
+                    .done(function (data) {
+                        $('#consulente_tipo')
+                                .append($("<option></option>")
+                                        .attr('value', data.tipo)
+                                        .text(data.tipo));
+                        updateConsulenteSource();
+                    });
+        });
+        //Cliente->Progetto
+        $('#cliente').change(function () {
+            $('#progetto').html('');
+            $('#contratto').val('');
+            if ($('#cliente').val()) {
+                globale_cliente = $('#cliente').val();
+                $.get('{{action('ClienteController@ajaxGetContratti')}}', {
+                            cliente_id: $('#cliente').val(),
+                            user: '{{Auth::user()->id}}'
+                        })
                         .done(function (data) {
-                            $('#consulente_tipo')
-                                    .append($("<option></option>")
-                                            .attr('value', data.tipo)
-                                            .text(data.tipo));
-                            updateConsulenteSource();
+
+                            var c = 0;
+                            $.each(data, function (id, contratto) {
+                                c++;
+                                $('#progetto')
+                                        .append($("<option></option>")
+                                                .attr('value', contratto.progetto.id)
+                                                .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
+                                if (c == '1') {
+                                    $('#contratto').val(contratto.id);
+                                    $('#progetto').select2('val', contratto.progetto.id);
+                                }
+                            });
+                            if (c == 0) $('#progetto').select2('val', '');
+                            updateProgettoSource();
+                            updateConsuntivoSource();
                         });
-            });
-            //Cliente->Progetto
-            $('#cliente').change(function () {
-                $('#progetto').html('');
-                $('#contratto').val('');
-                if ($('#cliente').val()) {
-                    $.get('{{action('ClienteController@ajaxGetContratti')}}', {
-                                cliente_id: $('#cliente').val(),
-                                user: '{{Auth::user()->id}}'
-                            })
-                            .done(function (data) {
+            }
+        });
 
-                                var c = 0;
-                                $.each(data, function (id, contratto) {
-                                    c++;
-                                    $('#progetto')
-                                            .append($("<option></option>")
-                                                    .attr('value', contratto.progetto.id)
-                                                    .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
-                                    if (c == '1') {
-                                        $('#contratto').val(contratto.id);
-                                        $('#progetto').select2('val', contratto.progetto.id);
-                                    }
-                                });
-                                if (c == 0) $('#progetto').select2('val', '');
-                                globale_contratto = $('#contratto').val();
-                                updateProgettoSource();
-                                updateConsuntivoSource();
+        $('#progetto').change(function () {
+            $('#attivita').html('');
+            $('#attivita').select2('val', '');
+            //Progetto->Attivita
+            if ($('#progetto').val()) {
+                $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
+                        .done(function (data) {
+                            var c = 0;
+                            $.each(data, function (id, dettagli) {
+                                c++;
+                                lastoption = $('#attivita')
+                                        .append($("<option></option>")
+                                                .attr('value', dettagli.id)
+                                                .text(dettagli.descrizione));
+                                if (c == '1') {
+                                    $('#attivita').select2("val", dettagli.id);
+                                }
                             });
-                }
-            });
-
-            $('#progetto').change(function () {
-                $('#attivita').html('');
-                $('#attivita').select2('val', '');
-                //Progetto->Attivita
-                if ($('#progetto').val()) {
-                    $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
-                            .done(function (data) {
-                                var c = 0;
-                                $.each(data, function (id, dettagli) {
-                                    c++;
-                                    lastoption = $('#attivita')
-                                            .append($("<option></option>")
-                                                    .attr('value', dettagli.id)
-                                                    .text(dettagli.descrizione));
-                                    if (c == '1') {
-                                        $('#attivita').select2("val", dettagli.id);
-                                    }
-                                });
+                        });
+            }
+            //Contratto->Listino
+            $('#listinoContratto').html('');
+            $('#listinoContratto').select2('val', '');
+            if ($('#contratto').val()) {
+                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
+                        .done(function (data) {
+                            var c = 0;
+                            $.each(data, function (id, dettagli) {
+                                c++;
+                                lastoption = $('#listinoContratto')
+                                        .append($("<option></option>")
+                                                .attr('value', dettagli.id)
+                                                .text(dettagli.descrizione));
+                                if (c == '1') {
+                                    $('#listinoContratto').select2("val", dettagli.id);
+                                }
                             });
-                }
-                //Contratto->Listino
-                $('#listinoContratto').html('');
-                $('#listinoContratto').select2('val', '');
-                if ($('#contratto').val()) {
-                    $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
-                            .done(function (data) {
-                                var c = 0;
-                                $.each(data, function (id, dettagli) {
-                                    c++;
-                                    lastoption = $('#listinoContratto')
-                                            .append($("<option></option>")
-                                                    .attr('value', dettagli.id)
-                                                    .text(dettagli.descrizione));
-                                    if (c == '1') {
-                                        $('#listinoContratto').select2("val", dettagli.id);
-                                    }
-                                });
-                            });
-                }
-            });
+                        });
+            }
+        });
 
-            $('#intervento_id').change(function () {
-                if ($('#intervento_id').val() == "") {
-                    $('#pulsanti_update').hide();
-                    $('#pulsanti_create').show();
-                }
-                else {
-                    $('#pulsanti_update').show();
-                    $('#pulsanti_create').hide();
-                }
-            });
-
-
-        </script>@append
+        $('#intervento_id').change(function () {
+            if ($('#intervento_id').val() == "") {
+                $('#pulsanti_update').hide();
+                $('#pulsanti_create').show();
+            }
+            else {
+                $('#pulsanti_update').show();
+                $('#pulsanti_create').hide();
+            }
+        });
+    </script>@append

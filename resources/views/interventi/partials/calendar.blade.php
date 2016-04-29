@@ -3,7 +3,7 @@
 </div>
 @section('page_scripts')
     <script>
-        var globale_contratto;
+        var globale_cliente;
         var globale_consulente;
         function drawCalendar() {
             $('#calendar').fullCalendar({
@@ -196,7 +196,7 @@
                             url: '/ajax/interventi/getCalendar?id=12',
                             type: 'GET',
                             data: {
-                                contratto_id: globale_contratto
+                                cliente_id: globale_cliente
                             },
                             error: function () {
                                 alert('there was an error while fetching events!');
@@ -234,7 +234,7 @@
                             url: '/ajax/interventi/getCalendar?id=9',
                             type: 'GET',
                             data: {
-                                progetto_id: globale_contratto,
+                                cliente_id: globale_cliente,
                                 stampa: 1
                             },
                             error: function () {

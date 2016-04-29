@@ -79,7 +79,9 @@
                 },
                 eventResize: function (event, delta, revertFunc) {
                     $('#ora_end').val(event.end.format('HH:mm'));
-                    updateIntervento();
+                    //ACL
+                    if (event.consulente_id == '{{Auth::User()->consulente->id}}')updateIntervento();
+                    else revertFunc();
                 },
                 eventDragStart: function (calEvent, delta, revertFunc) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
@@ -98,7 +100,9 @@
                     $('#data').val(moment(event.start).format('L'));
                     $('#ora_start').val(event.start.format('HH:mm'));
                     $('#ora_end').val(event.end.format('HH:mm'));
-                    updateIntervento();
+                    //ACL
+                    if (event.consulente_id == '{{Auth::User()->consulente->id}}')updateIntervento();
+                    else revertFunc();
                 },
                 eventClick: function (calEvent, jsEvent, view) {
                     if (calEvent.stampa == 0) {
@@ -113,19 +117,11 @@
                         $('#data').val(calEvent.start.format('L'));
                         $('#ora_start').val(calEvent.start.format('HH:mm'));
                         $('#ora_end').val(calEvent.end.format('HH:mm'));
-                        $.get('{{action('InterventoController@ajaxGetPermissionUpdateIntervento')}}', {
-                            user_id: '{{Auth::User()->id}}',
-                            contratto_id: calEvent.contratto_id
-                        })
-                        .done(function (data) {
-                            if (data.status == 'success' && data.result == true){
-                                $('.btnModifica').removeClass('disabled');
-                            }
-                            else if (data.status == 'success' && data.result == false){
-                                $('.btnModifica').addClass('disabled');
-                            }
-                            else alert('errore');
-                        });
+                        //ACL
+                        if (calEvent.consulente_id == '{{Auth::User()->consulente->id}}')
+                            $('.btnModifica').removeClass('disabled');
+                        else
+                            $('.btnModifica').addClass('disabled');
                     }
                 },
                 eventRender: function (event, element) {

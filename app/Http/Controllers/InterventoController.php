@@ -192,10 +192,11 @@ class InterventoController extends Controller {
 
             if ($calendario != [])
             {
-                $calendario->each(function ($evento)
+                $calendario->each(function ($evento) 
                 {
                     $intervento = Intervento::findOrFail($evento['id']);
                     $evento['contratto_id'] = '' . $intervento->listinoInterventi->contratto->id;
+                    $evento['consulente_id'] = '' . $intervento->consulente->id;
                     $evento['progetto_id'] = '' . $intervento->listinoInterventi->contratto->progetto->id;
                     $evento['title'] = $intervento->consulente->nominativo;
                     $evento['description'] = '<span class="description">' .
@@ -277,15 +278,16 @@ class InterventoController extends Controller {
         return ['status' => 'fail'];
     }
 
-    public function ajaxGetPermissionUpdateIntervento()
+    public function ajaxGetPermissionUpdatePianificazione()
     {
-        
         $user = Input::get('user_id');
-
+        $res = Intervento::where('id',Input::get('intervento_id'))->where('consulente_id',Input::get('user_id'))->count();
+        /*
         $res = Contratto::where('id',Input::get('contratto_id'))->whereHas('consulenti', function ($query) use ($user)
         {
             $query->where('consulente_id', $user);
         })->count();
+        */
 
         if ($res) return ['status'=>'success','result'=>true];
         else return ['status'=>'success','result'=>false];

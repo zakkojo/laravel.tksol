@@ -57,6 +57,7 @@ Route::group(['middleware' => 'web'], function () {
 
 	Route::resource('contratti/{contratto_id}/listino_interventi','ContrattoInterventoController');
 	Route::resource('contratti/{contratto_id}/listino_prodotti','ContrattoProdottoController');
+    Route::resource('contratti/{contratto_id}/consulenti','ConsulenteContrattoController');
 
     Route::resource('clienti','ClienteController');
     Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');

@@ -8,6 +8,8 @@ class ConsulenteContratto extends Model
 {
     protected $table = 'consulente_contratto';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'contratto_id',
         'consulente_id',

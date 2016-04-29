@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\ConsulenteContratto;
 use App\Http\Requests;
 use App\Cliente;
 use App\Progetto;
@@ -72,7 +73,8 @@ class ContrattoController extends Controller {
         $progetti = Progetto::all();
         $consulenti = Consulente::all();
         $contratto = Contratto::findOrFail($id);
-        return view('contratti.edit', compact('contratto', 'clienti', 'progetti', 'consulenti'));
+        $consulentiContratto = ConsulenteContratto::with('consulente')->where('contratto_id',$id)->get();
+        return view('contratti.edit', compact('contratto', 'clienti', 'progetti', 'consulenti','consulentiContratto'));
     }
 
     /**

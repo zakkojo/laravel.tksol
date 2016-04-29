@@ -47,6 +47,11 @@
                     @include('contratti.partials.prodottiTable')
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    @include('contratti.partials.consulentiTable')
+                </div>
+            </div>
         </div>
     </div>
 @endsection

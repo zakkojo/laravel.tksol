@@ -14,6 +14,7 @@ class CreateConsulenteContrattoTable extends Migration
     {
         Schema::create('consulente_contratto', function (Blueprint $table)
         {
+            $table->increments('id');
             $table->integer('contratto_id')->unsigned();
             $table->integer('consulente_id')->unsigned();
             $table->string('ruolo',50);

@@ -76,10 +76,11 @@ class InterventoController extends Controller {
         $intervento = Intervento::findOrFail($id);
         $consulente = $intervento->consulente;
         $cliente = $intervento->listinoInterventi->contratto->cliente;
+        $contratto = $intervento->listinoInterventi->contratto;
         $rimborsi = $intervento->rimborsi;
         $user = Consulente::findOrFail(Auth::User()->id);
 
-        return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi','user'));
+        return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi','user','contratto'));
     }
 
     /**
@@ -285,7 +286,7 @@ class InterventoController extends Controller {
         {
             $query->where('consulente_id', $user);
         })->count();
-        
+
         if ($res) return ['status'=>'success','result'=>true];
         else return ['status'=>'success','result'=>false];
 

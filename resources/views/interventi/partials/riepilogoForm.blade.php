@@ -26,8 +26,10 @@
         </div>
         <div class="form-group">
             <label>Contratto/Progetto</label>
-            <select id="progetto" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
-            <input type="hidden" id="contratto" name="contratto" value="">
+            <select id="progetto" style="width:100%" disabled class="form-control select2 select2-hidden-accessible">
+                <option value="{{$contratto->progetto->id}}">{{$contratto->progetto->area.' / '.$contratto->progetto->nome}}</option>
+            </select>
+            <input type="hidden" id="progetto_id" name="progetto_id" value="{{$contratto->progetto->id}}">
         </div>
         <div class="form-group">
             <label>Attività</label>
@@ -46,8 +48,8 @@
             </div>
             <div class="col-md-4">
                 <label>Ora Inizio</label>
-                <input type="text" id="ora_start_reale" onkeydown="return false;" name="ora_start_reale" style="width:100%"
-                       class="form-control clockpicker">
+                <input type="text" id="ora_start_reale" onkeydown="return false;" name="ora_start_reale"
+                       style="width:100%" class="form-control clockpicker">
                 <input type="hidden" id="ora_start" name="ora_start" style="width:100%" readonly class="form-control">
             </div>
             <div class="col-md-4">
@@ -80,8 +82,7 @@
 @section('page_scripts')
     <script>
         $('document').ready(function () {
-            $('#consulente').trigger('change');
-            $('#cliente').trigger('change');
+            $('#progetto').trigger('change');
             $('#data').val(moment('{{$intervento->data_start}}').format('L'));
             ora_start = moment('{{$intervento->data_start}}');
             ora_end = moment('{{$intervento->data_end}}');
@@ -94,8 +95,6 @@
             if ('{{$intervento->data_start_reale}}' == '0000-00-00 00:00:00')  $('#ora_end_reale').val(ora_end.format('HH:mm'));
             else $('#ora_end_reale').val(moment('{{$intervento->data_end_reale}}').format('HH:mm'));
 
-            console.log('{{$intervento->data_start_reale}}');
-
             $('.clockpicker').clockpicker({
                 placement: 'top',
                 align: 'left',
@@ -104,49 +103,15 @@
 
         });
 
-        $('#consulente').change(function () {
-            globale_consulente = $('#consulente').val();
-            $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
-                    .done(function (data) {
-                        $('#consulente_tipo')
-                                .append($("<option></option>")
-                                        .attr('value', data.tipo)
-                                        .text(data.tipo));
-                    });
-        });
-        //Cliente->Progetto
-        $('#cliente').change(function () {
-            $('#progetto').html('');
-            $('#contratto').val('');
-            if ($('#cliente').val()) {
-                $.get('{{action('ClienteController@ajaxGetContratti')}}', {cliente_id: $('#cliente').val(), user: {{$consulente->id}}})
-                        .done(function (data) {
-
-                            var c = 0;
-                            $.each(data, function (id, contratto) {
-                                c++;
-                                $('#progetto')
-                                        .append($("<option></option>")
-                                                .attr('value', contratto.progetto.id)
-                                                .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
-                                if (c == '1' || contratto.id == '{{$intervento->listinoInterventi->contratto->id}}') {
-                                    $('#contratto').val(contratto.id);
-                                    $('#progetto').select2('val', contratto.progetto.id);
-                                }
-                            });
-                            if (c == 0) $('#progetto').select2('val', '');
-                            globale_progetto = $('#progetto').val();
-                        });
-            }
-        });
 
         $('#progetto').change(function () {
             $('#attivita').html('');
             $('#attivita').select2('val', '');
-            globale_progetto = $('#progetto').val();
+            $('#listinoContratto').html('');
+            $('#listinoContratto').select2('val', '');
             //Progetto->Attivita
             if ($('#progetto').val()) {
-                $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
+                $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto_id').val()})
                         .done(function (data) {
                             var c = 0;
                             $.each(data, function (id, dettagli) {
@@ -160,12 +125,8 @@
                                 }
                             });
                         });
-            }
-            //Contratto->Listino
-            $('#listinoContratto').html('');
-            $('#listinoContratto').select2('val', '');
-            if ($('#contratto').val()) {
-                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
+                //Contratto->Listino
+                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': '{{ $intervento->listinoInterventi->contratto->id }}' })
                         .done(function (data) {
                             var c = 0;
                             $.each(data, function (id, dettagli) {

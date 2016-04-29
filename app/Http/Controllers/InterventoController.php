@@ -187,9 +187,9 @@ class InterventoController extends Controller {
             }
             if($progetto_id AND !$consulente_id)
             {
-                $calendario = Intervento::with(['listinoInterventi.contratto.progetto' => function ($query) use ($progetto_id)
+                $calendario = Intervento::with(['listinoInterventi' => function ($query) use ($progetto_id)
                 {
-                    $query->where('progetto.id', $progetto_id);
+                    $query->where('id', $progetto_id);
                 }])->where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where('stampa', $stampa)->get();
             }
             if ($calendario != [])

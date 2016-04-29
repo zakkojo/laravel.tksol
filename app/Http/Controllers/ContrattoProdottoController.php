@@ -42,7 +42,7 @@ class ContrattoProdottoController extends Controller {
     {
         $data = $request->all();
         $ret = ContrattoProdotto::create($data);
-        return redirect()->action('ContrattoController@edit', $data->contratto_id);
+        return redirect()->action('ContrattoController@edit', $data['contratto_id']);
     }
 
     /**

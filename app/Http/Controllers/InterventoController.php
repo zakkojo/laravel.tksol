@@ -178,21 +178,23 @@ class InterventoController extends Controller {
             if (Input::get('stampa')) $stampa = 1;
             else $stampa = 0;
 
-            if ($consulente_id)
+            $calendario = [];
+
+            if ($consulente_id AND !$progetto_id)
             {
                 $where[0][] = ['consulente_id' => $consulente_id];
                 $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('stampa', $stampa)->get();
-            } elseif ($progetto_id)
+            }
+            if($progetto_id AND !$consulente_id)
             {
                 $calendario = Intervento::with(['listinoInterventi.contratto.progetto' => function ($query) use ($progetto_id)
                 {
-                    $query->where('id', '=', $progetto_id);
+                    $query->where('progetto.id', $progetto_id);
                 }])->where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where('stampa', $stampa)->get();
-            } else $calendario = [];
-
+            }
             if ($calendario != [])
             {
-                $calendario->each(function ($evento) 
+                $calendario->each(function ($evento)
                 {
                     $intervento = Intervento::findOrFail($evento['id']);
                     $evento['contratto_id'] = '' . $intervento->listinoInterventi->contratto->id;

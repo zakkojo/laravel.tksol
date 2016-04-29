@@ -40,7 +40,7 @@ class RimborsoController extends Controller {
         $data = $request->all();
         $ret = Rimborso::create($data);
 
-        return redirect()->action('InterventoController@edit', $data->intervento_id);
+        return redirect()->action('InterventoController@edit', $data['intervento_id']);
     }
 
     /**

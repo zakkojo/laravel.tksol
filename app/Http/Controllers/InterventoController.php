@@ -174,22 +174,22 @@ class InterventoController extends Controller {
         if ($data_start AND $data_end)
         {
             $consulente_id = Input::get('consulente_id');
-            $progetto_id = Input::get('progetto_id');
+            $contratto_id = Input::get('contratto_id');
             if (Input::get('stampa')) $stampa = 1;
             else $stampa = 0;
 
             $calendario = [];
 
-            if ($consulente_id AND !$progetto_id)
+            if ($consulente_id AND !$contratto_id)
             {
                 $where[0][] = ['consulente_id' => $consulente_id];
                 $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('stampa', $stampa)->get();
             }
-            if($progetto_id AND !$consulente_id)
+            if($contratto_id AND !$consulente_id)
             {
-                $calendario = Intervento::with(['listinoInterventi' => function ($query) use ($progetto_id)
+                $calendario = Intervento::with(['listinoInterventi' => function ($query) use ($contratto_id)
                 {
-                    $query->where('id', $progetto_id);
+                    $query->where('contratto_id', $contratto_id);
                 }])->where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where('stampa', $stampa)->get();
             }
             if ($calendario != [])

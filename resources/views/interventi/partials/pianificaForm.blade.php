@@ -169,7 +169,7 @@ else $progDisabled = 'enabled';
                                     }
                                 });
                                 if (c == 0) $('#progetto').select2('val', '');
-                                globale_progetto = $('#progetto').val();
+                                globale_contratto = $('#contratto').val();
                                 updateProgettoSource();
                                 updateConsuntivoSource();
                             });
@@ -179,7 +179,6 @@ else $progDisabled = 'enabled';
             $('#progetto').change(function () {
                 $('#attivita').html('');
                 $('#attivita').select2('val', '');
-                globale_progetto = $('#progetto').val();
                 //Progetto->Attivita
                 if ($('#progetto').val()) {
                     $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})

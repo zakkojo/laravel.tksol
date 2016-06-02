@@ -14,7 +14,10 @@ class ContattoController extends Controller {
    *
    * @return Response
    */
-
+    public function create($id)
+    {
+        return redirect()->action('ContattoController@create');
+    }
   /**
    * Store a newly created resource in storage.
    *

@@ -71,10 +71,9 @@ class ContrattoController extends Controller {
     {
         $clienti = Cliente::all();
         $progetti = Progetto::all();
-        $consulenti = Consulente::all();
         $contratto = Contratto::findOrFail($id);
         $consulentiContratto = ConsulenteContratto::with('consulente')->where('contratto_id',$id)->get();
-        return view('contratti.edit', compact('contratto', 'clienti', 'progetti', 'consulenti','consulentiContratto'));
+        return view('contratti.edit', compact('contratto', 'clienti', 'progetti', 'consulentiContratto'));
     }
 
     /**

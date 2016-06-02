@@ -38,24 +38,24 @@ class ContattiRequest extends Request
                     //'citta'=> 'required',
                     //'provincia'=> 'required',
                     //'cap'=> 'required',
-                    'telefono' => 'required_without:mobile',
-                    'mobile' => 'required_without:telefono',
+                    'telefono' => 'required_without:telefono2',
+                    'telefono2' => 'required_without:telefono',
                     'email'=> 'required|email|unique:users,email',
                 ];
             }
             case 'PUT':
             case 'PATCH':
             {
-                $user = User::withTrashed()->where('email', '=', $this->user_email)->first();
+                if($user = User::withTrashed()->where('email', '=', $this->user_email)->first()) $user = $user->id; else $user = '';
                 return [
                     'descrizione'=> 'required',
                     //'indirizzo'=> 'required',
                     //'citta'=> 'required',
                     //'provincia'=> 'required',
                     //'cap'=> 'required',
-                    'telefono' => 'required_without:mobile',
-                    'mobile' => 'required_without:telefono',
-                    'email'=> 'required|email|unique:users,email,'.$user->id,
+                    'telefono' => 'required_without:telefono2',
+                    'telefono2' => 'required_without:telefono',
+                    'email'=> 'required|email|unique:users,email,'.$user,
                 ];
             }
             default:

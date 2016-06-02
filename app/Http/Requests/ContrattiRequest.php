@@ -41,6 +41,7 @@ class ContrattiRequest extends Request {
                     'data_avvio_progetto'     => 'date_format:d/m/Y|after:data_primo_contatto',
                     'data_chiusura_progetto'  => 'date_format:d/m/Y|after:data_primo_contatto',
                     'importo'                 => 'numeric',
+                    'modalita_fattura'        => 'required',
                 ];
             }
             case 'PUT':
@@ -55,6 +56,7 @@ class ContrattiRequest extends Request {
                     'data_avvio_progetto'     => 'date_format:d/m/Y|after:data_primo_contatto',
                     'data_chiusura_progetto'  => 'date_format:d/m/Y|after:data_primo_contatto',
                     'importo'                 => 'numeric',
+                    'modalita_fattura'        => 'required',
                 ];
             }
             default:

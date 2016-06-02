@@ -82,6 +82,11 @@ class ClienteController extends Controller {
      */
     public function update($id, ClientiRequest $request)
     {
+        if ($request->cliente) $request->merge(array('cliente' => 1));
+        else $request->merge(array('cliente' => 0));
+        if ($request->softwarehouse) $request->merge(array('softwarehouse' => 1));
+        else $request->merge(array('softwarehouse' => 0));
+
         $cliente = Cliente::findOrFail($id);
         $cliente->update($request->all());
 
@@ -120,7 +125,7 @@ class ClienteController extends Controller {
         })->get();
 
     }
-    
+
 }
 
 ?>

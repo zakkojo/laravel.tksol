@@ -45,16 +45,16 @@ class InterventiRequest extends Request {
             case 'PATCH':
             {
                 return [
-                    "listinoContratto"      => 'required|numeric',
-                    "consulente_id"         => 'required|numeric',
-                    "attivita"              => 'required|numeric',
-                    "intervento_id"         => 'required|numeric',
-                    
-                    "data"                  => 'required',
-                    "ora_start_reale"             => 'required',
-                    "ora_end_reale"               => 'required',
-                    "stato"                 => 'required',
-                    
+                    "listinoContratto" => 'required|numeric',
+                    "consulente_id"    => 'required|numeric',
+                    "attivita"         => 'required|numeric',
+                    "intervento_id"    => 'required|numeric',
+
+                    "data"            => 'required',
+                    "ora_start_reale" => 'required',
+                    "ora_end_reale"   => 'required',
+                    "sede"            => 'required',
+
                     //"attivitaPianificate"   => "0",
                     //"attivitaSvolte"        => "",
                     //"attivitaCaricoCliente" => "",

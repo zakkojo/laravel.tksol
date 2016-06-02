@@ -67,7 +67,7 @@
                 eventResizeStart: function (calEvent, delta, revertFunc) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     if (calEvent.id != 'new') {
-                        $('#form_title').text('Modifica Pianificazione Intervento ' + calEvent.id);
+                        $('#form_title').text('Modifica Intervento');
                         $('#intervento_id').val(calEvent.id).trigger("change");
                         $('#contratto').val(calEvent.contratto_id);
                         $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
@@ -102,7 +102,7 @@
                 eventDragStart: function (calEvent, delta, revertFunc) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     if (calEvent.id != 'new') {
-                        $('#form_title').text('Modifica Intervento ' + calEvent.id);
+                        $('#form_title').text('Modifica Intervento');
                         $('#intervento_id').val(calEvent.id).trigger("change");
                         $('#contratto').val(calEvent.contratto_id);
                         $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
@@ -140,9 +140,12 @@
                 },
                 eventClick: function (calEvent, jsEvent, view) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
+                    $('#calendar').fullCalendar('rerenderEvents');
+                    calEvent.backgroundColor = '#ffdf65';
+                    $('#calendar').fullCalendar('renderEvent', calEvent);
                     if (calEvent.id != 'new') {
                         if (calEvent.stampa == 0) {
-                            $('#form_title').text('Modifica Pianificazione Intervento ' + calEvent.id);
+                            $('#form_title').text('Modifica Intervento ');
                             $('#intervento_id').val(calEvent.id).trigger("change");
                             $('#contratto').val(calEvent.contratto_id);
                             $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
@@ -162,6 +165,7 @@
                 },
                 eventRender: function (event, element) {
                     if (event.id != 'new') {
+                        event.backgroundColor = event.color;
                         element.find('.fc-title').append("<br/>" + event.description);
                         element.find('.fc-title').append('<div onclick="openIntervento(' + event.id + ')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
                     }

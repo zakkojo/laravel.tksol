@@ -52,7 +52,6 @@
     </div>
 </div>
 @section('page_scripts')
-    @parent
     <script>
         $(document).ready(function () {
             var clientiTable = $('#consulenti').DataTable({
@@ -77,4 +76,4 @@
             $('.dataTables_filter').hide();
         });
     </script>
-@endsection
+@append

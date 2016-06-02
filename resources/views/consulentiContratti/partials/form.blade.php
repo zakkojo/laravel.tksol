@@ -2,7 +2,8 @@
 $listConsulenti = $consulenti->lists('nominativo', 'id');
 ?>
 <div class="box-body">
-    <input type="hidden" name="contratto_id" value= {{(isset($consulenteContratto)) ? $consulenteContratto->contratto_id : $contratto->id}}>
+    <input type="hidden" name="contratto_id"
+           value= {{(isset($consulenteContratto)) ? $consulenteContratto->contratto_id : $contratto->id}}>
     <div class="form-group">
         <label>Consulente</label>
         {!! Form::select('consulente_id',
@@ -15,7 +16,7 @@ $listConsulenti = $consulenti->lists('nominativo', 'id');
         <label>Ruolo</label>
         <div class="input-group">
             {!! Form::select('ruolo',
-            array('Standard' => 'Standard'),
+            array('Consulente' => 'Consulente', 'Capo Progetto'=>'Capo Progetto'),
             (isset($consulenteContratto)) ? $consulenteContratto->ruolo : '',
             ['id'=>'ruolo','style'=>'width:100%', 'class'=>'form-control'])
         !!}

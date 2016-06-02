@@ -100,7 +100,7 @@ class InterventoController extends Controller {
         $intervento->attivitaSvolte = Input::get('attivitaSvolte');
         $intervento->attivitaCaricoCliente = Input::get('attivitaCaricoCliente');
         $intervento->problemiAperti = Input::get('problemiAperti');
-        $intervento->stato = Input::get('stato');
+        $intervento->sede = Input::get('sede');
 
         if (Input::get('fatturabile') == 'on') $fatturabile = 1; else $fatturabile = 0;
         $intervento->fatturabile = $fatturabile;

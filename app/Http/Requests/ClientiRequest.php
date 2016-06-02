@@ -23,20 +23,38 @@ class ClientiRequest extends Request {
      */
     public function rules()
     {
-        if ($this->id)
+        switch ($this->method())
         {
-            return [
-                'codice_fiscale'  => 'required|max:16|unique:cliente,id,' . $this->id,
-                'partita_iva'     => 'required|unique:cliente,id,' . $this->id,
-                'ragione_sociale' => 'required',
-            ];
-        } else
-        {
-            return [
-                'codice_fiscale'  => 'required|max:16|unique:cliente',
-                'partita_iva'     => 'required|unique:cliente',
-                'ragione_sociale' => 'required',
-            ];
+            case 'GET':
+            case 'DELETE':
+            {
+                return [];
+            }
+            case 'POST':
+            {
+                return [
+                    'codice_fiscale'  => 'required|max:16|unique:cliente',
+                    'partita_iva'     => 'required|unique:cliente',
+                    'ragione_sociale' => 'required',
+                    'rating'          => 'numeric',
+                    'email'           => 'email',
+                    'distanza'        => 'numeric',
+                ];
+            }
+            case 'PUT':
+            case 'PATCH':
+            {
+                return [
+                    'codice_fiscale'  => 'required|max:16|unique:cliente,id,' . $this->id,
+                    'partita_iva'     => 'required|unique:cliente,id,' . $this->id,
+                    'ragione_sociale' => 'required',
+                    'rating'          => 'numeric',
+                    'email'           => 'email',
+                    'distanza'        => 'numeric',
+                ];
+            }
+            default:
+                break;
         }
     }
 }

@@ -16,7 +16,6 @@ class Contratto extends Model {
     protected $fillable = [
         'cliente_id',
         'progetto_id',
-        'capo_progetto',
         'stato',
         'importo',
         'modalita_fattura',
@@ -26,6 +25,7 @@ class Contratto extends Model {
         'data_validita_contratto',
         'data_avvio_progetto',
         'data_chiusura_progetto',
+        'rimborsi',
     ];
 
     protected $nullable = [

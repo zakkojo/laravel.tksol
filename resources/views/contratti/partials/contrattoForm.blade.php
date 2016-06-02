@@ -16,15 +16,6 @@ $listProgetto = $progetti->each(function ($progetto)
     return $progetto['areanome'] = $progetto['area'] . ' / ' . $progetto['nome'];
 })->lists('areanome', 'id');
 
-if (isset($contratto)) $cons = $contratto->capo_progetto;
-elseif (isset($_GET['cons'])) $cons = $_GET['cons'];
-elseif (Auth::user()->consulente->id) $cons = Auth::user()->consulente->id;
-else $cons = 0;
-$listConsuenti = $consulenti->each(function ($consulente)
-{
-    return $consulente['nomecognome'] = $consulente['nome'] . ' ' . $consulente['cognome'];
-})->lists('nomecognome', 'id');
-
 if (isset($contratto))
 {
     $periodo = $contratto->periodicita_pagamenti;
@@ -53,14 +44,6 @@ if (isset($contratto))
             [$progDisabled => $progDisabled,'id'=>'progetto_id','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
         !!}
         @if($prog)<input type="hidden" name="progetto_id" value="{{$prog}}">@endif
-    </div>
-    <div class="form-group">
-        <label>Capo Progetto</label>
-        {!! Form::select('capo_progetto',
-            $listConsuenti,
-            $cons,
-            ['id'=>'capo_progetto','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
-        !!}
     </div>
     <div class="form-group">
         <label>Stato Contratto</label>
@@ -120,6 +103,14 @@ if (isset($contratto))
         </div>
     </div>
     <div class="form-group">
+        <label>Modalità Fatturazione</label>
+        {!! Form::select('modalita_fattura',
+            array('CHIAVI_IN_MANO' => 'Chiavi in Mano','TIME_CONSUMING' => 'Time Consuming'),
+            $modalita,
+            ['id'=>'modalita_fattura','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
+    </div>
+    <div class="form-group">
         <label>Importo</label>
         <div class="input-group date">
             <div class="input-group-addon">
@@ -129,19 +120,19 @@ if (isset($contratto))
         </div>
     </div>
     <div class="form-group">
-        <label>Modalità Fatturazione</label>
-        {!! Form::select('modalita_fattura',
-            array(''=>'','CHIAVI_IN_MANO' => 'Chiavi in Mano','TIME_CONSUMING' => 'Time Consuming'),
-            $modalita,
-            ['id'=>'modalita_fattura','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
-        !!}
-    </div>
-    <div class="form-group">
         <label>Periodicità pagamenti</label>
         {!! Form::select('periodicita_pagamenti',
             array(''=>'','1' => 'Mensile','3' => 'Trimestrale','6' => 'Semestrale','12' => 'Annuale'),
             $periodo,
             ['id'=>'periodicita_pagamenti','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
+    </div>
+    <div class="form-group">
+        <label>Rimborsi</label>
+        {!! Form::select('rimborsi',
+            array('piedilista' => 'Piè di Lista','forfait' => 'Forfait','nessuno' => 'Non Previsti'),
+            $contratto->rimborsi,
+            ['id'=>'rimborsi','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
         !!}
     </div>
 
@@ -150,3 +141,18 @@ if (isset($contratto))
 <div class="box-footer">
     <button type="submit" class="btn btn-primary">Submit</button>
 </div>
+@section('page_scripts')
+    <script>
+        $('document').ready(function () {
+            $('#modalita_fattura').trigger('change');
+        });
+
+        $('#modalita_fattura').change(function () {
+            if ($('#modalita_fattura').val() == 'CHIAVI_IN_MANO') {
+                $('#importo').val('0');
+                $('#importo').prop('readonly', true);
+            }
+            else $('#importo').prop('readonly', false);
+        });
+    </script>
+@append

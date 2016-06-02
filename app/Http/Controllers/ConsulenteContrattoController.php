@@ -61,7 +61,7 @@ class ConsulenteContrattoController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function edit($contratto_id,$id)
     {
         $consulenteContratto = ConsulenteContratto::findOrFail($id);
         $consulenti = Consulente::all();
@@ -74,13 +74,13 @@ class ConsulenteContrattoController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update(ConsulentiContrattiRequest $request, $id)
+    public function update(ConsulentiContrattiRequest $request,$contratto_id, $id)
     {
         $consulenteContratto = ConsulenteContratto::findOrFail($id);
         $consulenteContratto->update($request->all());
         $consulenteContratto->save();
         
-        return redirect()->action('ContrattoController@edit', $id);
+        return redirect()->action('ContrattoController@edit', $contratto_id);
     }
 
     /**

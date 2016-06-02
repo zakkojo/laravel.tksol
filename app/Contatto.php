@@ -11,7 +11,7 @@ class Contatto extends Model {
 	public $timestamps = true;
 
 	protected $fillable = [
-		'cliente_id','descrizione','email','email2','indirizzo','citta','provincia','cap','telefono','mobile','telefono2','mobile2',
+		'cliente_id','descrizione','email','indirizzo','citta','provincia','cap','telefono','telefono2','fax','ruolo',
 	];
 
 	use SoftDeletes;

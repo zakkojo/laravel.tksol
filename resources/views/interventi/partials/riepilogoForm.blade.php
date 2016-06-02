@@ -60,11 +60,11 @@
             </div>
         </div>
         <div class="form-group">
-            <label>Stato</label>
-            <select id="stato" name="stato" style="width:100%" class="form-control">
-                <option selected="selected">{{ $intervento->stato or ''}}</option>
-                <option>Pianificato</option>
-                <option>Da Confermare</option>
+            <label>Sede</label>
+            <select id="sede" name="sede" style="width:100%" class="form-control">
+                <option selected="selected">{{ $intervento->sede or ''}}</option>
+                <option>Sede Cliente</option>
+                <option>Back Office</option>
             </select>
         </div>
         <div class="form-group">

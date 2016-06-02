@@ -11,7 +11,7 @@ class Cliente extends Model {
 	public $timestamps = true;
 
 	protected $fillable = [
-		'codice_fiscale','partita_iva','ragione_sociale','indirizzo','citta','provincia','cap','telefono','rating','cliente','settore','softwarehouse',
+		'codice_fiscale','partita_iva','ragione_sociale','indirizzo','citta','provincia','cap','telefono','fax','email','rating','cliente','settore','softwarehouse','distanza',
 	];
 
 	use SoftDeletes;
@@ -22,7 +22,15 @@ class Cliente extends Model {
     {
         return Cliente::where('softwarehouse','=','1')->get();
 	}
-	
+
+    //Mutator per update filed a null
+	public function setRatingAttribute($target){
+		$this->attributes['rating'] = $target ?: null;
+	}
+    public function setDistanzaAttribute($target){
+        $this->attributes['distanza'] = $target ?: null;
+    }
+    // fine mutators 0 AND '' to null
 
 	public function rubrica()
 	{

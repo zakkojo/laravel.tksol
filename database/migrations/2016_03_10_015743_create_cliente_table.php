@@ -26,7 +26,7 @@ class CreateClienteTable extends Migration {
 			$table->string('email', 100);
 			$table->string('fax', 50);
 			$table->integer('softwarehouse_id');
-			$table->decimal('fatturato',10,2);
+			$table->integer('fatturato');
 			$table->text('note');
 		});
 	}

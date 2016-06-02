@@ -24,7 +24,7 @@ else $progDisabled = 'enabled';
 ?>
 <div class="box box-primary">
     <div class="box-header with-border">
-        <h3 id="form_title" class="box-title">Pianifica</h3>
+        <h3 id="form_title" class="box-title">Pianifica Nuovo Intervento</h3>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
             </button>
@@ -133,6 +133,7 @@ else $progDisabled = 'enabled';
             drawCalendar();
             $('#consulente').trigger('change');
             $('#cliente').trigger('change');
+            $('#intervento_id').trigger('change');
             //Consulente->Tipo
         });
 
@@ -221,10 +222,17 @@ else $progDisabled = 'enabled';
 
         $('#intervento_id').change(function () {
             if ($('#intervento_id').val() == "") {
+                //sblocca cliente progetto
+                $('#cliente').prop('disabled',false);
+                $('#progetto').prop('disabled',false);
+
                 $('#pulsanti_update').hide();
                 $('#pulsanti_create').show();
             }
             else {
+                $('#cliente').prop('disabled',true);
+                $('#progetto').prop('disabled',true);
+
                 $('#pulsanti_update').show();
                 $('#pulsanti_create').hide();
             }

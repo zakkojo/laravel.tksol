@@ -14,12 +14,12 @@
                 timeFormat: {
                     agenda: 'H:mm'
                 },
-
+                defaultView: 'agendaWeek',
                 lang: 'it',
                 header: {
-                    left: 'prev,next today',
+                    right: 'prev,next today',
                     center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
+                    left: 'month,agendaWeek'
                 },
                 buttonText: {
                     today: 'Oggi',
@@ -66,16 +66,18 @@
                 },
                 eventResizeStart: function (calEvent, delta, revertFunc) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
-                    $('#form_title').text('Modifica Pianificazione Intervento ' + calEvent.id);
-                    $('#intervento_id').val(calEvent.id).trigger("change");
-                    $('#contratto').val(calEvent.contratto_id);
-                    $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
-                    $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
-                    $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
-                    $('#attivitaPianificate').html(calEvent.attivitaPianificate);
-                    $('#data').val(calEvent.start.format('L'));
-                    $('#ora_start').val(calEvent.start.format('HH:mm'));
-                    $('#ora_end').val(calEvent.end.format('HH:mm'));
+                    if (calEvent.id != 'new') {
+                        $('#form_title').text('Modifica Pianificazione Intervento ' + calEvent.id);
+                        $('#intervento_id').val(calEvent.id).trigger("change");
+                        $('#contratto').val(calEvent.contratto_id);
+                        $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
+                        $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
+                        $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                        $('#attivitaPianificate').html(calEvent.attivitaPianificate);
+                        $('#data').val(calEvent.start.format('L'));
+                        $('#ora_start').val(calEvent.start.format('HH:mm'));
+                        $('#ora_end').val(calEvent.end.format('HH:mm'));
+                    }
                 },
                 eventResize: function (event, delta, revertFunc) {
                     if (event.id == 'new') {
@@ -99,16 +101,18 @@
                 },
                 eventDragStart: function (calEvent, delta, revertFunc) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
-                    $('#form_title').text('Modifica Intervento ' + calEvent.id);
-                    $('#intervento_id').val(calEvent.id).trigger("change");
-                    $('#contratto').val(calEvent.contratto_id);
-                    $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
-                    $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
-                    $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
-                    $('#attivitaPianificate').html(calEvent.attivitaPianificate);
-                    $('#data').val(calEvent.start.format('L'));
-                    $('#ora_start').val(calEvent.start.format('HH:mm'));
-                    $('#ora_end').val(calEvent.end.format('HH:mm'));
+                    if (calEvent.id != 'new') {
+                        $('#form_title').text('Modifica Intervento ' + calEvent.id);
+                        $('#intervento_id').val(calEvent.id).trigger("change");
+                        $('#contratto').val(calEvent.contratto_id);
+                        $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
+                        $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
+                        $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                        $('#attivitaPianificate').html(calEvent.attivitaPianificate);
+                        $('#data').val(calEvent.start.format('L'));
+                        $('#ora_start').val(calEvent.start.format('HH:mm'));
+                        $('#ora_end').val(calEvent.end.format('HH:mm'));
+                    }
                 },
                 eventDrop: function (event, delta, revertFunc) {
                     if (event.id == 'new') {
@@ -135,28 +139,32 @@
                     }
                 },
                 eventClick: function (calEvent, jsEvent, view) {
-                    if (calEvent.stampa == 0) {
-                        $('#calendar').fullCalendar('removeEvents', 'new');
-                        $('#form_title').text('Modifica Pianificazione Intervento ' + calEvent.id);
-                        $('#intervento_id').val(calEvent.id).trigger("change");
-                        $('#contratto').val(calEvent.contratto_id);
-                        $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
-                        $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
-                        $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
-                        $('#attivitaPianificate').html(calEvent.attivitaPianificate);
-                        $('#data').val(calEvent.start.format('L'));
-                        $('#ora_start').val(calEvent.start.format('HH:mm'));
-                        $('#ora_end').val(calEvent.end.format('HH:mm'));
-                        //ACL
-                        if (calEvent.consulente_id == '{{Auth::User()->consulente->id}}')
-                            $('.btnModifica').removeClass('disabled');
-                        else
-                            $('.btnModifica').addClass('disabled');
+                    $('#calendar').fullCalendar('removeEvents', 'new');
+                    if (calEvent.id != 'new') {
+                        if (calEvent.stampa == 0) {
+                            $('#form_title').text('Modifica Pianificazione Intervento ' + calEvent.id);
+                            $('#intervento_id').val(calEvent.id).trigger("change");
+                            $('#contratto').val(calEvent.contratto_id);
+                            $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
+                            $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
+                            $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
+                            $('#attivitaPianificate').html(calEvent.attivitaPianificate);
+                            $('#data').val(calEvent.start.format('L'));
+                            $('#ora_start').val(calEvent.start.format('HH:mm'));
+                            $('#ora_end').val(calEvent.end.format('HH:mm'));
+                            //ACL
+                            if (calEvent.consulente_id == '{{Auth::User()->consulente->id}}')
+                                $('.btnModifica').removeClass('disabled');
+                            else
+                                $('.btnModifica').addClass('disabled');
+                        }
                     }
                 },
                 eventRender: function (event, element) {
-                    element.find('.fc-title').append("<br/>" + event.description);
-                    element.find('.fc-title').append('<div onclick="openIntervento(' + event.id + ')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
+                    if (event.id != 'new') {
+                        element.find('.fc-title').append("<br/>" + event.description);
+                        element.find('.fc-title').append('<div onclick="openIntervento(' + event.id + ')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
+                    }
                 }
             });
         }

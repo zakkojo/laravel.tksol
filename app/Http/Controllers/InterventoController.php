@@ -80,7 +80,7 @@ class InterventoController extends Controller {
         $rimborsi = $intervento->rimborsi;
         $user = Consulente::findOrFail(Auth::User()->id);
 
-        return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi','user','contratto'));
+        return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi', 'user', 'contratto'));
     }
 
     /**
@@ -185,12 +185,15 @@ class InterventoController extends Controller {
                 $where[0][] = ['consulente_id' => $consulente_id];
                 $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('stampa', $stampa)->get();
             }
-            if($cliente_id AND !$consulente_id)
+            if ($cliente_id AND !$consulente_id)
             {
-                $calendario = Intervento::with(['listinoInterventi.contratto' => function ($query) use ($cliente_id)
-                {
-                    $query->where('cliente_id', $cliente_id);
-                }])->where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where('stampa', $stampa)->get();
+                $calendario = Intervento::join('contratto_intervento','intervento.listino_id','=','contratto_intervento.id')
+                    ->join('contratto','contratto_intervento.contratto_id','=','contratto.id')
+                    ->where('cliente_id', $cliente_id)
+                    ->where('data_start', '>=', $data_start)
+                    ->where('data_start', '<=', $data_end)
+                    ->where('stampa', $stampa)->get(['intervento.*']);
+
             }
             if ($calendario != [])
             {
@@ -283,7 +286,7 @@ class InterventoController extends Controller {
     public function ajaxGetPermissionUpdatePianificazione()
     {
         $user = Input::get('user_id');
-        $res = Intervento::where('id',Input::get('intervento_id'))->where('consulente_id',Input::get('user_id'))->count();
+        $res = Intervento::where('id', Input::get('intervento_id'))->where('consulente_id', Input::get('user_id'))->count();
         /*
         $res = Contratto::where('id',Input::get('contratto_id'))->whereHas('consulenti', function ($query) use ($user)
         {
@@ -291,8 +294,8 @@ class InterventoController extends Controller {
         })->count();
         */
 
-        if ($res) return ['status'=>'success','result'=>true];
-        else return ['status'=>'success','result'=>false];
+        if ($res) return ['status' => 'success', 'result' => true];
+        else return ['status' => 'success', 'result' => false];
 
     }
 

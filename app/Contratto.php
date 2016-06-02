@@ -44,19 +44,19 @@ class Contratto extends Model {
 
     public function setDataValiditaContrattoAttribute($date)
     {
-        if($date != "") $this->attributes['data_validita_contratto'] = Carbon::createFromFormat('d/m/Y', $date);
+        if ($date != "") $this->attributes['data_validita_contratto'] = Carbon::createFromFormat('d/m/Y', $date);
         else $this->attributes['data_validita_contratto'] = NULL;
     }
 
     public function setDataAvvioProgettoAttribute($date)
     {
-        if($date != "") $this->attributes['data_avvio_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
+        if ($date != "") $this->attributes['data_avvio_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
         else $this->attributes['data_avvio_progetto'] = NULL;
     }
 
     public function setDataChiusuraProgettoAttribute($date)
     {
-        if($date != "") $this->attributes['data_chiusura_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
+        if ($date != "") $this->attributes['data_chiusura_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
         else $this->attributes['data_chiusura_progetto'] = NULL;
     }
 
@@ -96,9 +96,9 @@ class Contratto extends Model {
 
     public function consulenti()
     {
-        return $this->belongsToMany(Consulente::class)->withPivot('note','ruolo');
+        return $this->belongsToMany(Consulente::class)->withPivot('note', 'ruolo');
     }
-    
+
     public function listinoProdotti()
     {
         return $this->hasMany(ContrattoProdotto::class);
@@ -109,6 +109,5 @@ class Contratto extends Model {
         return $this->hasMany(ContrattoIntervento::class);
     }
 
-    
 
 }

@@ -78,10 +78,24 @@
                     $('#ora_end').val(calEvent.end.format('HH:mm'));
                 },
                 eventResize: function (event, delta, revertFunc) {
-                    $('#ora_end').val(event.end.format('HH:mm'));
-                    //ACL
-                    if (event.consulente_id == '{{Auth::User()->consulente->id}}')updateIntervento();
-                    else revertFunc();
+                    if (event.id == 'new') {
+                        $('#ora_end').val(event.end.add(delta).format('HH:mm'));
+
+                        eventData = {
+                            id: 'new',
+                            title: 'Nuovo Intervento',
+                            start: event.start.format(),
+                            end: event.end.format(),
+                        };
+                        $('#calendar').fullCalendar('renderEvent', eventData, true);
+                        $('#calendar').fullCalendar('unselect');
+                    }
+                    else {
+                        $('#ora_end').val(event.end.format('HH:mm'));
+                        //ACL
+                        if (event.consulente_id == '{{Auth::User()->consulente->id}}')updateIntervento();
+                        else revertFunc();
+                    }
                 },
                 eventDragStart: function (calEvent, delta, revertFunc) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
@@ -97,12 +111,28 @@
                     $('#ora_end').val(calEvent.end.format('HH:mm'));
                 },
                 eventDrop: function (event, delta, revertFunc) {
-                    $('#data').val(moment(event.start).format('L'));
-                    $('#ora_start').val(event.start.format('HH:mm'));
-                    $('#ora_end').val(event.end.format('HH:mm'));
-                    //ACL
-                    if (event.consulente_id == '{{Auth::User()->consulente->id}}')updateIntervento();
-                    else revertFunc();
+                    if (event.id == 'new') {
+                        $('#data').val(event.start.add(delta).format('L'));
+                        $('#ora_start').val(event.start.format('HH:mm'));
+                        $('#ora_end').val(event.end.add(delta).format('HH:mm'));
+
+                        eventData = {
+                            id: 'new',
+                            title: 'Nuovo Intervento',
+                            start: event.start.format(),
+                            end: event.end.format(),
+                        };
+                        $('#calendar').fullCalendar('renderEvent', eventData, true);
+                        $('#calendar').fullCalendar('unselect');
+                    }
+                    else {
+                        $('#data').val(moment(event.start).format('L'));
+                        $('#ora_start').val(event.start.format('HH:mm'));
+                        $('#ora_end').val(event.end.format('HH:mm'));
+                        //ACL
+                        if (event.consulente_id == '{{Auth::User()->consulente->id}}')updateIntervento();
+                        else revertFunc();
+                    }
                 },
                 eventClick: function (calEvent, jsEvent, view) {
                     if (calEvent.stampa == 0) {

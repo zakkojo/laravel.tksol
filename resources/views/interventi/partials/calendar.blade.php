@@ -145,15 +145,15 @@
                 },
                 eventClick: function (calEvent, jsEvent, view) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
-                    var events = $("#calendar").fullCalendar('clientEvents', calEvent.id);
-                    console.log(events.length);
-                    events.forEach(function (event) {
-                        event.backgroundColor = '#ffdf65';
-                    });
-                    $('#calendar').fullCalendar('rerenderEvents');
-
                     if (calEvent.id != 'new') {
                         if (calEvent.stampa == 0) {
+                            var events = $("#calendar").fullCalendar('clientEvents', calEvent.id);
+                            console.log(events.length);
+                            events.forEach(function (event) {
+                                event.backgroundColor = '#ffdf65';
+                            });
+                            $('#calendar').fullCalendar('rerenderEvents');
+                                                        
                             $('#form_title').text('Modifica Intervento ');
                             $('#intervento_id').val(calEvent.id).trigger("change");
                             $('#cliente').val(calEvent.cliente_id).trigger('change');

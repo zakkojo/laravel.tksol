@@ -20,10 +20,12 @@ if (isset($contratto))
 {
     $periodo = $contratto->periodicita_pagamenti;
     $modalita = $contratto->modalita_fattura;
+    $rimborsi = $contratto->rimborsi;
 } else
 {
     $periodo = '';
     $modalita = '';
+    $rimborsi = 'nessuno';
 }
 ?>
 <div class="box-body">
@@ -131,7 +133,7 @@ if (isset($contratto))
         <label>Rimborsi</label>
         {!! Form::select('rimborsi',
             array('piedilista' => 'Piè di Lista','forfait' => 'Forfait','nessuno' => 'Non Previsti'),
-            $contratto->rimborsi,
+            $rimborsi,
             ['id'=>'rimborsi','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
         !!}
     </div>
@@ -148,7 +150,7 @@ if (isset($contratto))
         });
 
         $('#modalita_fattura').change(function () {
-            if ($('#modalita_fattura').val() == 'CHIAVI_IN_MANO') {
+            if ($('#modalita_fattura').val() != 'CHIAVI_IN_MANO') {
                 $('#importo').val('0');
                 $('#importo').prop('readonly', true);
             }

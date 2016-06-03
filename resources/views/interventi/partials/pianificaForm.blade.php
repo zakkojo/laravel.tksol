@@ -173,8 +173,10 @@ else $progDisabled = 'enabled';
                                 }
                             });
                             if (c == 0) $('#progetto').select2('val', '');
-                            updateProgettoSource();
-                            updateConsuntivoSource();
+                            if ($('#intervento_id').val() == '') {
+                                updateProgettoSource();
+                                updateConsuntivoSource();
+                            }
                         });
             }
         });

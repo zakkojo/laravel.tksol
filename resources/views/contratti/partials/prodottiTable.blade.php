@@ -23,7 +23,7 @@
     </div>
     <div class="box-body" style="min-height: 300px;">
         <table id="listinoProdotti"
-               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide"
+               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap"
                cellspacing="0" width="100%">
             <thead>
             <tr>

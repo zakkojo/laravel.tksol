@@ -37,7 +37,7 @@ class ClientiRequest extends Request {
                     'partita_iva'     => 'required|unique:cliente',
                     'ragione_sociale' => 'required',
                     'rating'          => 'numeric',
-                    'email'           => 'email',
+                    'email'           => 'required|email',
                     'distanza'        => 'numeric',
                 ];
             }
@@ -49,7 +49,7 @@ class ClientiRequest extends Request {
                     'partita_iva'     => 'required|unique:cliente,id,' . $this->id,
                     'ragione_sociale' => 'required',
                     'rating'          => 'numeric',
-                    'email'           => 'email',
+                    'email'           => 'required|email',
                     'distanza'        => 'numeric',
                 ];
             }

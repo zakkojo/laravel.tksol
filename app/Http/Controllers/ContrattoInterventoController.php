@@ -83,9 +83,10 @@ class ContrattoInterventoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function destroy($id)
+  public function destroy($contratto_id,$id)
   {
-    
+      $resp = ContrattoIntervento::destroy($id);
+      return redirect()->action('ContrattoController@edit', $contratto_id);
   }
   
 }

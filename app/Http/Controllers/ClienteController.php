@@ -42,10 +42,15 @@ class ClienteController extends Controller {
      */
     public function store(ClientiRequest $request)
     {
+        if ($request->cliente) $request->merge(array('cliente' => 1));
+        else $request->merge(array('cliente' => 0));
+        if ($request->softwarehouse) $request->merge(array('softwarehouse' => 1));
+        else $request->merge(array('softwarehouse' => 0));
+
         $data = $request->all();
         $ret = Cliente::create($data);
 
-        return redirect()->action('ClienteController@edit', $ret->id);
+        return redirect()->action('ClienteController@show', $ret->id);
     }
 
     /**
@@ -90,7 +95,7 @@ class ClienteController extends Controller {
         $cliente = Cliente::findOrFail($id);
         $cliente->update($request->all());
 
-        return redirect()->action('ClienteController@edit', $id);
+        return redirect()->action('ClienteController@show', $id);
     }
 
     public function associa($id_cliente)

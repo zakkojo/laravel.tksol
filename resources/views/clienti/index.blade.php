@@ -40,7 +40,7 @@
 
         <!-- /.box-body -->
         <div class="box-body" style="min-height: 300px;">
-        <table id="clienti" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide" cellspacing="0" width="100%">
+        <table id="clienti" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0" width="100%">
             <thead>
             <tr>
                 <td>Opzioni</td>

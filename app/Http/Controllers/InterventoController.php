@@ -3,6 +3,7 @@
 use App\Cliente;
 use App\Consulente;
 use App\Contratto;
+use App\ContrattoIntervento;
 use App\Http\Requests\AjaxInterventiRequest;
 use App\Http\Requests\InterventiRequest;
 use App\Intervento;
@@ -108,12 +109,29 @@ class InterventoController extends Controller {
         $intervento->data_start_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start_reale'));
         $intervento->data_end_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end_reale'));
         $intervento->save();
+        //se clicco sul pulsante stampa
         if (Input::get('stampa') == 1)
         {
-            session()->flash('attivita', Input::get('problemiAperti'));
-            session()->flash('stampaIntervento', $id);
+            $temp = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')->where('intervento.id', $intervento->id)->get(['contratto_intervento.contratto_id'])->first();
+            $prossimoIntervento = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')
+                ->where('contratto_intervento.contratto_id', $temp->contratto_id)
+                ->where('data_start', '>', $intervento->data_start_reale)
+                ->where('stampa', '<>', '1')->get();
+            //return $prossimoIntervento;
+            //se è già pianificato un intervento
+            if (!empty($prossimoIntervento))
+            {
+                $intervento->stampa = 1;
+                $intervento->save();
+                return redirect()->action('InterventoController@show',$id);
+            } else
+            {
+                //altrimenti chiedo l'inserimento del prossimo intervento
+                session()->flash('attivita', Input::get('problemiAperti'));
+                session()->flash('stampaIntervento', $id);
 
-            return redirect()->action('InterventoController@create');
+                return redirect()->action('InterventoController@create');
+            }
         } else
         {
             return redirect()->action('InterventoController@edit', $id);
@@ -187,8 +205,8 @@ class InterventoController extends Controller {
             }
             if ($cliente_id AND !$consulente_id)
             {
-                $calendario = Intervento::join('contratto_intervento','intervento.listino_id','=','contratto_intervento.id')
-                    ->join('contratto','contratto_intervento.contratto_id','=','contratto.id')
+                $calendario = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')
+                    ->join('contratto', 'contratto_intervento.contratto_id', '=', 'contratto.id')
                     ->where('cliente_id', $cliente_id)
                     ->where('data_start', '>=', $data_start)
                     ->where('data_start', '<=', $data_end)
@@ -200,13 +218,14 @@ class InterventoController extends Controller {
                 $calendario->each(function ($evento)
                 {
                     $intervento = Intervento::findOrFail($evento['id']);
-                    $evento['contratto_id'] = '' . $intervento->listinoInterventi->contratto->id;
+                    $evento['contratto_id'] = '' . $intervento->listinoInterventi_wt->contratto->id;
                     $evento['consulente_id'] = '' . $intervento->consulente->id;
-                    $evento['progetto_id'] = '' . $intervento->listinoInterventi->contratto->progetto->id;
+                    $evento['cliente_id'] = '' . $intervento->listinoInterventi_wt->contratto->cliente->id;
+                    $evento['progetto_id'] = '' . $intervento->listinoInterventi_wt->contratto->progetto->id;
                     $evento['title'] = $intervento->consulente->nominativo;
                     $evento['description'] = '<span class="description">' .
-                        $intervento->listinoInterventi->contratto->cliente->ragione_sociale .
-                        '<br/>' . $intervento->listinoInterventi->contratto->progetto->nome .
+                        $intervento->listinoInterventi_wt->contratto->cliente->ragione_sociale .
+                        '<br/>' . $intervento->listinoInterventi_wt->contratto->progetto->nome .
                         '<br/>' . $intervento->attivita->descrizione . '</span>';
                     $evento['attivitaPianificate'] = htmlspecialchars_decode($intervento->attivitaPianificate);
                     $evento['start'] = $evento['data_start'];

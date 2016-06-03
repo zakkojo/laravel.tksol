@@ -102,9 +102,12 @@
                 eventDragStart: function (calEvent, delta, revertFunc) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     if (calEvent.id != 'new') {
-                        $('#form_title').text('Modifica Intervento');
+                        $('#form_title').text('Modifica Intervento ');
                         $('#intervento_id').val(calEvent.id).trigger("change");
+                        $('#cliente').val(calEvent.cliente_id).trigger('change');
+                        $('#cliente').val(calEvent.cliente_id).trigger('change.select2');
                         $('#contratto').val(calEvent.contratto_id);
+                        $('#progetto').val(calEvent.progetto_id).trigger("change");
                         $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
                         $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
                         $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
@@ -112,6 +115,8 @@
                         $('#data').val(calEvent.start.format('L'));
                         $('#ora_start').val(calEvent.start.format('HH:mm'));
                         $('#ora_end').val(calEvent.end.format('HH:mm'));
+
+
                     }
                 },
                 eventDrop: function (event, delta, revertFunc) {
@@ -140,14 +145,21 @@
                 },
                 eventClick: function (calEvent, jsEvent, view) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
+                    var events = $("#calendar").fullCalendar('clientEvents', calEvent.id);
+                    console.log(events.length);
+                    events.forEach(function (event) {
+                        event.backgroundColor = '#ffdf65';
+                    });
                     $('#calendar').fullCalendar('rerenderEvents');
-                    calEvent.backgroundColor = '#ffdf65';
-                    $('#calendar').fullCalendar('renderEvent', calEvent);
+
                     if (calEvent.id != 'new') {
                         if (calEvent.stampa == 0) {
                             $('#form_title').text('Modifica Intervento ');
                             $('#intervento_id').val(calEvent.id).trigger("change");
+                            $('#cliente').val(calEvent.cliente_id).trigger('change');
+                            $('#cliente').val(calEvent.cliente_id).trigger('change.select2');
                             $('#contratto').val(calEvent.contratto_id);
+                            $('#progetto').val(calEvent.progetto_id).trigger("change");
                             $('#listinoContratto').val(calEvent.listino_id).trigger('change.select2');
                             $('#attivita').val(calEvent.attivita_id).trigger('change.select2');
                             $('#consulente').val(calEvent.consulente_id).trigger('change.select2');
@@ -222,7 +234,14 @@
                 dataType: "JSON"
             }).done(function (data) {
                 if (data['status'] == 'success') {
-                    $('#calendar').fullCalendar('refetchEvents');
+                    //$('#calendar').fullCalendar('refetchEvents');
+                    $('#calendar').fullCalendar('removeEvents', 'new');
+                    var events = $("#calendar").fullCalendar('clientEvents', $('#intervento_id').val());
+                    console.log(events.length);
+                    events.forEach(function (event) {
+                        event.backgroundColor = '#ffdf65';
+                    });
+                    $('#calendar').fullCalendar('rerenderEvents');
                 }
                 else console.log(['Errore!!', data]);
             }).fail(function (jqXHR, textStatus) {

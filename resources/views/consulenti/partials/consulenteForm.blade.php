@@ -42,7 +42,13 @@
 </div><!-- /.box-body -->
 
 <div class="box-footer">
-    @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->id == $consulente->id)
-        <button type="submit" class="btn btn-primary">Submit</button>
+    @if(isset($consulente))
+        @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->id == $consulente->id)
+            <button type="submit" class="btn btn-primary">Submit</button>
+        @endif
+    @else
+        @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+            <button type="submit" class="btn btn-primary">Submit</button>
+        @endif
     @endif
 </div>

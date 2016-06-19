@@ -114,7 +114,9 @@ class ClienteController extends Controller {
      */
     public function destroy($id)
     {
-
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
     }
 
     public function ajaxGetContratti()

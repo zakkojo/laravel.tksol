@@ -6,10 +6,6 @@
 @endsection
 @section('contentheader_title')
     Gestione Progetti &nbsp;
-    <button type="button" class="btn btn-default navbar-btn" onClick="location.href='progetti/create'"
-            title="Aggiungi Nuovo">
-        <i class="fa fa-plus"></i>&nbsp; Aggiungi Nuovo
-    </button>
 @endsection
 
 @section('contentheader_breadcrumb')
@@ -22,12 +18,20 @@
             <h3 class="box-title">Elenco progetti</h3>
 
             <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" id="clienti_search" name="table_search" class="form-control pull-right"
-                           placeholder="Search">
+                <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default"
+                            onClick="location.href='{{ action('ProgettoController@create') }}'" title="Aggiungi Nuovo ">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+                <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" id="clienti_search" name="table_search" class="form-control pull-right"
+                               placeholder="Search">
 
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -51,6 +55,12 @@
                         <td>
                             <a href="{{ action('ProgettoController@edit',$progetto->id) }}" data-skin="skin-blue"
                                class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                            @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+                                <a href="{{ action('ProgettoController@destroy',$progetto->id) }}" data-method="DELETE"
+                                   data-confirm="Eliminare la filiera?" data-token="{{csrf_token()}}"
+                                   data-skin="skin-blue" class="btn btn-danger btn-xs"><i
+                                            class="glyphicon glyphicon-trash"></i></a>
+                            @endif
                         </td>
                         <td>{{ $progetto->area }}</td>
                         <td>{{ $progetto->nome }}</td>

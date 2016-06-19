@@ -41,9 +41,12 @@
                     <td>
                         <a href="{{ action('ContrattoInterventoController@edit',[$contratto->id,$listinoIntervento->id]) }}"
                            data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
-                        <a href="{{ action('ContrattoInterventoController@destroy',[$contratto->id,$listinoIntervento->id]) }}"
-                           data-method="DELETE" data-confirm="Eliminare il listino?" data-token="{{csrf_token()}}"
-                           data-skin="skin-blue" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                        @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+                            <a href="{{ action('ContrattoInterventoController@destroy',[$contratto->id,$listinoIntervento->id]) }}"
+                               data-method="DELETE" data-confirm="Eliminare il listino?" data-token="{{csrf_token()}}"
+                               data-skin="skin-blue" class="btn btn-danger btn-xs"><i
+                                        class="glyphicon glyphicon-trash"></i></a>
+                        @endif
 
                     </td>
                     <td>{{ $listinoIntervento->descrizione }}</td>

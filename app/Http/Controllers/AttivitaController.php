@@ -34,6 +34,9 @@ class AttivitaController extends Controller {
      */
     public function store(AttivitaRequest $request)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         $data = $request->all();
         Attivita::create($data);
         if ($request->parent_id != 0) $attivita = Attivita::findOrFail($request->parent_id);
@@ -72,6 +75,9 @@ class AttivitaController extends Controller {
      */
     public function update(AttivitaRequest $request)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         $attivita = Attivita::findOrFail($request->parent_id);
         $progetto = Progetto::findOrFail($request->progetto_id);
         $attivita->descrizione = $request->descrizione;
@@ -88,6 +94,9 @@ class AttivitaController extends Controller {
      */
     public function destroy($id)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         $attivita = Attivita::findOrFail($id);
         $progetto = Progetto::findOrFail($attivita->progetto_id);
         $attivita->delete();

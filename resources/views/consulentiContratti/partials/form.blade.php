@@ -1,5 +1,6 @@
 <?php
 $listConsulenti = $consulenti->lists('nominativo', 'id');
+$contratto_id = (isset($consulenteContratto)) ? $consulenteContratto->contratto_id : $contratto->id;
 ?>
 <div class="box-body">
     <input type="hidden" name="contratto_id"
@@ -30,7 +31,9 @@ $listConsulenti = $consulenti->lists('nominativo', 'id');
             {{ $consulenteContratto->note or '' }}
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Salva</button>
+    @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->contratti->contains($contratto_id))
+        <button type="submit" class="btn btn-primary">Salva</button>
+    @endif
 </div>
 @section('page_scripts')
     <script>

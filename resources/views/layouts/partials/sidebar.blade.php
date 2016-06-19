@@ -37,11 +37,16 @@
         <ul class="sidebar-menu">
             <!--li class="header">CONSULENTE</li> -->
             <!-- Optionally, you can add icons to the links -->
+            @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
             <li><a href="/consulenti/dashboard_direzionale"><i class='fa fa-dashboard'></i> <span>Dashboard direzionale</span></a></li>
+            @endif
             <li><a href="/consulenti/{{ Auth::user()->consulente->id }}"><i class='fa fa-dashboard'></i> <span>Dashboard consulente</span></a></li>
             <li><a href="/clienti/dashboard"><i class='fa fa-dashboard'></i> <span>Dashboard cliente</span></a></li>
             <li><a href="/interventi"><i class='fa fa-calendar '></i> <span>Interventi</span></a></li>
+            @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
             <li><a href="/progetti"><i class='fa fa-bitcoin'></i> <span>Filiera</span></a></li>
+            <li><a href="/prodotti"><i class='fa fa-bitcoin'></i> <span>Prodotti</span></a></li>
+            @endif
             <li><a href="/consulenti"><i class='fa fa-user'></i> <span>Consulenti</span></a></li>
             <li><a href="/clienti"><i class='fa fa-briefcase'></i> <span>Clienti</span></a></li>
             <!--li class="treeview">

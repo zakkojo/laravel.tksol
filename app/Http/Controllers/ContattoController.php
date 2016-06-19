@@ -82,7 +82,9 @@ class ContattoController extends Controller {
    */
   public function destroy($id)
   {
-    
+      $cliente_id = Contatto::find($id)->cliente->id;
+      $resp = Contatto::destroy($id);
+      return redirect()->action('ClienteController@show', $cliente_id);
   }
   
 }

@@ -4,6 +4,7 @@ use App\Consulente;
 use App\ConsulenteContratto;
 use App\Contratto;
 use App\Http\Requests\ConsulentiContrattiRequest;
+use Illuminate\Support\Facades\Auth;
 
 
 class ConsulenteContrattoController extends Controller {
@@ -39,6 +40,9 @@ class ConsulenteContrattoController extends Controller {
      */
     public function store(ConsulentiContrattiRequest $request)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->contratti->contains($contratto_id))){
+            abort(503, 'Unauthorized action.');
+        }
         $data = $request->all();
         $ret = ConsulenteContratto::create($data);
         return redirect()->action('ContrattoController@edit', $data['contratto_id']);
@@ -76,10 +80,13 @@ class ConsulenteContrattoController extends Controller {
      */
     public function update(ConsulentiContrattiRequest $request,$contratto_id, $id)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->contratti->contains($contratto_id))){
+            abort(503, 'Unauthorized action.');
+        }
         $consulenteContratto = ConsulenteContratto::findOrFail($id);
         $consulenteContratto->update($request->all());
         $consulenteContratto->save();
-        
+
         return redirect()->action('ContrattoController@edit', $contratto_id);
     }
 
@@ -89,9 +96,13 @@ class ConsulenteContrattoController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($contratto_id,$id)
     {
-
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->contratti->contains($contratto_id))){
+            abort(503, 'Unauthorized action.');
+        }
+        $resp = ConsulenteContratto::destroy($id);
+        return redirect()->action('ContrattoController@edit', $contratto_id);
     }
 
 }

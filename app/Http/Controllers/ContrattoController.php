@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\ConsulenteContratto;
 use App\Http\Requests;
 use App\Cliente;
@@ -8,11 +9,12 @@ use App\Progetto;
 use App\Consulente;
 use App\Contratto;
 use App\Http\Requests\ContrattiRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
 
 class ContrattoController extends Controller {
-    
+
 
     /**
      * Display a listing of the resource.
@@ -45,8 +47,12 @@ class ContrattoController extends Controller {
      */
     public function store(ContrattiRequest $request)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         $data = $request->all();
         $ret = Contratto::create($data);
+
         return redirect()->action('ContrattoController@edit', $ret->id);
     }
 
@@ -72,7 +78,8 @@ class ContrattoController extends Controller {
         $clienti = Cliente::all();
         $progetti = Progetto::all();
         $contratto = Contratto::findOrFail($id);
-        $consulentiContratto = ConsulenteContratto::with('consulente')->where('contratto_id',$id)->get();
+        $consulentiContratto = ConsulenteContratto::with('consulente')->where('contratto_id', $id)->get();
+
         return view('contratti.edit', compact('contratto', 'clienti', 'progetti', 'consulentiContratto'));
     }
 
@@ -84,9 +91,13 @@ class ContrattoController extends Controller {
      */
     public function update($id, ContrattiRequest $request)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         //return $request->all();
         $contratto = Contratto::findOrFail($id);
         $contratto->update($request->all());
+
         return redirect()->action('ContrattoController@edit', $contratto->id);
     }
 
@@ -98,16 +109,24 @@ class ContrattoController extends Controller {
      */
     public function destroy($id)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
+        $cliente_id = Contratto::find($id)->cliente->id;
+        $resp = Contratto::destroy($id);
 
+        return redirect()->action('ClienteController@show', $cliente_id);
     }
 
     public function ajaxGetListinoInterventi()
     {
         $contratto = Contratto::findOrFail(Input::get('contratto_id'));
+
         return $contratto->listinoInterventi;
     }
 
-    public function ajaxGetProgetti(){
-        return Contratto::with('progetto')->where('id',Input::get('contratto_id'))->get();
+    public function ajaxGetProgetti()
+    {
+        return Contratto::with('progetto')->where('id', Input::get('contratto_id'))->get();
     }
 }

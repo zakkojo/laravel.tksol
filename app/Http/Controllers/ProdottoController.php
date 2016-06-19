@@ -2,9 +2,9 @@
 
 use App\Http\Requests\ProdottiRequest;
 use App\Prodotto;
+use Illuminate\Support\Facades\Auth;
 
 class ProdottoController extends Controller {
-    
 
     /**
      * Display a listing of the resource.
@@ -35,6 +35,9 @@ class ProdottoController extends Controller {
      */
     public function store(ProdottiRequest $request)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         $data = $request->all();
         $ret = Prodotto::create($data);
 
@@ -73,6 +76,9 @@ class ProdottoController extends Controller {
      */
     public function update(ProdottiRequest $request,$id)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         if ($prodotto = Prodotto::findOrFail($id))
         {
             $prodotto->update($request->all());
@@ -89,7 +95,11 @@ class ProdottoController extends Controller {
      */
     public function destroy($id)
     {
-
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
+        $resp = Prodotto::destroy($id);
+        return redirect()->action('ProdottoController@index');
     }
 
 }

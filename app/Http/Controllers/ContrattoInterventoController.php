@@ -35,6 +35,9 @@ class ContrattoInterventoController extends Controller {
    */
   public function store(ContrattiInterventiRequest $request)
   {
+      if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+          abort(503, 'Unauthorized action.');
+      }
       $data = $request->all();
       $ret = ContrattoIntervento::create($data);
       return redirect()->action('ContrattoController@edit', $data['contratto_id']);
@@ -72,6 +75,9 @@ class ContrattoInterventoController extends Controller {
    */
   public function update(ContrattiInterventiRequest $request, $contratto_id, $id)
   {
+      if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+          abort(503, 'Unauthorized action.');
+      }
       $listinoIntertvento = ContrattoIntervento::findOrFail($id);
       $listinoIntertvento->update($request->all());
       return redirect()->action('ContrattoController@edit', $contratto_id);
@@ -85,6 +91,9 @@ class ContrattoInterventoController extends Controller {
    */
   public function destroy($contratto_id,$id)
   {
+      if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+          abort(503, 'Unauthorized action.');
+      }
       $resp = ContrattoIntervento::destroy($id);
       return redirect()->action('ContrattoController@edit', $contratto_id);
   }

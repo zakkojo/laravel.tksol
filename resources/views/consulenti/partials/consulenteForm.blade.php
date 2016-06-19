@@ -27,28 +27,22 @@
     <div class="form-group">
         {!! Form::text('partita_iva', null,['class'=>'form-control', 'id'=>'partita_iva', 'placeholder'=>'Partita IVA']) !!}
     </div>
-    <div class="form-group">
-        <select class="form-control select2 select2-hidden-accessible" name="tipo" style="width: 100%;" tabindex="-1" aria-hidden="true">
-            <option value="{{ $consulente->tipo or  '' }}"> {{ $consulente->tipo or  'Tipo' }}</option>
-            <option value="Partner">Partner</option>
-            <option value="Senior">Senior</option>
-            <option value="Junior">Junior</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputFile">Allega curriculum</label>
-        <input type="file" id="exampleInputFile">
+    @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+        <div class="form-group">
 
-        <p class="help-block">Example block-level help text here.</p>
-    </div>
-    <div class="checkbox">
-        <label>
-            <input type="checkbox"> Check me out
-        </label>
-    </div>
-</div>
-<!-- /.box-body -->
+            <select class="form-control select2 select2-hidden-accessible" name="tipo" style="width: 100%;"
+                    tabindex="-1" aria-hidden="true">
+                <option value="{{ $consulente->tipo or  '' }}"> {{ $consulente->tipo or  'Tipo' }}</option>
+                <option value="Partner">Partner</option>
+                <option value="Senior">Senior</option>
+                <option value="Junior">Junior</option>
+            </select>
+        </div>
+    @endif
+</div><!-- /.box-body -->
 
 <div class="box-footer">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->id == $consulente->id)
+        <button type="submit" class="btn btn-primary">Submit</button>
+    @endif
 </div>

@@ -44,7 +44,7 @@
                 <!-- /.box-body -->
                 <div class="box-body">
                     <table id="clienti"
-                           class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide"
+                           class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap"
                            cellspacing="0" width="100%">
                         <thead>
                         <tr>
@@ -65,9 +65,10 @@
                                     <a href="{{ action('ContattoController@edit',$contatto->id) }}"
                                        data-skin="skin-blue" class="btn btn-default btn-xs"><i
                                                 class="glyphicon glyphicon-edit"></i></a>
-                                    <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i
-                                                class="glyphicon glyphicon-trash"></i></a>
-
+                                    <a href="{{ action('ContattoController@destroy',[$contatto->id, $cliente->id]) }}"
+                                       data-method="DELETE" data-confirm="Eliminare il contatto?"
+                                       data-token="{{csrf_token()}}" data-skin="skin-blue"
+                                       class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
                                 </td>
                                 <td>{{ $contatto->descrizione }}</td>
                                 <td>{{ $contatto->citta }}</td>
@@ -105,7 +106,7 @@
                 </div>
                 <div class="box-body">
                     <table id="contratti"
-                           class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide"
+                           class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap"
                            cellspacing="0" width="100%">
                         <thead>
                         <tr>
@@ -123,9 +124,12 @@
                                     <a href="{{ action('ContrattoController@edit',$contratto->id) }}"
                                        data-skin="skin-blue" class="btn btn-default btn-xs"><i
                                                 class="glyphicon glyphicon-edit"></i></a>
-                                    <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i
-                                                class="glyphicon glyphicon-trash"></i></a>
-
+                                    @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+                                        <a href="{{ action('ContrattoController@destroy',$contratto->id) }}"
+                                           data-method="DELETE" data-confirm="Eliminare il contratto?"
+                                           data-token="{{csrf_token()}}" data-skin="skin-blue"
+                                           class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                                    @endif
                                 </td>
                                 <td>{{ $contratto->progetto->nome }}</td>
                                 <td>{{ $contratto->data_avvio_progetto }}</td>
@@ -153,7 +157,7 @@
                 "ordering": true,
                 "info": true,
                 "autoWidth": false,
-                "fnDrawCallback":function(){
+                "fnDrawCallback": function () {
                     $('#clienti').removeClass('hide');
                 }
 
@@ -171,9 +175,9 @@
                 "info": true,
                 "autoWidth": false,
                 "columnDefs": [
-                    { "width": "80px", "targets": 0 }
+                    {"width": "80px", "targets": 0}
                 ],
-                "fnDrawCallback":function(){
+                "fnDrawCallback": function () {
                     $('#contratti').removeClass('hide');
                 }
             });

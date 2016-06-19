@@ -22,9 +22,8 @@
         </div>
     </div>
     <div class="box-body">
-        <table id="consulenti"
-               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap " cellspacing="0"
-               width="100%">
+        <table id="consulenti" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap "
+               cellspacing="0" width="100%">
             <thead>
             <tr>
                 <td>Opzioni</td>
@@ -37,10 +36,12 @@
                 <tr>
                     <td>
                         <a href="{{ action('ConsulenteContrattoController@edit',[$contratto->id,$consulenteContratto->id]) }}"
-                           data-skin="skin-blue" class="btn btn-default btn-xs"><i
-                                    class="glyphicon glyphicon-edit"></i></a>
-                        <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i
-                                    class="glyphicon glyphicon-trash"></i></a>
+                           data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                        @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->contratti->contains($contratto->id))
+                            <a href="{{ action('ConsulenteContrattoController@destroy',[$contratto->id,$consulenteContratto->id]) }}"
+                               data-method="DELETE" data-confirm="Eliminare il Consulente dal Contratto?" data-token="{{csrf_token()}}"
+                               data-skin="skin-blue" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                        @endif
 
                     </td>
                     <td>{{ $consulenteContratto->consulente->nominativo }}</td>
@@ -63,9 +64,9 @@
                 "info": true,
                 "autoWidth": false,
                 "columnDefs": [
-                    { "width": "80px", "targets": 0 }
+                    {"width": "80px", "targets": 0}
                 ],
-                "fnDrawCallback":function(){
+                "fnDrawCallback": function () {
                     $('#listinoInterventi').removeClass('hide');
                 }
 

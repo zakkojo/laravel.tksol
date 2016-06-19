@@ -153,7 +153,7 @@
                                 event.backgroundColor = '#ffdf65';
                             });
                             $('#calendar').fullCalendar('rerenderEvents');
-                                                        
+
                             $('#form_title').text('Modifica Intervento ');
                             $('#intervento_id').val(calEvent.id).trigger("change");
                             $('#cliente').val(calEvent.cliente_id).trigger('change');

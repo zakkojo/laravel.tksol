@@ -8,7 +8,7 @@ if (isset($contrattoIntervento))
 }
 ?>
 <div class="box-body">
-    <input type="hidden" name="contratto_id" value = {{$contratto->id}}>
+    <input type="hidden" name="contratto_id" value= {{$contratto->id}}>
     <div class="form-group">
         <label>Descrizione</label>
         <div class="input-group date">
@@ -56,5 +56,7 @@ if (isset($contrattoIntervento))
 </div><!-- /.box-body -->
 
 <div class="box-footer">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+        <button type="submit" class="btn btn-primary">Submit</button>
+    @endif
 </div>

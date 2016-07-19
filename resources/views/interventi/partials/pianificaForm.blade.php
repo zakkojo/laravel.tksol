@@ -131,9 +131,11 @@ else $progDisabled = 'enabled';
             });
 
             drawCalendar();
-            $('#consulente').trigger('change');
-            $('#cliente').trigger('change');
-            $('#intervento_id').trigger('change');
+            colorconsulente();
+            colorcliente();
+            //$('#consulente').trigger('change');
+            //$('#cliente').trigger('change');
+            //$('#intervento_id').trigger('change');
             //Consulente->Tipo
         });
 
@@ -174,7 +176,7 @@ else $progDisabled = 'enabled';
                             });
                             if (c == 0) $('#progetto').select2('val', '');
                             if ($('#intervento_id').val() == '') {
-                                updateProgettoSource();
+                                //updateProgettoSource();
                                 updateConsuntivoSource();
                             }
                         });

@@ -16,6 +16,7 @@
                 },
                 defaultView: 'agendaWeek',
                 lang: 'it',
+                columnFormat: 'ddd D/M',
                 header: {
                     right: 'prev,next today',
                     center: 'title',
@@ -248,54 +249,52 @@
                 alert("Request failed: " + textStatus);
             });
         }
-        function updateProgettoSource() {
-            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=12');
-            if ($('#progetto').val()) {
-                $('#calendar').fullCalendar('addEventSource',
-                        {
-                            id: 'progettoEvents',
-                            url: '/ajax/interventi/getCalendar?id=12',
-                            type: 'GET',
-                            data: {
-                                cliente_id: globale_cliente
-                            },
-                            error: function () {
-                                alert('there was an error while fetching events!');
-                            },
-                            color: '#F9595C',   // a non-ajax option
-                            textColor: 'black' // a non-ajax option
-                        }
-                )
-            }
-        }
-        function updateConsulenteSource() {
-            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=1');
+        function updateProgettoSource(cliente_id, bgcolor) {
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=' + cliente_id);
             $('#calendar').fullCalendar('addEventSource',
                     {
-                        id: 'consulenteEvents',
-                        url: '/ajax/interventi/getCalendar?id=1',
+                        id: cliente_id,
+                        url: '/ajax/interventi/getCalendar?id=' + cliente_id,
                         type: 'GET',
                         data: {
-                            consulente_id: globale_consulente
+                            cliente_id: parseInt(cliente_id) - 2000,
                         },
                         error: function () {
                             alert('there was an error while fetching events!');
                         },
-                        color: '#92E1C0',   // a non-ajax option
+                        color: bgcolor,   // a non-ajax option
+                        textColor: 'black' // a non-ajax option
+                    }
+            )
+        }
+        function updateConsulenteSource(consulente_id, bgcolor) {
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=' + consulente_id);
+            $('#calendar').fullCalendar('addEventSource',
+                    {
+                        id: consulente_id,
+                        url: '/ajax/interventi/getCalendar?id=' + consulente_id,
+                        type: 'GET',
+                        data: {
+                            consulente_id: parseInt(consulente_id) - 1000
+                        },
+                        error: function () {
+                            alert('there was an error while fetching events!');
+                        },
+                        color: bgcolor,   // a non-ajax option
                         textColor: 'black' // a non-ajax option
                     }
             )
         }
         function updateConsuntivoSource() {
-            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=9');
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=' + parseInt(cliente_id) - 2000 + 9000);
             if ($('#progetto').val()) {
                 $('#calendar').fullCalendar('addEventSource',
                         {
                             id: 'consuntivoEvents',
-                            url: '/ajax/interventi/getCalendar?id=9',
+                            url: '/ajax/interventi/getCalendar?id=' + parseInt(cliente_id) - 2000 + 9000,
                             type: 'GET',
                             data: {
-                                cliente_id: globale_cliente,
+                                cliente_id: parseInt(cliente_id) - 2000,
                                 stampa: 1
                             },
                             error: function () {

@@ -26,13 +26,15 @@
             @include('interventi.partials.calendar')
         </div>
         <div class="col-md-4">
-            <div class="row">
-                <div class="col-md-12">
-                    @include('interventi.partials.pianificaForm')
-                </div>
+            <div class="col-md-12">
+                @include('interventi.partials.filtriForm')
+            </div>
+            <div class="col-md-12">
+                @include('interventi.partials.pianificaForm')
             </div>
         </div>
     </div>
+
 
 @endsection
 @section('page_scripts')

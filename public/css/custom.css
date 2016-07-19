@@ -1,0 +1,25 @@
+/*CUSTOM CSS...FORSE*/
+.customsearch {
+    padding-left: 0px;
+}
+.customsearch > li{
+    list-style: none;
+    background-color: #3c8dbc;
+    display: inline-block;
+    padding: 1px 5px;
+    color: #fff;
+    border-radius: 4px;
+    cursor: default;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+.customsearch > li > span{
+    margin-right:3px;
+    cursor: pointer;
+    color: #cccccc;
+    display: inline-block;
+    font-weight: bold;
+}
+.customsearch > li > span:hover{
+    color: #fff;
+}

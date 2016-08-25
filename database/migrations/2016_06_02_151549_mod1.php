@@ -19,6 +19,13 @@ class Mod1 extends Migration {
             $table->integer('distanza')->nullable();
         });
 
+        Schema::table('intervento', function ($table)
+        {
+            $table->integer('creatore_id')->unsigned();
+            $table->timestamp('data_modifica');
+            $table->timestamp('data_accettazione')->nullable();
+        });
+
 
         Schema::table('contatto', function ($table)
         {
@@ -59,6 +66,14 @@ class Mod1 extends Migration {
             $table->dropColumn('distanza');
             $table->integer('rating')->nullable()->change();
         });
+
+        Schema::table('intervento', function ($table)
+        {
+            $table->dropColumn('creatore_id');
+            $table->dropColumn('data_modifica');
+            $table->dropColumn('data_accettazione');
+        });
+
         Schema::table('contatto', function ($table)
         {
             $table->dropColumn('fax');

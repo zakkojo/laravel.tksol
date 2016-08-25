@@ -35,10 +35,10 @@
 
             if (typeof(treeData) === 'undefined') var treeData = {!!  $listAttivita !!};
             var alternateData = [{
-                text: 'Progetto',
-                icon: 'glyphicon glyphicon-certificate',
-                color: 'pink',
-                backColor: 'red',
+                text: '<b>{{$progetto->area}} / {{$progetto->nome}}</b>',
+                //icon: 'glyphicon glyphicon-certificate',
+                //color: 'pink',
+                //backColor: 'red',
                 href: 'http://www.tesco.com',
                 tags: ['available', '0'],
                 multiselect: false,
@@ -51,8 +51,8 @@
                 color: "#428bca",
                 expandIcon: 'glyphicon glyphicon-chevron-right',
                 collapseIcon: 'glyphicon glyphicon-chevron-down',
-                nodeIcon: 'glyphicon glyphicon-bookmark',
-                showTags: true,
+                //nodeIcon: 'glyphicon glyphicon-bookmark',
+                //showTags: true,
                 data: alternateData,
                 onNodeSelected: function (event, item) {
                     $('#treeview5').treeview('getSelected').forEach(function (node) {

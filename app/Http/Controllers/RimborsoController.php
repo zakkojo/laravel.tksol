@@ -5,6 +5,8 @@ use App\Intervento;
 use App\Rimborso;
 use App\Http\Requests;
 use App\Http\Requests\RimborsiRequest;
+use Illuminate\Support\Facades\Auth;
+
 
 class RimborsoController extends Controller {
 
@@ -26,7 +28,6 @@ class RimborsoController extends Controller {
     public function create($intervento_id)
     {
         $intervento = Intervento::findOrFail($intervento_id);
-
         return view('rimborsi.create', compact('intervento'));
     }
 

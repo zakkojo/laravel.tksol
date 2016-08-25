@@ -35,6 +35,11 @@ class Consulente extends Model {
 
     public function contratti()
     {
-        return $this->belongsToMany(Contratto::class)->withPivot('note','ruolo');
+        return $this->belongsToMany(Contratto::class)->with('progetto')->withPivot('note','ruolo');
+    }
+
+    public function capoProgetto()
+    {
+        return $this->belongsToMany(Contratto::class)->withPivot('note','ruolo')->where('ruolo', 'Capo Progetto');;
     }
 }

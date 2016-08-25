@@ -4,6 +4,8 @@ use App\Http\Requests\AttivitaRequest;
 use App\Attivita;
 use App\Progetto;
 
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 class AttivitaController extends Controller {

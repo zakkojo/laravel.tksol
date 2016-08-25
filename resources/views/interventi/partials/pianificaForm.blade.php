@@ -139,29 +139,19 @@ else $progDisabled = 'enabled';
             //Consulente->Tipo
         });
 
-        $('#consulente').change(function () {
-            globale_consulente = $('#consulente').val();
-            $.get('{{action('ConsulenteController@ajaxGetConsulente')}}', {id: $('#consulente').val()})
-                    .done(function (data) {
-                        $('#consulente_tipo')
-                                .append($("<option></option>")
-                                        .attr('value', data.tipo)
-                                        .text(data.tipo));
-                        updateConsulenteSource();
-                    });
-        });
+
         //Cliente->Progetto
         $('#cliente').change(function () {
             $('#progetto').html('');
             $('#contratto').val('');
             if ($('#cliente').val()) {
                 globale_cliente = $('#cliente').val();
-                $.get('{{action('ClienteController@ajaxGetContratti')}}', {
+                $.get('{{action('ConsulenteController@ajaxGetContratti')}}', {
                             cliente_id: $('#cliente').val(),
                             user: '{{Auth::user()->id}}'
                         })
                         .done(function (data) {
-
+                            console.log(data);
                             var c = 0;
                             $.each(data, function (id, contratto) {
                                 c++;
@@ -176,8 +166,7 @@ else $progDisabled = 'enabled';
                             });
                             if (c == 0) $('#progetto').select2('val', '');
                             if ($('#intervento_id').val() == '') {
-                                //updateProgettoSource();
-                                updateConsuntivoSource();
+
                             }
                         });
             }

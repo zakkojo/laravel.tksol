@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('htmlheader_title')
     Dettaglio Intervento
 @endsection

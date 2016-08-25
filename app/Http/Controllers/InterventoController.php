@@ -47,6 +47,8 @@ class InterventoController extends Controller {
      */
     public function store(InterventiRequest $request)
     {
+        $request->request->add(['data_modifica' => Carbon::now()]);
+        $request->request->add(['creatore_id' => Auth::User()->id]);
         $data = $request->all();
         if (Intervento::create($data)) return true;
         else return false;
@@ -79,7 +81,7 @@ class InterventoController extends Controller {
         $cliente = $intervento->listinoInterventi->contratto->cliente;
         $contratto = $intervento->listinoInterventi->contratto;
         $rimborsi = $intervento->rimborsi;
-        $user = Consulente::findOrFail(Auth::User()->id);
+        $user = Consulente::findOrFail(Auth::User()->consulente->id);
 
         return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi', 'user', 'contratto'));
     }
@@ -92,7 +94,12 @@ class InterventoController extends Controller {
      */
     public function update(InterventiRequest $request, $id)
     {
+
         $intervento = Intervento::findOrFail($id);
+
+        $intervento->data_modifica = Carbon::now();
+        $intervento->creatore_id = Auth::User()->id;
+
         $intervento->listino_id = Input::get('listinoContratto');
         $intervento->consulente_id = Input::get('consulente_id');
         $intervento->attivita_id = Input::get('attivita');
@@ -123,7 +130,8 @@ class InterventoController extends Controller {
             {
                 $intervento->stampa = 1;
                 $intervento->save();
-                return redirect()->action('InterventoController@show',$id);
+
+                return redirect()->action('InterventoController@show', $id);
             } else
             {
                 //altrimenti chiedo l'inserimento del prossimo intervento
@@ -144,7 +152,7 @@ class InterventoController extends Controller {
 
         $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
 
-        return $pdf->inline();
+        return $pdf->setPaper('a5')->setOption('margin-bottom',0)->setOption('margin-top',0)->setOption('margin-left',0)->setOption('margin-right',0)->inline();
     }
 
     public function invia($id)
@@ -253,6 +261,8 @@ class InterventoController extends Controller {
             'attivitaPianificate' => Input::get('attivitaPianificate'),
             'data_start'          => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
             'data_end'            => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
+            'data_modifica'       => Carbon::now(),
+            'creatore_id'         => Auth::User()->id,
         ];
 
         $response = Intervento::create($data);
@@ -284,6 +294,8 @@ class InterventoController extends Controller {
             'attivitaPianificate' => Input::get('attivitaPianificate'),
             'data_start'          => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
             'data_end'            => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
+            'data_modifica'       => Carbon::now(),
+            'creatore_id'         => Auth::User()->id,
         ];
         $intervento = Intervento::findOrFail(Input::get('id'));
         $response = $intervento->update($data);
@@ -304,7 +316,6 @@ class InterventoController extends Controller {
 
     public function ajaxGetPermissionUpdatePianificazione()
     {
-        $user = Input::get('user_id');
         $res = Intervento::where('id', Input::get('intervento_id'))->where('consulente_id', Input::get('user_id'))->count();
         /*
         $res = Contratto::where('id',Input::get('contratto_id'))->whereHas('consulenti', function ($query) use ($user)

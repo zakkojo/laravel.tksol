@@ -5,6 +5,8 @@ use App\Http\Requests\ContattiRequest;
 use App\Contatto;
 use App\User;
 use DB;
+use Illuminate\Support\Facades\Auth;
+
 
 use Request;
 class ContattoController extends Controller {

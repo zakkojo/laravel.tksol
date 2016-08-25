@@ -6,6 +6,8 @@ use App\Contratto;
 use App\Prodotto;
 use App\Cliente;
 use App\Http\Requests\ContrattiProdottiRequest;
+use Illuminate\Support\Facades\Auth;
+
 
 class ContrattoProdottoController extends Controller {
 

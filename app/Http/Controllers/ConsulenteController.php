@@ -10,6 +10,7 @@ use App\User;
 use Carbon\Carbon;
 use DB;
 use Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 
@@ -74,9 +75,9 @@ class ConsulenteController extends Controller {
             LEFT JOIN contratto_intervento ci on (c.id = ci.contratto_id) 
             LEFT JOIN consulente_contratto cc on (cc.contratto_id = ci.id) 
             LEFT JOIN intervento i ON (i.listino_id = ci.id) 
-            WHERE cc.consulente_id = '".$consulente->id."'
+            WHERE cc.consulente_id = '" . $consulente->id . "'
             GROUP BY c.id,ragione_sociale, pro.nome
-            HAVING (prossimo_intervento >= '".Carbon::now()->addMonths(2)."' OR prossimo_intervento is null)
+            HAVING (prossimo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR prossimo_intervento is null)
         ");
 
         return view('consulenti.show', compact('consulente', 'prossimiInterventi', 'rapportiniDaInviare', 'contrattiSenzaInterventi'));
@@ -130,6 +131,24 @@ class ConsulenteController extends Controller {
         $consulente = Consulente::findOrFail(Input::get('id'));
 
         return $consulente;
+    }
+
+    public function ajaxGetContratti()
+    {
+        $user = Input::get('user');
+        $cliente_id = Input::get('cliente_id');
+        $contratti = User::find($user)->consulente->contratti;
+
+
+        $return = $contratti->filter(function ($contratto) use ($cliente_id)
+        {
+            return $contratto->cliente_id == $cliente_id;
+        });
+
+
+
+        return $return;
+
     }
 
 }

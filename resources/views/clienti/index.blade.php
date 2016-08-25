@@ -97,7 +97,7 @@
     <script>
         $(document).ready(function () {
             var oTable = $('#clienti').DataTable({
-                "scrollY": "280px",
+                "scrollY": "500px",
                 "scrollCollapse": false,
                 "paging": false,
                 "lengthChange": false,

@@ -47,11 +47,16 @@ class ContrattoController extends Controller {
      */
     public function store(ContrattiRequest $request)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin'))
+        {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
         $ret = Contratto::create($data);
+
+        $consulenteContratto_data = ['contratto_id'=> $ret->id, 'consulente_id' => Auth::User()->id, 'ruolo' => 'Capo Progetto'];
+
+        ConsulenteContratto::create($consulenteContratto_data);
 
         return redirect()->action('ContrattoController@edit', $ret->id);
     }
@@ -91,7 +96,8 @@ class ContrattoController extends Controller {
      */
     public function update($id, ContrattiRequest $request)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin'))
+        {
             abort(503, 'Unauthorized action.');
         }
         //return $request->all();
@@ -109,7 +115,8 @@ class ContrattoController extends Controller {
      */
     public function destroy($id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin'))
+        {
             abort(503, 'Unauthorized action.');
         }
         $cliente_id = Contratto::find($id)->cliente->id;

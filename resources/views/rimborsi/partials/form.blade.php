@@ -38,6 +38,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Salva</button>
 </div>
+<div id="distanza" class="hidden">{{$intervento->listinoInterventi->contratto->cliente->distanza}}</div>
 @section('page_scripts')
     <script>
         $('document').ready(function () {
@@ -52,6 +53,17 @@
                     "color": false, //Button to change color of font
                     "blockquote": false, //Blockquote
                     "size": 'sm' //default: none, other options are xs, sm, lg
+                }
+            });
+
+            $('#tipo_spesa').change(function () {
+                if($('#tipo_spesa').val() == 'Viaggio') {
+                    $('#um').val('Km');
+                    $('#quantita').val($('#distanza').text());
+                }
+                else {
+                    $('#um').val('');
+                    $('#quantita').val('');
                 }
             });
         });

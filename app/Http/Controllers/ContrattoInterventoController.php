@@ -4,6 +4,8 @@ use App\Http\Requests;
 use App\ContrattoIntervento;
 use App\Contratto;
 use App\Http\Requests\ContrattiInterventiRequest;
+use Illuminate\Support\Facades\Auth;
+
 class ContrattoInterventoController extends Controller {
 
   /**

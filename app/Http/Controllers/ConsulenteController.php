@@ -79,8 +79,10 @@ class ConsulenteController extends Controller {
             GROUP BY c.id,ragione_sociale, pro.nome
             HAVING (prossimo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR prossimo_intervento is null)
         ");
+        $interventiDaApprovare = Intervento::where('consulente_id',$consulente->id)->whereRaw('consulente_id <> creatore_id')->whereRaw('data_accettazione is null')->get();
 
-        return view('consulenti.show', compact('consulente', 'prossimiInterventi', 'rapportiniDaInviare', 'contrattiSenzaInterventi'));
+
+        return view('consulenti.show', compact('consulente', 'prossimiInterventi', 'rapportiniDaInviare', 'contrattiSenzaInterventi', 'interventiDaApprovare'));
     }
 
     /**
@@ -137,14 +139,19 @@ class ConsulenteController extends Controller {
     {
         $user = Input::get('user');
         $cliente_id = Input::get('cliente_id');
-        $contratti = User::find($user)->consulente->contratti;
 
 
-        $return = $contratti->filter(function ($contratto) use ($cliente_id)
+        if (User::findOrFail($user)->consulente->tipo == 'Partner')
         {
-            return $contratto->cliente_id == $cliente_id;
-        });
-
+            return Contratto::with('progetto')->where('cliente_id', $cliente_id)->get();
+        } else
+        {
+            $contratti = User::find($user)->consulente->contratti;
+            $return = $contratti->filter(function ($contratto) use ($cliente_id)
+            {
+                return $contratto->cliente_id == $cliente_id;
+            });
+        }
 
 
         return $return;

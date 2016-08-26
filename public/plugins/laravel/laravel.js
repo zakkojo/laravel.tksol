@@ -26,7 +26,7 @@
 
       // If the data-method attribute is not PUT or DELETE,
       // then we don't know what to do. Just ignore.
-      if ( $.inArray(httpMethod, ['PUT', 'DELETE']) === - 1 ) {
+      if ( $.inArray(httpMethod, ['PATCH','PUT', 'DELETE']) === - 1 ) {
         return;
       }
 

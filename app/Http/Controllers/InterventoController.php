@@ -152,7 +152,7 @@ class InterventoController extends Controller {
 
         $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
 
-        return $pdf->setPaper('a5')->setOption('margin-bottom',0)->setOption('margin-top',0)->setOption('margin-left',0)->setOption('margin-right',0)->inline();
+        return $pdf->setPaper('a5')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0)->inline();
     }
 
     public function invia($id)
@@ -190,6 +190,19 @@ class InterventoController extends Controller {
     public function destroy($id)
     {
 
+    }
+
+
+    public function ajaxAcceptIntervento()
+    {
+        $id = Input::get('id');
+        $intervento = Intervento::findOrFail($id);
+        if(Auth::User()->consulente->id == $intervento->consulente_id AND !$intervento->data_accettazione){
+            $intervento->data_accettazione = Carbon::now();
+            $intervento->save();
+            return ['status' => 'success', 'result' => true];
+        }
+        else return ['status' => 'Non autorizzato', 'result' => false];
     }
 
 
@@ -262,9 +275,10 @@ class InterventoController extends Controller {
             'data_start'          => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
             'data_end'            => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
             'data_modifica'       => Carbon::now(),
-            'creatore_id'         => Auth::User()->id,
+            'creatore_id'         => Input::get('creatore_id'),
         ];
-
+        if (Input::get('creatore_id') == Input::get('consulente'))
+            $data['data_accettazione'] = Carbon::now();
         $response = Intervento::create($data);
         if ($response)
         {

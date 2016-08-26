@@ -1,6 +1,7 @@
 <div class="box box-primary">
     <div id="calendar"></div>
 </div>
+
 @section('page_scripts')
     <script>
         var globale_cliente;
@@ -28,6 +29,7 @@
                     week: 'Settimana',
                     day: 'Giorno'
                 },
+                @if(isset($_REQUEST['data'])) defaultDate: moment('{{$_REQUEST['data']}}'), @endif
                 editable: true,
                 selectable: true,
                 selectHelper: true,
@@ -186,7 +188,6 @@
             });
         }
 
-
         function createIntervento() {
             var postData = {};
             postData.contratto = $('#contratto').val();
@@ -198,6 +199,7 @@
             postData.ora_end = $('#ora_end').val();
             postData.attivitaPianificate = $('#attivitaPianificate').html();
             postData.stampaIntervento = $('#stampaIntervento').val();
+            postData.creatore_id = {{Auth::User()->consulente->id}};
             console.log(postData);
             $.ajax({
                 url: "/ajax/interventi/createIntervento",

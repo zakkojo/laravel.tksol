@@ -5,6 +5,7 @@ namespace App;
 use App\ContrattoIntervento;
 use App\Contratto;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,7 +24,24 @@ class Intervento extends Model {
         'data_start',
         'data_end',
         'attivitaPianificate',
+        'creatore_id',
+        'data_modifica',
+        'data_accettazione',
     ];
+
+    public function getOrarioAttribute()
+    {
+        return Carbon::parse($this->data_start)->format('H:i') . ' - ' . Carbon::parse($this->data_end)->format('H:i');
+    }
+
+    public function getDataAttribute()
+    {
+        return Carbon::parse($this->data_start)->format('d/m/Y');
+    }
+    public function getDataCAttribute()
+    {
+        return Carbon::parse($this->data_start)->format('Y-m-d');
+    }
 
     public function attivita()
     {
@@ -34,6 +52,11 @@ class Intervento extends Model {
     {
         return $this->belongsTo(Consulente::class);
     }
+    public function creatore()
+    {
+        return $this->belongsTo(Consulente::class,'consulente_id','id');
+    }
+
 
     public function listinoInterventi()
     {

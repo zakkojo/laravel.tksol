@@ -156,6 +156,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        App\Providers\ViewComposerServiceProvider::class,
+
         //
         Collective\Html\HtmlServiceProvider::class,
 
@@ -164,6 +166,8 @@ return [
         Orangehill\Iseed\IseedServiceProvider::class,
         
         Barryvdh\Snappy\ServiceProvider::class,
+
+
 
     ],
 

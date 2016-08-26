@@ -32,5 +32,10 @@
             @include('consulenti.partials.contrattiSenzaInterventi')
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            @include('consulenti.partials.interventiDaApprovare')
+        </div>
+    </div>
 @endsection
 

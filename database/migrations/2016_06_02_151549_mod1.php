@@ -69,9 +69,9 @@ class Mod1 extends Migration {
 
         Schema::table('intervento', function ($table)
         {
-            $table->dropColumn('creatore_id');
-            $table->dropColumn('data_modifica');
-            $table->dropColumn('data_accettazione');
+            if(Schema::hasColumn('intervento', 'creatore_id')) $table->dropColumn('creatore_id');
+            if(Schema::hasColumn('intervento', 'data_accettazione')) $table->dropColumn('data_accettazione');
+            if(Schema::hasColumn('intervento', 'data_modifica')) $table->dropColumn('data_modifica');
         });
 
         Schema::table('contatto', function ($table)

@@ -62,8 +62,8 @@ class Mod1 extends Migration {
     {
         Schema::table('cliente', function ($table)
         {
-            $table->dropColumn('email');
-            $table->dropColumn('distanza');
+            if(Schema::hasColumn('cliente', 'email')) $table->dropColumn('email');
+            if(Schema::hasColumn('cliente', 'distanza')) $table->dropColumn('distanza');
             $table->integer('rating')->nullable()->change();
         });
 
@@ -76,8 +76,8 @@ class Mod1 extends Migration {
 
         Schema::table('contatto', function ($table)
         {
-            $table->dropColumn('fax');
-            $table->dropColumn('ruolo');
+            if(Schema::hasColumn('contatto', 'fax')) $table->dropColumn('fax');
+            if(Schema::hasColumn('contatto', 'ruolo')) $table->dropColumn('ruolo');
             //
             $table->boolean('mobile');
             $table->boolean('mobile2');
@@ -88,14 +88,14 @@ class Mod1 extends Migration {
 
         Schema::table('intervento', function ($table)
         {
-            $table->dropColumn('sede');
+            if(Schema::hasColumn('intervento', 'sede')) $table->dropColumn('sede');
             //retrocompatibilita
             $table->boolean('stato');
         });
 
         Schema::table('contratto', function ($table)
         {
-            $table->dropColumn('rimborsi');
+            if(Schema::hasColumn('contratto', 'rimborsi')) $table->dropColumn('rimborsi');
             //retrocompatibilita
             $table->boolean('capo_progetto');
         });

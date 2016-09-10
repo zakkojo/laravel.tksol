@@ -11,7 +11,7 @@ use Barryvdh\Snappy\Facades\SnappyPdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class InterventoController extends Controller {
@@ -193,17 +193,18 @@ class InterventoController extends Controller {
     }
 
 
-    public function ajaxAcceptIntervento()
+    /*public function ajaxAcceptIntervento()
     {
         $id = Input::get('id');
         $intervento = Intervento::findOrFail($id);
-        if(Auth::User()->consulente->id == $intervento->consulente_id AND !$intervento->data_accettazione){
+        if (Auth::User()->consulente->id == $intervento->consulente_id AND !$intervento->data_accettazione)
+        {
             $intervento->data_accettazione = Carbon::now();
             $intervento->save();
+
             return ['status' => 'success', 'result' => true];
-        }
-        else return ['status' => 'Non autorizzato', 'result' => false];
-    }
+        } else return ['status' => 'Non autorizzato', 'result' => false];
+    }*/
 
 
     public function ajaxGetCalendar()
@@ -265,8 +266,6 @@ class InterventoController extends Controller {
 
     public function ajaxCreateIntervento(AjaxInterventiRequest $request)
     {
-        $input = $request->all();
-
         $data = [
             'listino_id'          => Input::get('listinoContratto'),
             'attivita_id'         => Input::get('attivita'),
@@ -277,9 +276,13 @@ class InterventoController extends Controller {
             'data_modifica'       => Carbon::now(),
             'creatore_id'         => Input::get('creatore_id'),
         ];
-        if (Input::get('creatore_id') == Input::get('consulente'))
-            $data['data_accettazione'] = Carbon::now();
+        //if (Input::get('creatore_id') == Input::get('consulente'))
+        //    $data['data_accettazione'] = Carbon::now();
+        //-------------------------------------------
         $response = Intervento::create($data);
+        $response->intervento_id = $response->id;
+        $response->save();
+        //-------------------------------------------
         if ($response)
         {
             if ($id_padre = Input::get('stampaIntervento'))
@@ -300,19 +303,18 @@ class InterventoController extends Controller {
 
     public function ajaxUpdateIntervento(AjaxInterventiRequest $request)
     {
-        $input = $request->all();
-        $data = [
-            'listino_id'          => Input::get('listinoContratto'),
-            'attivita_id'         => Input::get('attivita'),
-            'consulente_id'       => Input::get('consulente'),
-            'attivitaPianificate' => Input::get('attivitaPianificate'),
-            'data_start'          => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
-            'data_end'            => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
-            'data_modifica'       => Carbon::now(),
-            'creatore_id'         => Auth::User()->id,
-        ];
         $intervento = Intervento::findOrFail(Input::get('id'));
-        $response = $intervento->update($data);
+
+        $intervento->listino_id = Input::get('listinoContratto');
+        $intervento->attivita_id = Input::get('attivita');
+        $intervento->consulente_id = Input::get('consulente');
+        $intervento->attivitaPianificate = Input::get('attivitaPianificate');
+        $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
+        $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
+        $intervento->data_modifica = Carbon::now();
+        $intervento->creatore_id = Auth::User()->id;
+
+        $response = $intervento->storicizza();
 
         if ($response) return ['status' => 'success'];
 

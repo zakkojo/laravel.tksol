@@ -25,7 +25,7 @@
 <!-- Tree-View -->
 <script src="{{asset('/plugins/bootstrap-treeview/bootstrap-treeview.min.js')}}" type="text/javascript" ></script>
 <!-- FullCalendar -->
-<script src="{{asset('/plugins/fullcalendar/moment-with-locales.min.js')}}" type="text/javascript" >
+<script src="{{asset('/plugins/moment/moment-with-locales.min.js')}}" type="text/javascript" >
     moment().locale('it');
 </script>
 <script src="{{asset('/plugins/fullcalendar/fullcalendar.min.js')}}" type="text/javascript" ></script>

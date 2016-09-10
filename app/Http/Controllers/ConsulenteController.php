@@ -79,10 +79,10 @@ class ConsulenteController extends Controller {
             GROUP BY c.id,ragione_sociale, pro.nome
             HAVING (prossimo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR prossimo_intervento is null)
         ");
-        $interventiDaApprovare = Intervento::where('consulente_id',$consulente->id)->whereRaw('consulente_id <> creatore_id')->whereRaw('data_accettazione is null')->get();
+        //$interventiDaApprovare = Intervento::where('consulente_id',$consulente->id)->whereRaw('consulente_id <> creatore_id')->whereRaw('data_accettazione is null')->get();
 
 
-        return view('consulenti.show', compact('consulente', 'prossimiInterventi', 'rapportiniDaInviare', 'contrattiSenzaInterventi', 'interventiDaApprovare'));
+        return view('consulenti.show', compact('consulente', 'prossimiInterventi', 'rapportiniDaInviare', 'contrattiSenzaInterventi'));
     }
 
     /**

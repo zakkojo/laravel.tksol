@@ -25,7 +25,7 @@ class Consulente extends Model {
 
     public function interventi()
     {
-        return $this->hasMany(Intervento::class);
+        return $this->user->interventi();
     }
 
     public function getNominativoAttribute()

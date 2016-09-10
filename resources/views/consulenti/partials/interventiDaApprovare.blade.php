@@ -29,25 +29,25 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($interventiDaApprovare as $intervento)
-                <tr>
-                    <td>
-                        <a href="{{ action('InterventoController@create',['data' =>$intervento->dataC]) }}"
-                           title="vai al calendario" data-skin="skin-blue" class="btn btn-default btn-xs"><i
-                                    class="glyphicon glyphicon-calendar"></i></a>
-                        <a href="#" onclick="acceptIntervento($(this).parent(),{{$intervento->id}})" title="accetta appuntamento"
-                           data-skin="skin-blue" class="btn btn-success btn-xs"><i
-                                    class="glyphicon glyphicon-ok"></i></a>
-
-
-                    </td>
-                    <td>{{ $intervento->creatore->nominativo }}</td>
-                    <td>{{ $intervento->listinoInterventi->contratto->cliente->ragione_sociale }}</td>
-                    <td>{{ $intervento->listinoInterventi->contratto->progetto->descrizione}}</td>
-                    <td class="pull-right">{{$intervento->data}}</td>
-                    <td>{{ $intervento->orario }}</td>
-                </tr>
-            @endforeach
+            @if(isset($interventiDaApprovare))
+                @foreach($warning as $intervento)
+                    <tr>
+                        <td>
+                            <a href="{{ action('InterventoController@create',['data' =>$intervento->dataC]) }}"
+                               title="vai al calendario" data-skin="skin-blue" class="btn btn-default btn-xs"><i
+                                        class="glyphicon glyphicon-calendar"></i></a>
+                            <a href="#" onclick="acceptIntervento($(this).parent(),{{$intervento->id}})"
+                               title="accetta appuntamento" data-skin="skin-blue" class="btn btn-success btn-xs"><i
+                                        class="glyphicon glyphicon-ok"></i></a>
+                        </td>
+                        <td>{{ $intervento->creatore->nominativo }}</td>
+                        <td>{{ $intervento->listinoInterventi->contratto->cliente->ragione_sociale }}</td>
+                        <td>{{ $intervento->listinoInterventi->contratto->progetto->descrizione}}</td>
+                        <td class="pull-right">{{$intervento->data}}</td>
+                        <td>{{ $intervento->orario }}</td>
+                    </tr>
+                @endforeach
+            @endif
             </tbody>
         </table>
     </div>
@@ -78,7 +78,7 @@
             $('.dataTables_filter').hide();
         });
 
-        function acceptIntervento(element,id) {
+        function acceptIntervento(element, id) {
             if (confirm("Cancellare l'appuntamneto selezionato?")) {
                 $.ajax({
                     url: "/ajax/interventi/acceptIntervento",
@@ -86,7 +86,7 @@
                     data: {id: id},
                     dataType: "JSON"
                 }).done(function (data) {
-                    if (data['status'] == 'success'){
+                    if (data['status'] == 'success') {
                         element.hide();
                     }
                     else console.log(['Errore!!', data]);

@@ -8,11 +8,13 @@ use App\Contratto;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Intervento extends Model {
 
     protected $table = 'intervento';
-    public $timestamps = false;
+    public $timestamps = true;
 
     use SoftDeletes;
     protected $dates = ['deleted_at'];
@@ -26,8 +28,17 @@ class Intervento extends Model {
         'attivitaPianificate',
         'creatore_id',
         'data_modifica',
-        'data_accettazione',
     ];
+
+    public function storico()
+    {
+        return $this->morphMany('App\Storico', 'storicizza');
+    }
+
+    public function getStorico()
+    {
+        return $this::where('id', $this->id)->orderBy('id', 'DESC')->get();
+    }
 
     public function getOrarioAttribute()
     {
@@ -38,6 +49,7 @@ class Intervento extends Model {
     {
         return Carbon::parse($this->data_start)->format('d/m/Y');
     }
+
     public function getDataCAttribute()
     {
         return Carbon::parse($this->data_start)->format('Y-m-d');
@@ -48,13 +60,14 @@ class Intervento extends Model {
         return $this->belongsTo(Attivita::class);
     }
 
-    public function consulente()
+    public function user()
     {
-        return $this->belongsTo(Consulente::class);
+        return $this->belongsTo(User::class);
     }
-    public function creatore()
+
+    public function user_modifica()
     {
-        return $this->belongsTo(Consulente::class,'consulente_id','id');
+        return $this->belongsTo(User::class, 'user_id_modifica', 'id');
     }
 
 
@@ -62,6 +75,7 @@ class Intervento extends Model {
     {
         return $this->belongsTo(ContrattoIntervento::class, 'listino_id', 'id');
     }
+
     public function listinoInterventi_wt()
     {
         return $this->belongsTo(ContrattoIntervento::class, 'listino_id', 'id')->withTrashed();

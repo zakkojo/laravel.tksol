@@ -39,6 +39,11 @@ class User extends Authenticatable
         return $this->hasOne(Consulente::class);
     }
 
+    public function interventi()
+    {
+        return $this->hasMany(Intervento::class)->where('intervento.storico', 0);
+    }
+
     public function contatto()
     {
         return $this->hasOne(Contatto::class);

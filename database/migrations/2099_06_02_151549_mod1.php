@@ -12,20 +12,29 @@ class Mod1 extends Migration {
      */
     public function up()
     {
+
+        Schema::table('intervento', function ($table)
+        {
+            $table->increments('id')->change();
+            $table->integer('intervento_padre')->unsigned()->nullable();
+            $table->integer('user_id_modifica')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->timestamp('data_modifica');
+            $table->timestamp('data_accettazione');
+            $table->integer('storico')->defaul(0);
+            $table->string('sede', 100)->default('Sede Cliente');
+            $table->boolean('fatturabile')->default(1)->change();
+            $table->integer('ore_lavorate')->defaul(0);
+            if(Schema::hasColumn('intervento', 'stato')) $table->dropColumn('stato');
+            if(Schema::hasColumn('intervento', 'consulente_id')) $table->dropColumn('consulente_id');
+        });
+
         Schema::table('cliente', function ($table)
         {
             $table->string('email')->nullable();
             $table->integer('rating')->nullable()->change();
             $table->integer('distanza')->nullable();
         });
-
-        Schema::table('intervento', function ($table)
-        {
-            $table->integer('creatore_id')->unsigned();
-            $table->timestamp('data_modifica');
-            $table->timestamp('data_accettazione')->nullable();
-        });
-
 
         Schema::table('contatto', function ($table)
         {
@@ -38,12 +47,6 @@ class Mod1 extends Migration {
             $table->string('ruolo', 100)->nullable();
         });
 
-        Schema::table('intervento', function ($table)
-        {
-            $table->dropColumn('stato');
-            $table->string('sede', 100)->default('Sede Cliente');
-            $table->boolean('fatturabile')->default(1)->change();
-        });
         Schema::table('contratto', function ($table)
         {
             $table->dropColumn('capo_progetto');
@@ -60,18 +63,27 @@ class Mod1 extends Migration {
      */
     public function down()
     {
+
+        Schema::table('intervento', function ($table)
+        {
+            if(Schema::hasColumn('intervento', 'intervento_padre')) $table->dropColumn('intervento_padre');
+            if(Schema::hasColumn('intervento', 'user_id_creatore')) $table->dropColumn('user_id_creatore');
+            if(Schema::hasColumn('intervento', 'user_id_modifica')) $table->dropColumn('user_id_modifica');
+            if(Schema::hasColumn('intervento', 'user_id')) $table->dropColumn('user_id');
+            if(Schema::hasColumn('intervento', 'data_accettazione')) $table->dropColumn('data_accettazione');
+            if(Schema::hasColumn('intervento', 'data_accettazione')) $table->dropColumn('data_accettzione');
+            if(Schema::hasColumn('intervento', 'data_modifica')) $table->dropColumn('data_modifica');
+            if(Schema::hasColumn('intervento', 'storico')) $table->dropColumn('storico');
+            if(Schema::hasColumn('intervento', 'sede')) $table->dropColumn('sede');
+            if(Schema::hasColumn('intervento', 'ore_lavorate')) $table->dropColumn('ore_lavorate');
+
+        });
+
         Schema::table('cliente', function ($table)
         {
             if(Schema::hasColumn('cliente', 'email')) $table->dropColumn('email');
             if(Schema::hasColumn('cliente', 'distanza')) $table->dropColumn('distanza');
             $table->integer('rating')->nullable()->change();
-        });
-
-        Schema::table('intervento', function ($table)
-        {
-            if(Schema::hasColumn('intervento', 'creatore_id')) $table->dropColumn('creatore_id');
-            if(Schema::hasColumn('intervento', 'data_accettazione')) $table->dropColumn('data_accettazione');
-            if(Schema::hasColumn('intervento', 'data_modifica')) $table->dropColumn('data_modifica');
         });
 
         Schema::table('contatto', function ($table)
@@ -84,13 +96,6 @@ class Mod1 extends Migration {
             $table->boolean('email2');
             $table->boolean('referente');
             $table->boolean('fatturazione');
-        });
-
-        Schema::table('intervento', function ($table)
-        {
-            if(Schema::hasColumn('intervento', 'sede')) $table->dropColumn('sede');
-            //retrocompatibilita
-            $table->boolean('stato');
         });
 
         Schema::table('contratto', function ($table)

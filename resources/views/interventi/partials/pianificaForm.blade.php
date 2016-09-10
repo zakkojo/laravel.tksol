@@ -148,7 +148,7 @@ else $progDisabled = 'enabled';
                 globale_cliente = $('#cliente').val();
                 $.get('{{action('ConsulenteController@ajaxGetContratti')}}', {
                             cliente_id: $('#cliente').val(),
-                            user: '{{Auth::user()->id}}'
+                            user: '{{Auth::User()->id}}'
                         })
                         .done(function (data) {
                             console.log(data);

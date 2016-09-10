@@ -11,23 +11,23 @@
                 allDaySlot: false,
                 firstHour: 8,
                 slotMinutes: 30,
-                axisFormat: 'HH:mm',
-                timeFormat: {
-                    agenda: 'H:mm'
-                },
+                slotLabelFormat : 'HH:mm',
+                timeFormat: 'H:mm',
                 defaultView: 'agendaWeek',
-                lang: 'it',
-                columnFormat: 'ddd D/M',
+                locale: 'it',
+                agendaWeek: {
+                    columnFormat: 'ddd D/M',
+                },
                 header: {
                     right: 'prev,next today',
                     center: 'title',
-                    left: 'month,agendaWeek'
+                    left: 'month,agendaWeek,listMonth'
                 },
                 buttonText: {
                     today: 'Oggi',
                     month: 'Mese',
                     week: 'Settimana',
-                    day: 'Giorno'
+                    listMonth: 'Lista'
                 },
                 @if(isset($_REQUEST['data'])) defaultDate: moment('{{$_REQUEST['data']}}'), @endif
                 editable: true,
@@ -49,7 +49,6 @@
                     }
                     $('#ora_start').val(ora_start.format('HH:mm'));
                     $('#ora_end').val(ora_end.format('HH:mm'));
-
                     eventData = {
                         id: 'new',
                         title: 'Nuovo Intervento',
@@ -68,8 +67,8 @@
                     end: '24:00',
                 },
                 eventResizeStart: function (calEvent, delta, revertFunc) {
-                    $('#calendar').fullCalendar('removeEvents', 'new');
                     if (calEvent.id != 'new') {
+                        $('#calendar').fullCalendar('removeEvents', 'new');
                         $('#form_title').text('Modifica Intervento');
                         $('#intervento_id').val(calEvent.id).trigger("change");
                         $('#contratto').val(calEvent.contratto_id);
@@ -84,16 +83,7 @@
                 },
                 eventResize: function (event, delta, revertFunc) {
                     if (event.id == 'new') {
-                        $('#ora_end').val(event.end.add(delta).format('HH:mm'));
-
-                        eventData = {
-                            id: 'new',
-                            title: 'Nuovo Intervento',
-                            start: event.start.format(),
-                            end: event.end.format(),
-                        };
-                        $('#calendar').fullCalendar('renderEvent', eventData, true);
-                        $('#calendar').fullCalendar('unselect');
+                        $('#ora_end').val(event.end.format('HH:mm'));
                     }
                     else {
                         $('#ora_end').val(event.end.format('HH:mm'));
@@ -103,8 +93,8 @@
                     }
                 },
                 eventDragStart: function (calEvent, delta, revertFunc) {
-                    $('#calendar').fullCalendar('removeEvents', 'new');
                     if (calEvent.id != 'new') {
+                        $('#calendar').fullCalendar('removeEvents', 'new');
                         $('#form_title').text('Modifica Intervento ');
                         $('#intervento_id').val(calEvent.id).trigger("change");
                         $('#cliente').val(calEvent.cliente_id).trigger('change');
@@ -118,23 +108,13 @@
                         $('#data').val(calEvent.start.format('L'));
                         $('#ora_start').val(calEvent.start.format('HH:mm'));
                         $('#ora_end').val(calEvent.end.format('HH:mm'));
-
-
                     }
                 },
                 eventDrop: function (event, delta, revertFunc) {
                     if (event.id == 'new') {
-                        $('#data').val(event.start.add(delta).format('L'));
+                        $('#data').val(event.start.format('L'));
                         $('#ora_start').val(event.start.format('HH:mm'));
-                        $('#ora_end').val(event.end.add(delta).format('HH:mm'));
-
-                        eventData = {
-                            id: 'new',
-                            title: 'Nuovo Intervento',
-                            start: event.start.format(),
-                            end: event.end.format(),
-                        };
-                        $('#calendar').fullCalendar('renderEvent', eventData, true);
+                        $('#ora_end').val(event.end.format('HH:mm'));
                         $('#calendar').fullCalendar('unselect');
                     }
                     else {
@@ -147,8 +127,8 @@
                     }
                 },
                 eventClick: function (calEvent, jsEvent, view) {
-                    $('#calendar').fullCalendar('removeEvents', 'new');
                     if (calEvent.id != 'new') {
+                        $('#calendar').fullCalendar('removeEvents', 'new');
                         if (calEvent.stampa == 0) {
                             var events = $("#calendar").fullCalendar('clientEvents', calEvent.id);
                             console.log(events.length);
@@ -180,11 +160,11 @@
                 },
                 eventRender: function (event, element) {
                     if (event.id != 'new') {
-                        event.backgroundColor = event.color;
+                        //event.backgroundColor = event.color;
                         element.find('.fc-title').append("<br/>" + event.description);
                         element.find('.fc-title').append('<div onclick="openIntervento(' + event.id + ')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
                     }
-                }
+                },
             });
         }
 
@@ -203,7 +183,7 @@
             console.log(postData);
             $.ajax({
                 url: "/ajax/interventi/createIntervento",
-                type: "POST",
+                type: "GET",
                 data: postData,
                 dataType: "JSON"
             }).done(function (data) {
@@ -229,10 +209,10 @@
             postData.ora_start = $('#ora_start').val();
             postData.ora_end = $('#ora_end').val();
             postData.attivitaPianificate = $('#attivitaPianificate').html();
-            postData._method = 'PATCH';
+            //postData._method = 'PATCH';
             $.ajax({
                 url: "/ajax/interventi/updateIntervento",
-                type: "POST",
+                type: "GET",
                 data: postData,
                 dataType: "JSON"
             }).done(function (data) {

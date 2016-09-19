@@ -82,6 +82,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('interventi/{intervento_id}/stampa', 'InterventoController@stampa');
     Route::get('interventi/{intervento_id}/invia', 'InterventoController@invia');
     Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
+    Route::get('ajax/interventi/getIntervento', 'InterventoController@ajaxGetIntervento');
     Route::get('ajax/interventi/createIntervento', 'InterventoController@ajaxCreateIntervento');
     Route::get('ajax/interventi/updateIntervento', 'InterventoController@ajaxUpdateIntervento');
     Route::delete('ajax/interventi/deleteIntervento', 'InterventoController@ajaxDeleteIntervento');

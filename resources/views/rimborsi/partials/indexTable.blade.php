@@ -3,7 +3,7 @@
         <h3 class="box-title">Rimborsi</h3>
         <div class="box-tools">
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                @if(Auth::User()->id == $consulente->id OR $user->tipo == 'Partner')
+                @if(Auth::User()->id == $user->id OR $user->tipo == 'Partner')
                     <button type="button" class="btn btn-default"
                             onClick="location.href='{{ action('RimborsoController@create',$intervento->id) }}'"
                             title="Aggiungi Nuovo ">

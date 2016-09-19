@@ -1,12 +1,14 @@
 <?php
 
 if (isset($_GET['cons'])) $cons = $_GET['cons'];
-elseif (Auth::user()->consulente->id) $cons = Auth::user()->consulente->id;
+elseif (Auth::user()->id) $cons = Auth::user()->consulente->id;
 else $cons = 0;
 $listConsulenti = $consulenti->each(function ($consulente)
 {
-    return $consulente['consulente'] = $consulente['nome'] . ' ' . $consulente['cognome'] . ' / ' . $consulente['tipo'];
-})->lists('consulente', 'id');
+    $consulente['user_id'] = $consulente->user->id;
+
+    return $consulente;
+})->lists('nominativo', 'user_id');
 $consulente = $consulenti->find($cons);
 
 if (isset($contratto)) $cli = $contratto->cliente_id;
@@ -145,13 +147,11 @@ else $progDisabled = 'enabled';
             $('#progetto').html('');
             $('#contratto').val('');
             if ($('#cliente').val()) {
-                globale_cliente = $('#cliente').val();
                 $.get('{{action('ConsulenteController@ajaxGetContratti')}}', {
-                            cliente_id: $('#cliente').val(),
-                            user: '{{Auth::User()->id}}'
-                        })
+                    cliente_id: $('#cliente').val(),
+                    user: '{{Auth::User()->id}}'
+                })
                         .done(function (data) {
-                            console.log(data);
                             var c = 0;
                             $.each(data, function (id, contratto) {
                                 c++;
@@ -159,7 +159,11 @@ else $progDisabled = 'enabled';
                                         .append($("<option></option>")
                                                 .attr('value', contratto.progetto.id)
                                                 .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
-                                if (c == '1') {
+                                if (c == '1' && globale_intervento.loading == 0) {
+                                    $('#contratto').val(contratto.id);
+                                    $('#progetto').select2('val', contratto.progetto.id);
+                                }
+                                else if (globale_intervento.loading == 1 && contratto.id == globale_intervento.contratto_id) {
                                     $('#contratto').val(contratto.id);
                                     $('#progetto').select2('val', contratto.progetto.id);
                                 }
@@ -168,7 +172,10 @@ else $progDisabled = 'enabled';
                             if ($('#intervento_id').val() == '') {
 
                             }
-                        });
+                        }).fail(function (jqXHR, textStatus, data) {
+                            console.log("Request failed: " + data);
+                        }
+                )
             }
         });
 
@@ -179,36 +186,46 @@ else $progDisabled = 'enabled';
             if ($('#progetto').val()) {
                 $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
                         .done(function (data) {
-                            var c = 0;
+                            //aggiorno la form
+                            var d = 0;
                             $.each(data, function (id, dettagli) {
-                                c++;
+                                d++;
                                 lastoption = $('#attivita')
                                         .append($("<option></option>")
                                                 .attr('value', dettagli.id)
                                                 .text(dettagli.descrizione));
-                                if (c == '1') {
+                                if (d == '1' && globale_intervento.loading == 0) {
+                                    $('#attivita').select2("val", dettagli.id);
+                                }
+                                else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.attivita_id) {
                                     $('#attivita').select2("val", dettagli.id);
                                 }
                             });
-                        });
-            }
-            //Contratto->Listino
-            $('#listinoContratto').html('');
-            $('#listinoContratto').select2('val', '');
-            if ($('#contratto').val()) {
-                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
-                        .done(function (data) {
-                            var c = 0;
-                            $.each(data, function (id, dettagli) {
-                                c++;
-                                lastoption = $('#listinoContratto')
-                                        .append($("<option></option>")
-                                                .attr('value', dettagli.id)
-                                                .text(dettagli.descrizione));
-                                if (c == '1') {
-                                    $('#listinoContratto').select2("val", dettagli.id);
-                                }
-                            });
+
+                            //Contratto->Listino
+                            $('#listinoContratto').html('');
+                            $('#listinoContratto').select2('val', '');
+                            if ($('#contratto').val()) {
+                                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
+                                        .done(function (data) {
+                                            var c = 0;
+                                            $.each(data, function (id, dettagli) {
+                                                c++;
+                                                lastoption = $('#listinoContratto')
+                                                        .append($("<option></option>")
+                                                                .attr('value', dettagli.id)
+                                                                .text(dettagli.descrizione));
+                                                if (c == '1' && globale_intervento.loading == 0) {
+                                                    $('#listinoContratto').select2("val", dettagli.id);
+                                                }
+                                                else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.listino_id) {
+                                                    $('#listinoContratto').select2("val", dettagli.id);
+                                                    globale_intervento.func();
+                                                    globale_intervento = {'loading': 0};
+                                                }
+                                            });
+                                        });
+                            }
                         });
             }
         });
@@ -216,15 +233,15 @@ else $progDisabled = 'enabled';
         $('#intervento_id').change(function () {
             if ($('#intervento_id').val() == "") {
                 //sblocca cliente progetto
-                $('#cliente').prop('disabled',false);
-                $('#progetto').prop('disabled',false);
+                $('#cliente').prop('disabled', false);
+                $('#progetto').prop('disabled', false);
 
                 $('#pulsanti_update').hide();
                 $('#pulsanti_create').show();
             }
             else {
-                $('#cliente').prop('disabled',true);
-                $('#progetto').prop('disabled',true);
+                $('#cliente').prop('disabled', true);
+                $('#progetto').prop('disabled', true);
 
                 $('#pulsanti_update').show();
                 $('#pulsanti_create').hide();

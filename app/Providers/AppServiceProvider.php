@@ -17,12 +17,15 @@ class AppServiceProvider extends ServiceProvider {
     public function boot()
     {
         Intervento::saving(function ($intervento) {
-            $storico = new Storico();
-            $storico->record = $intervento->toJson();
-            $storico->user_id = (Auth::check()) ? Auth::User()->id : 0;
-            $storico->storicizza_id = $intervento->id;
-            $storico->storicizza_type = 'App\Intervento';
-            $storico->save();
+            if ($intervento->id)
+            {
+                $storico = new Storico();
+                $storico->record = $intervento->toJson();
+                $storico->user_id = (Auth::check()) ? Auth::User()->id : 0;
+                $storico->storicizza_id = $intervento->id;
+                $storico->storicizza_type = 'App\Intervento';
+                $storico->save();
+            }
         });
     }
 

@@ -1,14 +1,14 @@
 <?php
-
-if (isset($_GET['cons'])) $cons = $_GET['cons'];
-elseif (Auth::user()->consulente->id) $cons = Auth::user()->consulente->id;
-else $cons = null;
+if (isset($_GET['user'])) $user = $_GET['user'];
+elseif (Auth::user()->id) $user = Auth::user()->id;
+else $user = null;
 $listConsulenti = $consulenti->each(function ($consulente)
 {
-    return $consulente['consulente'] = $consulente['nome'] . ' ' . $consulente['cognome'];
-})->lists('consulente', 'id');
+    $consulente['user_id'] = $consulente->user->id;
+    return $consulente;
+})->lists('nominativo', 'user_id');
 $listConsulenti->prepend('', 0);
-$search_cons[] = $consulenti->find($cons);
+$search_cons[] = $consulenti->find(Auth::user()->consulente->id);
 
 $listClienti = $clienti->lists('ragione_sociale', 'id');
 $listClienti->prepend('', 0);
@@ -24,16 +24,16 @@ $listClienti->prepend('', 0);
     <div class="box-body">
         <div id="formconsulente" class="form-group">
             <label>Consulente</label>
-            {!! Form::select('cliente_id',
+            {!! Form::select('user_id',
             $listConsulenti,
             '',
             ['id'=>'search_consulente','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
             !!}
 
             <ul class="customsearch consulente">
-                @if($cons)
+                @if($user)
                     @foreach($search_cons as $search_con)
-                        <li data-consulente_id="{{1000 + $search_con->id}}" title="{{$search_con->nominativo}}">
+                        <li data-consulente_id="{{$search_con->id}}" title="{{$search_con->nominativo}}">
                             <span>×</span>{{$search_con->nominativo}}</li>
                     @endforeach
                 @endif
@@ -95,7 +95,7 @@ $listClienti->prepend('', 0);
         function colorcliente() {
             $(".customsearch.cliente > li").each(function (x) {
                 this.style.backgroundColor = bgcliente[x % bgcliente.length];
-                updateProgettoSource($(this).attr('data-cliente_id'), bgcliente[x % bgcliente.length]);
+                updateClienteSource($(this).attr('data-cliente_id'), bgcliente[x % bgcliente.length]);
             });
         }
 
@@ -110,7 +110,6 @@ $listClienti->prepend('', 0);
 
 
         $('document').ready(function () {
-
             $('.customsearch.consulente').on('click', 'span', function () {
                 $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=' + $(this).closest('li').attr('data-consulente_id'));
                 $(this).closest('li').remove();
@@ -122,16 +121,16 @@ $listClienti->prepend('', 0);
                 colorcliente();
             });
             $('#search_consulente').on("select2:select", function (e) {
-                if ($("li[data-consulente_id='" + (1000 + parseInt(e.params.data.id)) + "']").length == 0 && e.params.data.id != 0) {
-                    $('.customsearch.consulente').append('<li data-consulente_id="' + (1000 + parseInt(e.params.data.id)) + '" title="' + e.params.data.text + '" ><span>×</span>' + e.params.data.text + '</li>');
+                if ($("li[data-consulente_id='" + (parseInt(e.params.data.id)) + "']").length == 0 && e.params.data.id != 0) {
+                    $('.customsearch.consulente').append('<li data-consulente_id="' + (parseInt(e.params.data.id)) + '" title="' + e.params.data.text + '" ><span>×</span>' + e.params.data.text + '</li>');
                     colorconsulente();
                     //var bgcolor = $('li[data-consulente_id="' + (1000 + parseInt(e.params.data.id)) + '"]').css('backgroundColor');
                     //updateConsulenteSource((1000 + parseInt(e.params.data.id)), bgcolor);
                 }
             });
             $('#search_cliente').on("select2:select", function (e) {
-                if ($('li[data-cliente_id="' + (2000 + parseInt(e.params.data.id)) + '"]').length == 0 && e.params.data.id != 0) {
-                    $('.customsearch.cliente').append('<li data-cliente_id="' + (2000 + parseInt(e.params.data.id)) + '" title="' + e.params.data.text + '" ><span>×</span>' + e.params.data.text + '</li>');
+                if ($('li[data-cliente_id="' + (parseInt(e.params.data.id)) + '"]').length == 0 && e.params.data.id != 0) {
+                    $('.customsearch.cliente').append('<li data-cliente_id="' + (parseInt(e.params.data.id)) + '" title="' + e.params.data.text + '" ><span>×</span>' + e.params.data.text + '</li>');
                     colorcliente();
                     //refresh_calendar();
                 }

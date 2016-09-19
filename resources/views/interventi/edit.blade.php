@@ -34,7 +34,7 @@
     </div>
     @if($intervento->stampa == 0 )
     <div class="btn-group btn-block">
-        @if(Auth::User()->consulente->id == $consulente->id)
+        @if(Auth::User()->id == $user->id)
             <button type="aggiorna" class="col-md-6 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
         </button>
         <button type="stampa" value="stampa" class="stampaButton col-md-6 btn btn-primary"><i class="fa fa-calendar"></i>

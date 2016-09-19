@@ -11,9 +11,9 @@
             <label>Consulente</label>
             <select id="consulente" name="consulente" style="width:100%" disabled
                     class="form-control select2 select2-hidden-accessible">
-                <option value="{{$consulente->id}}">{{$consulente['nome'] . ' ' . $consulente['cognome'] . ' / ' . $consulente['tipo']}}</option>
+                <option value="{{$user->id}}">{{$user->consulente->nominativo . ' / ' . $user->consulente->tipo}}</option>
             </select>
-            <input type="hidden" id="consulente_id" name="consulente_id" value="{{$consulente->id}}">
+            <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}">
         </div>
         <input type="hidden" id="intervento_id" name="intervento_id" value="{{$intervento->id}}">
         <div class="form-group">
@@ -42,21 +42,25 @@
                     class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label>Data</label>
                 <input type="text" id="data" name="data" style="width:100%" readonly class="form-control">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label>Ora Inizio</label>
                 <input type="text" id="ora_start_reale" onkeydown="return false;" name="ora_start_reale"
                        style="width:100%" class="form-control clockpicker">
                 <input type="hidden" id="ora_start" name="ora_start" style="width:100%" readonly class="form-control">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label>Ora Fine</label>
                 <input type="text" id="ora_end_reale" onkeydown="return false;" name="ora_end_reale" style="width:100%"
                        class="form-control clockpicker">
                 <input type="hidden" id="ora_end" name="ora_end" style="width:100%" readonly class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label>Ore Lavorate</label>
+                <input type="text" id="ore_lavorate" name="ore_lavorate" style="width:100%" class="form-control">
             </div>
         </div>
         <div class="form-group">
@@ -86,6 +90,8 @@
             $('#data').val(moment('{{$intervento->data_start}}').format('L'));
             ora_start = moment('{{$intervento->data_start}}');
             ora_end = moment('{{$intervento->data_end}}');
+            ora_start_reale = moment('{{$intervento->data_start_reale}}');
+            ora_end_reale = moment('{{$intervento->data_end_reale}}');
             $('#ora_start').val(ora_start.format('HH:mm'));
             $('#ora_end').val(ora_end.format('HH:mm'));
 
@@ -98,11 +104,22 @@
             $('.clockpicker').clockpicker({
                 placement: 'top',
                 align: 'left',
-                donetext: 'OK'
+                donetext: 'OK',
+                afterDone: function() {
+                    aggiornaOreLavorate();
+                }
             });
+
+            $('#ora_start_reale').on('change',aggiornaOreLavorate());
+            $('#ora_end_reale').on('change',aggiornaOreLavorate());
 
         });
 
+        function aggiornaOreLavorate(){
+            var orastart = moment('2000-01-01 ' + $('#ora_start_reale').val(), 'YYYY-MM-DD HH:mm');
+            var oraend = moment('2000-01-01 ' + $('#ora_end_reale').val(), 'YYYY-MM-DD HH:mm');
+            $('#ore_lavorate').val(oraend.diff(orastart,'hours',true));
+        }
 
         $('#progetto').change(function () {
             $('#attivita').html('');
@@ -126,7 +143,7 @@
                             });
                         });
                 //Contratto->Listino
-                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': '{{ $intervento->listinoInterventi->contratto->id }}' })
+                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': '{{ $intervento->listinoInterventi->contratto->id }}'})
                         .done(function (data) {
                             var c = 0;
                             $.each(data, function (id, dettagli) {

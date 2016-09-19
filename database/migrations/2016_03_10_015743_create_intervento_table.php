@@ -12,7 +12,8 @@ class CreateInterventoTable extends Migration {
 			$table->integer('listino_id')->unsigned();
 			$table->integer('attivita_id')->unsigned();
 			$table->integer('consulente_id')->unsigned();
-			$table->softDeletes();
+            $table->softDeletes();
+            $table->timestamps();
 			$table->string('stato',50)->default('Pianificato');
 			$table->timestamp('data_start');
 			$table->timestamp('data_end');

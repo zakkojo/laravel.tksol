@@ -34,11 +34,11 @@ class InterventiRequest extends Request {
             case 'POST':
             {
                 return [
-                    'listino_id'    => 'required|numeric',
-                    'attivita_id'   => 'required|numeric',
-                    'consulente_id' => 'required|numeric',
-                    'data_start'    => 'required|date',
-                    'data_end'      => 'required|date',
+                    'listino_id'  => 'required|numeric',
+                    'attivita_id' => 'required|numeric',
+                    'user_id'     => 'required|numeric',
+                    'data_start'  => 'required|date',
+                    'data_end'    => 'required|date',
                 ];
             }
             case 'PUT':
@@ -46,13 +46,14 @@ class InterventiRequest extends Request {
             {
                 return [
                     "listinoContratto" => 'required|numeric',
-                    "consulente_id"    => 'required|numeric',
+                    "user_id"          => 'required|numeric',
                     "attivita"         => 'required|numeric',
                     "intervento_id"    => 'required|numeric',
 
                     "data"            => 'required',
                     "ora_start_reale" => 'required',
                     "ora_end_reale"   => 'required',
+                    "ore_lavorate"    => 'required',
                     "sede"            => 'required',
 
                     //"attivitaPianificate"   => "0",

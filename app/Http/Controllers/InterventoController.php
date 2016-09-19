@@ -77,11 +77,10 @@ class InterventoController extends Controller {
     public function edit($id)
     {
         $intervento = Intervento::findOrFail($id);
-        $consulente = $intervento->consulente;
+        $user = $intervento->user;
         $cliente = $intervento->listinoInterventi->contratto->cliente;
         $contratto = $intervento->listinoInterventi->contratto;
         $rimborsi = $intervento->rimborsi;
-        $user = Consulente::findOrFail(Auth::User()->consulente->id);
 
         return view('interventi.edit', compact('intervento', 'consulente', 'cliente', 'rimborsi', 'user', 'contratto'));
     }
@@ -96,12 +95,10 @@ class InterventoController extends Controller {
     {
 
         $intervento = Intervento::findOrFail($id);
-
-        $intervento->data_modifica = Carbon::now();
-        $intervento->creatore_id = Auth::User()->id;
+        $intervento->user_id_modifica = Auth::User()->id;
 
         $intervento->listino_id = Input::get('listinoContratto');
-        $intervento->consulente_id = Input::get('consulente_id');
+        $intervento->user_id = Input::get('user_id');
         $intervento->attivita_id = Input::get('attivita');
 
         $intervento->attivitaPianificate = Input::get('attivitaPianificate');
@@ -115,6 +112,7 @@ class InterventoController extends Controller {
 
         $intervento->data_start_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start_reale'));
         $intervento->data_end_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end_reale'));
+        $intervento->ore_lavorate = Input::get('ore_lavorate');
         $intervento->save();
         //se clicco sul pulsante stampa
         if (Input::get('stampa') == 1)
@@ -222,7 +220,7 @@ class InterventoController extends Controller {
 
             if ($consulente_id AND !$cliente_id)
             {
-                $where[0][] = ['consulente_id' => $consulente_id];
+                $where[0][] = ['user_id' => Consulente::findOrFail($consulente_id)->user->id];
                 $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('stampa', $stampa)->get();
             }
             if ($cliente_id AND !$consulente_id)
@@ -241,10 +239,10 @@ class InterventoController extends Controller {
                 {
                     $intervento = Intervento::findOrFail($evento['id']);
                     $evento['contratto_id'] = '' . $intervento->listinoInterventi_wt->contratto->id;
-                    $evento['consulente_id'] = '' . $intervento->consulente->id;
+                    $evento['user_id'] = '' . $intervento->user_id;
                     $evento['cliente_id'] = '' . $intervento->listinoInterventi_wt->contratto->cliente->id;
                     $evento['progetto_id'] = '' . $intervento->listinoInterventi_wt->contratto->progetto->id;
-                    $evento['title'] = $intervento->consulente->nominativo;
+                    $evento['title'] = $intervento->user->consulente->nominativo;
                     $evento['description'] = '<span class="description">' .
                         $intervento->listinoInterventi_wt->contratto->cliente->ragione_sociale .
                         '<br/>' . $intervento->listinoInterventi_wt->contratto->progetto->nome .
@@ -261,44 +259,54 @@ class InterventoController extends Controller {
             return $calendario;
         }
 
-        return ['msg' => 'errore', 'start' => $data_start];
+        return ['msg' => 'errore', 'input' => Input::all()];
     }
+
+    public function ajaxGetIntervento()
+    {
+        $intervento = Intervento::find(Input::get('id'));
+
+        $intervento->contratto_id = $intervento->listinointerventi->contratto->id;
+        $intervento->cliente_id = $intervento->listinointerventi->contratto->cliente->id;
+        $intervento->progetto_id = $intervento->listinointerventi->contratto->progetto->id;
+
+        if ($intervento) return ['status' => 'success', 'intervento' => $intervento];
+
+        return ['status' => 'fail'];
+    }
+
 
     public function ajaxCreateIntervento(AjaxInterventiRequest $request)
     {
-        $data = [
-            'listino_id'          => Input::get('listinoContratto'),
-            'attivita_id'         => Input::get('attivita'),
-            'consulente_id'       => Input::get('consulente'),
-            'attivitaPianificate' => Input::get('attivitaPianificate'),
-            'data_start'          => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s'),
-            'data_end'            => Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s'),
-            'data_modifica'       => Carbon::now(),
-            'creatore_id'         => Input::get('creatore_id'),
-        ];
+        $intervento = new Intervento();
+        $intervento->listino_id = Input::get('listinoContratto');
+        $intervento->attivita_id = Input::get('attivita');
+        $intervento->user_id = Input::get('user_id'); //consulente associato ad intervento
+        $intervento->user_id_modifica = Auth::User()->id; //utente che crea l'intervento
+        $intervento->attivitaPianificate = Input::get('attivitaPianificate');
+        $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
+        $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
         //if (Input::get('creatore_id') == Input::get('consulente'))
         //    $data['data_accettazione'] = Carbon::now();
         //-------------------------------------------
-        $response = Intervento::create($data);
-        $response->intervento_id = $response->id;
-        $response->save();
+        $response = $intervento->save();
         //-------------------------------------------
         if ($response)
         {
-            if ($id_padre = Input::get('stampaIntervento'))
+            /*if ($id_padre = Input::get('stampaIntervento'))
             {
-                $intervento = Intervento::findOrFail($id_padre);
+                $intervento = Intervento::findOrFail($intervento_padre);
                 $intervento->stampa = 1;
                 if ($intervento->save())
                 {
                     return ['status' => 'success', 'action' => 'stampa', 'id_padre' => $id_padre];
                 } else return ['status' => 'fail'];
             } else return ['status' => 'success', 'msg' => Input::get('stampaIntervento')];
-
+            */
             return ['status' => 'success'];
         }
 
-        return ['status' => 'fail'];
+        return ['status' => 'fail', 'input' => Input::all()];
     }
 
     public function ajaxUpdateIntervento(AjaxInterventiRequest $request)
@@ -307,16 +315,15 @@ class InterventoController extends Controller {
 
         $intervento->listino_id = Input::get('listinoContratto');
         $intervento->attivita_id = Input::get('attivita');
-        $intervento->consulente_id = Input::get('consulente');
+        $intervento->user_id = Input::get('user_id'); //consulente associato ad intervento
+        $intervento->user_id_modifica = Auth::User()->id; //utente che effettua l'update
         $intervento->attivitaPianificate = Input::get('attivitaPianificate');
         $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
         $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
-        $intervento->data_modifica = Carbon::now();
-        $intervento->creatore_id = Auth::User()->id;
 
-        $response = $intervento->storicizza();
+        $response = $intervento->update();
 
-        if ($response) return ['status' => 'success'];
+        if ($response) return ['status' => 'success', 'input' => Input::all()];
 
         return ['status' => 'fail'];
     }

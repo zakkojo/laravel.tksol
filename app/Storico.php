@@ -8,7 +8,7 @@ class Storico extends Model
 {
     protected $table = 'storico';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function storicizza()
     {

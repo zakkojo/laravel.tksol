@@ -19,9 +19,7 @@ class Mod1 extends Migration {
             $table->integer('intervento_padre')->unsigned()->nullable();
             $table->integer('user_id_modifica')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->timestamp('data_modifica');
             $table->timestamp('data_accettazione');
-            $table->integer('storico')->defaul(0);
             $table->string('sede', 100)->default('Sede Cliente');
             $table->boolean('fatturabile')->default(1)->change();
             $table->integer('ore_lavorate')->defaul(0);
@@ -71,7 +69,6 @@ class Mod1 extends Migration {
             if(Schema::hasColumn('intervento', 'user_id_modifica')) $table->dropColumn('user_id_modifica');
             if(Schema::hasColumn('intervento', 'user_id')) $table->dropColumn('user_id');
             if(Schema::hasColumn('intervento', 'data_accettazione')) $table->dropColumn('data_accettazione');
-            if(Schema::hasColumn('intervento', 'data_accettazione')) $table->dropColumn('data_accettzione');
             if(Schema::hasColumn('intervento', 'data_modifica')) $table->dropColumn('data_modifica');
             if(Schema::hasColumn('intervento', 'storico')) $table->dropColumn('storico');
             if(Schema::hasColumn('intervento', 'sede')) $table->dropColumn('sede');

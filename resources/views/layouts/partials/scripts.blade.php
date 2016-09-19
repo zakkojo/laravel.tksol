@@ -25,9 +25,7 @@
 <!-- Tree-View -->
 <script src="{{asset('/plugins/bootstrap-treeview/bootstrap-treeview.min.js')}}" type="text/javascript" ></script>
 <!-- FullCalendar -->
-<script src="{{asset('/plugins/moment/moment-with-locales.min.js')}}" type="text/javascript" >
-    moment().locale('it');
-</script>
+<script src="{{asset('/plugins/moment/moment-with-locales.min.js')}}" type="text/javascript" ></script>
 <script src="{{asset('/plugins/fullcalendar/fullcalendar.min.js')}}" type="text/javascript" ></script>
 <!-- Laravel -->
 <script src="{{asset('/plugins/laravel/laravel.js')}}" type="text/javascript" ></script>
@@ -55,6 +53,7 @@ $.ajaxSetup({
     }
 });
 $(document).ready(function() {
+    moment.locale('it');
     $('.select2').select2();
     //Date picker
     $('.datepicker').datepicker({

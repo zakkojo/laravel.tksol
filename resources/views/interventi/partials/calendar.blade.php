@@ -74,8 +74,10 @@
                         globale_intervento.func = function () {
                             return updateIntervento();
                         };
-                        loadIntervento(event,function(){$('#ora_end').val(event.end.format('HH:mm'));});
-                        if (! (event.user_id === '{{Auth::User()->id}}')) {
+                        loadIntervento(event, function () {
+                            $('#ora_end').val(event.end.format('HH:mm'));
+                        });
+                        if (!(event.user_id === '{{Auth::User()->id}}')) {
                             globale_intervento = {'loading': 0};
                             revertFunc();
                         }
@@ -116,6 +118,7 @@
                     }
                 },
                 eventClick: function (calEvent, jsEvent, view) {
+                    console.log(calEvent);
                     loadIntervento(calEvent);
                 },
                 eventRender: function (event, element) {
@@ -128,8 +131,9 @@
             });
         }
 
-        function loadIntervento(calEvent,onEnd) {
-            onEnd = onEnd || function(){};
+        function loadIntervento(calEvent, onEnd) {
+            onEnd = onEnd || function () {
+                    };
             globale_intervento.loading = 1;
             $('#calendar').fullCalendar('rerenderEvent');
             if (calEvent.id != 'new') {
@@ -250,11 +254,11 @@
         }
 
         function updateClienteSource(cliente_id, bgcolor) {
-            $('#calendar').fullCalendar('removeEventSource', 'cliente_' + cliente_id);
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=' + 'cliente_' + cliente_id);
             $('#calendar').fullCalendar('addEventSource',
                     {
                         id: cliente_id,
-                        url: '/ajax/interventi/getCalendar',
+                        url: '/ajax/interventi/getCalendar?calendar_id=' + 'cliente_' + cliente_id,
                         type: 'GET',
                         data: {
                             cliente_id: parseInt(cliente_id),
@@ -268,15 +272,16 @@
             )
         }
 
-        function updateConsulenteSource(consulente_id, bgcolor) {
-            $('#calendar').fullCalendar('removeEventSource', 'consulente_' + consulente_id);
+        function updateConsulenteSource(user_id, bgcolor) {
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=' + 'consulente_' + user_id);
             $('#calendar').fullCalendar('addEventSource',
                     {
-                        id: 'consulente_' + consulente_id,
-                        url: '/ajax/interventi/getCalendar',
+                        id: 'consulente_' + user_id,
+                        user_id: user_id,
+                        url: '/ajax/interventi/getCalendar?calendar_id=' + 'consulente_' + user_id,
                         type: 'GET',
                         data: {
-                            consulente_id: parseInt(consulente_id)
+                            user_id: parseInt(user_id)
                         },
                         error: function () {
                             console.log('there was an error while fetching consulenti!');
@@ -288,7 +293,7 @@
         }
 
         function updateConsuntivoSource() {
-            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=' + parseInt(cliente_id) - 2000 + 9000);
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=' + 'consulente_' + user_id);
             if ($('#progetto').val()) {
                 $('#calendar').fullCalendar('addEventSource',
                         {

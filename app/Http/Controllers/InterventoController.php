@@ -211,19 +211,19 @@ class InterventoController extends Controller {
         $data_end = Input::get('end');
         if ($data_start AND $data_end)
         {
-            $consulente_id = Input::get('consulente_id');
+            $user_id = Input::get('user_id');
             $cliente_id = Input::get('cliente_id');
             if (Input::get('stampa')) $stampa = 1;
             else $stampa = 0;
 
             $calendario = [];
 
-            if ($consulente_id AND !$cliente_id)
+            if ($user_id AND !$cliente_id)
             {
-                $where[0][] = ['user_id' => Consulente::findOrFail($consulente_id)->user->id];
+                $where[0][] = ['user_id' => $user_id];
                 $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('stampa', $stampa)->get();
             }
-            if ($cliente_id AND !$consulente_id)
+            if ($cliente_id AND !$user_id)
             {
                 $calendario = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')
                     ->join('contratto', 'contratto_intervento.contratto_id', '=', 'contratto.id')

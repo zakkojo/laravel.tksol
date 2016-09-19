@@ -111,12 +111,12 @@ $listClienti->prepend('', 0);
 
         $('document').ready(function () {
             $('.customsearch.consulente').on('click', 'span', function () {
-                $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=' + $(this).closest('li').attr('data-consulente_id'));
+                $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=consulente_' + $(this).closest('li').attr('data-consulente_id'));
                 $(this).closest('li').remove();
                 colorconsulente();
             });
             $('.customsearch.cliente').on('click', 'span', function () {
-                $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=' + $(this).closest('li').attr('data-cliente_id'));
+                $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?id=cliente_' + $(this).closest('li').attr('data-cliente_id'));
                 $(this).closest('li').remove();
                 colorcliente();
             });

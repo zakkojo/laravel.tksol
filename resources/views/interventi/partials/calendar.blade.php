@@ -12,6 +12,8 @@
                 slotMinutes: 30,
                 slotLabelFormat: 'HH:mm',
                 timeFormat: 'H:mm',
+                minTime: "06:00:00",
+                maxTime: "22:00:00",
                 defaultView: 'agendaWeek',
                 locale: 'it',
                 agendaWeek: {
@@ -32,6 +34,12 @@
                 editable: true,
                 selectable: true,
                 selectHelper: true,
+                loading: function (isLoading, view) {
+                    if (isLoading) {
+                    } else {
+                        $('#calendar').fullCalendar('rerenderEvents');
+                    }
+                },
                 select: function (start, end, resource) {
                     $('#calendar').fullCalendar('removeEvents', 'new');
                     $('#form_title').text('Pianifica Nuovo Intervento');
@@ -85,7 +93,7 @@
                 },
                 eventDragStart: function (calEvent, delta, revertFunc) {
                     if (calEvent.id != 'new') {
-                        $('#calendar').fullCalendar('removeEvents', 'new');
+                        //$('#calendar').fullCalendar('removeEvents', 'new');
                         $('#form_title').text('Modifica Intervento ');
                         $('#intervento_id').val(calEvent.id).trigger("change");
                         $('#cliente').val(calEvent.cliente_id).trigger('change');
@@ -109,16 +117,25 @@
                         $('#calendar').fullCalendar('unselect');
                     }
                     else {
-                        $('#data').val(moment(event.start).format('L'));
-                        $('#ora_start').val(event.start.format('HH:mm'));
-                        $('#ora_end').val(event.end.format('HH:mm'));
-                        //ACL
-                        if (event.user_id == '{{Auth::User()->id}}')updateIntervento();
-                        else revertFunc();
+                        console.log(moment(event.start).diff(moment(), 'days'));
+                        if (event.user_id == '{{Auth::User()->id}}' && moment(event.start).diff(moment(), 'days') >= 0) {
+                            globale_intervento.func = function () {
+                                return updateIntervento();
+                            };
+                            loadIntervento(event, function () {
+                                $('#data').val(moment(event.start).format('L'));
+                                $('#ora_start').val(event.start.format('HH:mm'));
+                                $('#ora_end').val(event.end.format('HH:mm'));
+                            });
+                        }
+                        else {
+                            globale_intervento = {'loading': 0};
+                            revertFunc();
+                        }
                     }
                 },
                 eventClick: function (calEvent, jsEvent, view) {
-                    console.log(calEvent);
+                    //console.log(calEvent);
                     loadIntervento(calEvent);
                 },
                 eventRender: function (event, element) {
@@ -126,6 +143,9 @@
                         event.backgroundColor = event.color;
                         element.find('.fc-title').append("<br/>" + event.description);
                         element.find('.fc-title').append('<div onclick="openIntervento(' + event.id + ')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
+                        if (event.id == '{{ $_REQUEST['eventId'] or ''}}') {
+                            event.backgroundColor = '#ffdf65';
+                        }
                     }
                 },
             });

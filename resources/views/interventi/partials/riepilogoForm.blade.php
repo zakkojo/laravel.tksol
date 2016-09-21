@@ -47,20 +47,23 @@
                 <input type="text" id="data" name="data" style="width:100%" readonly class="form-control">
             </div>
             <div class="col-md-3">
-                <label>Ora Inizio</label>
+                <label>Inizio Intervento</label>
                 <input type="text" id="ora_start_reale" onkeydown="return false;" name="ora_start_reale"
                        style="width:100%" class="form-control clockpicker">
                 <input type="hidden" id="ora_start" name="ora_start" style="width:100%" readonly class="form-control">
             </div>
             <div class="col-md-3">
-                <label>Ora Fine</label>
+                <label>Fine Intervento</label>
                 <input type="text" id="ora_end_reale" onkeydown="return false;" name="ora_end_reale" style="width:100%"
                        class="form-control clockpicker">
                 <input type="hidden" id="ora_end" name="ora_end" style="width:100%" readonly class="form-control">
             </div>
             <div class="col-md-3">
-                <label>Ore Lavorate</label>
-                <input type="text" id="ore_lavorate" name="ore_lavorate" style="width:100%" class="form-control">
+                <label class="ore_lavorate">Ore Lavorate</label>
+                <span id="ore_mod" style="display:none" title="valore calcolato" class="label label-warning"><i class="fa fa-warning"></i></span>
+                <input type="text" id="ore_lavorate" name="ore_lavorate" style="width:100%"
+                       value="{{ $intervento->ore_lavorate or ''}}"
+                       class="form-control @if( $intervento->ore_lavorate ) modificato @endif">
             </div>
         </div>
         <div class="form-group">
@@ -105,20 +108,30 @@
                 placement: 'top',
                 align: 'left',
                 donetext: 'OK',
-                afterDone: function() {
+                afterDone: function () {
                     aggiornaOreLavorate();
                 }
             });
 
-            $('#ora_start_reale').on('change',aggiornaOreLavorate());
-            $('#ora_end_reale').on('change',aggiornaOreLavorate());
+            $('#ora_start_reale').on('change', aggiornaOreLavorate());
+            $('#ora_end_reale').on('change', aggiornaOreLavorate());
 
         });
 
-        function aggiornaOreLavorate(){
-            var orastart = moment('2000-01-01 ' + $('#ora_start_reale').val(), 'YYYY-MM-DD HH:mm');
-            var oraend = moment('2000-01-01 ' + $('#ora_end_reale').val(), 'YYYY-MM-DD HH:mm');
-            $('#ore_lavorate').val(oraend.diff(orastart,'hours',true));
+        function aggiornaOreLavorate() {
+            if (!$('#ore_lavorate').hasClass('modificato')) {
+                $('#ore_mod').show();
+                var orastart = moment('2000-01-01 ' + $('#ora_start_reale').val(), 'YYYY-MM-DD HH:mm');
+                var oraend = moment('2000-01-01 ' + $('#ora_end_reale').val(), 'YYYY-MM-DD HH:mm');
+
+                if(oraend.diff(orastart, 'hours', true) % 1 > 0.67){
+                    $('#ore_lavorate').val(Math.ceil(oraend.diff(orastart, 'hours', true)));
+                }
+                else{
+                    $('#ore_lavorate').val(Math.floor(oraend.diff(orastart, 'hours', true)));
+                }
+            }
+            else $('#ore_mod').hide();
         }
 
         $('#progetto').change(function () {

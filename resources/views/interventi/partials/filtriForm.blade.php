@@ -1,22 +1,19 @@
 <?php
-if (isset($_GET['user'])) $user = $_GET['user'];
-elseif (Auth::user()->id) $user = Auth::user()->id;
-else $user = null;
 $listConsulenti = $consulenti->each(function ($consulente)
 {
     $consulente['user_id'] = $consulente->user->id;
+
     return $consulente;
 })->lists('nominativo', 'user_id');
 $listConsulenti->prepend('', 0);
-$search_cons[] = $consulenti->find(Auth::user()->consulente->id);
 
 $listClienti = $clienti->lists('ragione_sociale', 'id');
 $listClienti->prepend('', 0);
 ?>
 <div class="box box-primary">
     <div id="searcheader" class="boxsearch box-header with-border">
-        <h3 id="form_title" class="box-title">Pianifica Nuovo Intervento</h3>
-        <div class="box-tools pull-right">
+        <h3 id="search_title" class="box-title">Selezione Calendari</h3>
+        <div class="box-tools pull-right btn-filtri">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="boxsearch fa fa-minus"></i>
             </button>
         </div>
@@ -31,12 +28,6 @@ $listClienti->prepend('', 0);
             !!}
 
             <ul class="customsearch consulente">
-                @if($user)
-                    @foreach($search_cons as $search_con)
-                        <li data-consulente_id="{{$search_con->id}}" title="{{$search_con->nominativo}}">
-                            <span>×</span>{{$search_con->nominativo}}</li>
-                    @endforeach
-                @endif
             </ul>
         </div>
 
@@ -55,14 +46,7 @@ $listClienti->prepend('', 0);
         </div>
 
     </div>
-    <div class="box-footer">
-        <div class="btn-group btn-group-justified">
-            <div type="Filtra" onclick="updateIntervento()" class="btnFiltra btn btn-primary"><i
-                        class="fa fa-calendar"></i>
-                Filtra
-            </div>
-        </div>
-    </div>
+    <div class="box-footer"></div>
 </div>
 
 @section('page_scripts')
@@ -99,14 +83,31 @@ $listClienti->prepend('', 0);
             });
         }
 
-        $('.btn-box-tool').on('click', '.boxsearch.fa.fa-minus', function () {
-            $('.customsearch.consulente').appendTo('#searcheader');
-            $('.customsearch.cliente').appendTo('#searcheader');
+        $('.btn-filtri').on('click', '.btn-box-tool', function () {
+            if($(this).has('.boxsearch.fa.fa-plus').length >0){
+                $('.customsearch.consulente').appendTo('#formconsulente');
+                $('.customsearch.cliente').appendTo('#formcliente');
+            }
+            else {
+                $('.customsearch.consulente').appendTo('#searcheader');
+                $('.customsearch.cliente').appendTo('#searcheader');
+            }
         });
-        $('.btn-box-tool').on('click', '.boxsearch.fa.fa-plus', function () {
-            $('.customsearch.consulente').appendTo('#formconsulente');
-            $('.customsearch.cliente').appendTo('#formcliente');
-        });
+
+        function addFiltroCliente(id) {
+            var descrizione = $('#search_cliente option[value="'+id+'"]').text();
+            if ($('li[data-cliente_id="' + (parseInt(id)) + '"]').length == 0 && id != 0) {
+                $('.customsearch.cliente').append('<li data-cliente_id="' + (parseInt(id)) + '" title="' + descrizione + '" ><span>×</span>' + descrizione + '</li>');
+                colorcliente();
+            }
+        }
+        function addFiltroConsulente(id) {
+            var descrizione = $('#search_consulente option[value="'+id+'"]').text();
+            if ($("li[data-consulente_id='" + (parseInt(id)) + "']").length == 0 && id != 0) {
+                $('.customsearch.consulente').append('<li data-consulente_id="' + (parseInt(id)) + '" title="' + descrizione + '" ><span>×</span>' + descrizione + '</li>');
+                colorconsulente();
+            }
+        }
 
 
         $('document').ready(function () {
@@ -121,19 +122,31 @@ $listClienti->prepend('', 0);
                 colorcliente();
             });
             $('#search_consulente').on("select2:select", function (e) {
-                if ($("li[data-consulente_id='" + (parseInt(e.params.data.id)) + "']").length == 0 && e.params.data.id != 0) {
-                    $('.customsearch.consulente').append('<li data-consulente_id="' + (parseInt(e.params.data.id)) + '" title="' + e.params.data.text + '" ><span>×</span>' + e.params.data.text + '</li>');
-                    colorconsulente();
-                    //var bgcolor = $('li[data-consulente_id="' + (1000 + parseInt(e.params.data.id)) + '"]').css('backgroundColor');
-                    //updateConsulenteSource((1000 + parseInt(e.params.data.id)), bgcolor);
-                }
+                addFiltroConsulente(e.params.data.id);
+                $('#search_consulente').select2("val", "");
             });
             $('#search_cliente').on("select2:select", function (e) {
-                if ($('li[data-cliente_id="' + (parseInt(e.params.data.id)) + '"]').length == 0 && e.params.data.id != 0) {
-                    $('.customsearch.cliente').append('<li data-cliente_id="' + (parseInt(e.params.data.id)) + '" title="' + e.params.data.text + '" ><span>×</span>' + e.params.data.text + '</li>');
-                    colorcliente();
-                    //refresh_calendar();
-                }
+                addFiltroCliente(e.params.data.id);
             });
+
+            //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
+            var filtri_calendar = {!! session()->get('filtri_calendar', '{"clienti":[], "consulenti":['.Auth::user()->id.']}') !!};
+            var searchParams = new URLSearchParams(window.location.search.substring(1));
+            if (searchParams.has('consulente') || searchParams.has('cliente') ){
+                searchParams.getAll('consulente').forEach(function (id) {
+                    addFiltroConsulente(id)
+                });
+                searchParams.getAll('cliente').forEach(function (id) {
+                    addFiltroCliente(id)
+                });
+            }
+            else {
+                filtri_calendar.clienti.forEach(function (id) {
+                    addFiltroCliente(id)
+                });
+                filtri_calendar.consulenti.forEach(function (id) {
+                    addFiltroConsulente(id)
+                });
+            }
         });
     </script>@append

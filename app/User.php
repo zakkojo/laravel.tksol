@@ -41,7 +41,7 @@ class User extends Authenticatable
 
     public function interventi()
     {
-        return $this->hasMany(Intervento::class)->where('intervento.storico', 0);
+        return $this->hasMany(Intervento::class);//->where('intervento.storico', 0);
     }
 
     public function contatto()

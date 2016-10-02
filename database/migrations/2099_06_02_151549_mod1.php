@@ -20,7 +20,7 @@ class Mod1 extends Migration {
             $table->integer('contratto_id')->unsigned();
             $table->integer('user_id_modifica')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->timestamp('data_accettazione');
+            if(!Schema::hasColumn('intervento', 'data_modifica')) $table->timestamp('data_accettazione');
             $table->string('sede', 100)->default('Sede Cliente');
             $table->boolean('fatturabile')->default(1)->change();
             $table->integer('ore_lavorate')->defaul(0);

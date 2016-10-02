@@ -109,5 +109,15 @@ class Contratto extends Model {
         return $this->hasMany(ContrattoIntervento::class);
     }
 
+    public function prossimiInterventi()
+    {
+        return $this->hasMany(Intervento::class)->whereDate('data_start','>',date('Y-m-d'));
+    }
+
+    public function interventi()
+    {
+        return $this->hasMany(Intervento::class);
+    }
+
 
 }

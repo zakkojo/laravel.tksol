@@ -49,6 +49,7 @@ class InterventoController extends Controller {
     {
         $request->request->add(['data_modifica' => Carbon::now()]);
         $request->request->add(['creatore_id' => Auth::User()->id]);
+        $request->request->add(['contratto_id' => ContrattoIntervento::findOrFail($request->listinoContratto)->contratto->id]);
         $data = $request->all();
         if (Intervento::create($data)) return true;
         else return false;
@@ -63,9 +64,11 @@ class InterventoController extends Controller {
     public function show($id)
     {
         $intervento = Intervento::findOrFail($id);
-        if ($intervento->stampa == 0) return redirect()->action('InterventoController@edit', $id);
 
-        return view('interventi.inviaStampa', compact('intervento'));
+        if ($intervento->stampa == 0)
+            return redirect()->action('InterventoController@edit', $id, ['ciccio' => 1]);
+        else
+            return view('interventi.inviaStampa', compact('intervento'));
     }
 
     /**
@@ -117,26 +120,36 @@ class InterventoController extends Controller {
         //se clicco sul pulsante stampa
         if (Input::get('stampa') == 1)
         {
-            $temp = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')->where('intervento.id', $intervento->id)->get(['contratto_intervento.contratto_id'])->first();
-            $prossimoIntervento = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')
-                ->where('contratto_intervento.contratto_id', $temp->contratto_id)
-                ->where('data_start', '>', $intervento->data_start_reale)
-                ->where('stampa', '<>', '1')->get();
+            //$temp = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')->where('intervento.id', $intervento->id)->get(['contratto_intervento.contratto_id'])->first();
+            //$prossimoIntervento = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')
+            //     ->where('contratto_intervento.contratto_id', $temp->contratto_id)
+            //     ->where('data_start', '>', $intervento->data_start_reale)
+            //     ->where('stampa', '<>', '1')->get();
             //return $prossimoIntervento;
             //se è già pianificato un intervento
-            if (!empty($prossimoIntervento))
-            {
-                $intervento->stampa = 1;
-                $intervento->save();
+            $prossimiInterventi = $intervento->contratto->prossimiInterventi;
 
-                return redirect()->action('InterventoController@show', $id);
-            } else
+            if ($intervento->stampa != 1)
             {
-                //altrimenti chiedo l'inserimento del prossimo intervento
-                session()->flash('attivita', Input::get('problemiAperti'));
-                session()->flash('stampaIntervento', $id);
+                if (count($prossimiInterventi) == 0 AND Auth::user()->consulente->canPianificare($intervento->contratto->id))
+                {
+                    //altrimenti chiedo l'inserimento del prossimo intervento
+                    session()->flash('attivita', Input::get('problemiAperti'));
+                    session()->flash('stampaIntervento', $id);
+                    //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
+                    $filtroCalendar = new \stdClass();
+                    $filtroCalendar->clienti = [$intervento->contratto->cliente->id];
+                    $filtroCalendar->consulenti = [];
+                    session()->flash('filtri_calendar',json_encode($filtroCalendar));
 
-                return redirect()->action('InterventoController@create');
+                    return redirect()->action('InterventoController@create', ['data' => Carbon::parse($intervento->data_start)->format('Y-m-d'), 'eventId'=>$id]);
+                } else
+                {
+                    $intervento->stampa = 1;
+                    $intervento->save();
+
+                    return redirect()->action('InterventoController@show', $id);
+                }
             }
         } else
         {
@@ -286,6 +299,7 @@ class InterventoController extends Controller {
         $intervento->attivitaPianificate = Input::get('attivitaPianificate');
         $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
         $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
+        $intervento->contratto_id = ContrattoIntervento::findOrFail(Input::get('listinoContratto'))->contratto->id;
         //if (Input::get('creatore_id') == Input::get('consulente'))
         //    $data['data_accettazione'] = Carbon::now();
         //-------------------------------------------
@@ -293,16 +307,15 @@ class InterventoController extends Controller {
         //-------------------------------------------
         if ($response)
         {
-            /*if ($id_padre = Input::get('stampaIntervento'))
+            if ($id_padre = Input::get('stampaIntervento'))
             {
-                $intervento = Intervento::findOrFail($intervento_padre);
+                $intervento = Intervento::findOrFail($id_padre);
                 $intervento->stampa = 1;
                 if ($intervento->save())
                 {
                     return ['status' => 'success', 'action' => 'stampa', 'id_padre' => $id_padre];
                 } else return ['status' => 'fail'];
             } else return ['status' => 'success', 'msg' => Input::get('stampaIntervento')];
-            */
             return ['status' => 'success'];
         }
 

@@ -51,6 +51,7 @@ $listClienti->prepend('', 0);
 
 @section('page_scripts')
     <script>
+        var searchParams = new URLSearchParams(window.location.search.substring(1));
         var bgconsulente = [
             "#005BF1", //blu
             "#5AC594", //verde
@@ -131,7 +132,7 @@ $listClienti->prepend('', 0);
 
             //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
             var filtri_calendar = {!! session()->get('filtri_calendar', '{"clienti":[], "consulenti":['.Auth::user()->id.']}') !!};
-            var searchParams = new URLSearchParams(window.location.search.substring(1));
+
             if (searchParams.has('consulente') || searchParams.has('cliente') ){
                 searchParams.getAll('consulente').forEach(function (id) {
                     addFiltroConsulente(id)

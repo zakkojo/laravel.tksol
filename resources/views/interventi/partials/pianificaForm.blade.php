@@ -71,7 +71,6 @@ else $progDisabled = 'enabled';
             <div id="attivitaPianificate" name="attivitaPianificate" class="wysihtml5"
                  style="width: 100%; height: 150px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                  placeholder="">
-                {!! session()->get('attivita')!!}
             </div>
         </div>
         <div class="form-group row">
@@ -231,20 +230,29 @@ else $progDisabled = 'enabled';
         });
 
         $('#intervento_id').change(function () {
-            if ($('#intervento_id').val() == "") {
-                //sblocca cliente progetto
-                $('#cliente').prop('disabled', false);
-                $('#progetto').prop('disabled', false);
+            if ($('#stampaIntervento').val() == 0) {
+                if ($('#intervento_id').val() == "") {
+                    //sblocca cliente progetto
+                    $('#cliente').prop('disabled', false);
+                    $('#progetto').prop('disabled', false);
 
-                $('#pulsanti_update').hide();
-                $('#pulsanti_create').show();
+                    $('#pulsanti_update').hide();
+                    $('#pulsanti_create').show();
+                }
+                else {
+                    $('#cliente').prop('disabled', true);
+                    $('#progetto').prop('disabled', true);
+
+                    $('#pulsanti_update').show();
+                    $('#pulsanti_create').hide();
+                }
             }
             else {
+                //$('#consulente').prop('disabled', true);
                 $('#cliente').prop('disabled', true);
                 $('#progetto').prop('disabled', true);
-
-                $('#pulsanti_update').show();
-                $('#pulsanti_create').hide();
+                $('#pulsanti_update').hide();
+                $('#pulsanti_create').show();
             }
         });
     </script>@append

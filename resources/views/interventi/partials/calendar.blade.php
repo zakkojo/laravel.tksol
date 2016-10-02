@@ -41,28 +41,30 @@
                     }
                 },
                 select: function (start, end, resource) {
-                    $('#calendar').fullCalendar('removeEvents', 'new');
-                    $('#form_title').text('Pianifica Nuovo Intervento');
-                    $('#intervento_id').val('').trigger("change");
-                    $('#attivitaPianificate').html('{!! session()->get('attivita')!!}');
-                    $('#data').val(moment(start).format('L'));
-                    if (moment(start).format('HHmm') == '0000') {
-                        ora_start = moment(start).add('9', 'h');
-                        ora_end = moment(start).add('18', 'h');
+                    if(moment().diff(start, 'minutes')<0) {
+                        $('#calendar').fullCalendar('removeEvents', 'new');
+                        $('#form_title').text('Pianifica Nuovo Intervento');
+                        $('#intervento_id').val('').trigger("change");
+                        $('#attivitaPianificate').html('{!! session()->get('attivita')!!}');
+                        $('#data').val(moment(start).format('L'));
+                        if (moment(start).format('HHmm') == '0000') {
+                            ora_start = moment(start).add('9', 'h');
+                            ora_end = moment(start).add('18', 'h');
+                        }
+                        else {
+                            ora_start = moment(start);
+                            ora_end = moment(end);
+                        }
+                        $('#ora_start').val(ora_start.format('HH:mm'));
+                        $('#ora_end').val(ora_end.format('HH:mm'));
+                        eventData = {
+                            id: 'new',
+                            title: 'Nuovo Intervento',
+                            start: ora_start.format(),
+                            end: ora_end.format(),
+                        };
+                        $('#calendar').fullCalendar('renderEvent', eventData, true);
                     }
-                    else {
-                        ora_start = moment(start);
-                        ora_end = moment(end);
-                    }
-                    $('#ora_start').val(ora_start.format('HH:mm'));
-                    $('#ora_end').val(ora_end.format('HH:mm'));
-                    eventData = {
-                        id: 'new',
-                        title: 'Nuovo Intervento',
-                        start: ora_start.format(),
-                        end: ora_end.format(),
-                    };
-                    $('#calendar').fullCalendar('renderEvent', eventData, true);
                     $('#calendar').fullCalendar('unselect');
                 },
                 selectConstraint: {
@@ -136,75 +138,78 @@
                 },
                 eventClick: function (calEvent, jsEvent, view) {
                     //console.log(calEvent);
-                    loadIntervento(calEvent);
+                    //$('#calendar').fullCalendar('rerenderEvent');
+                    //se l'evento non è NEW e non sono in fase di pianificazione prossimo intervento
+                    if (calEvent.id != 'new' && $('#stampaIntervento').val() == 0) {
+                        $('#calendar').fullCalendar('removeEvents', 'new');
+                        if (calEvent.stampa == 0) {
+                            var events = $("#calendar").fullCalendar('clientEvents', calEvent.id);
+                            events.forEach(function (event) {
+                                event.backgroundColor = '#ffdf65';
+                            });
+                            $('#calendar').fullCalendar('rerenderEvents');
+
+                            $('#form_title').text('Modifica Intervento ');
+                            $('.btnModifica').addClass('disabled');
+                            loadIntervento(calEvent);
+                        }
+                    }
                 },
                 eventRender: function (event, element) {
-                    if (event.id != 'new') {
+                    if (event.id !== undefined && event.id != 'new') {
                         event.backgroundColor = event.color;
                         element.find('.fc-title').append("<br/>" + event.description);
                         element.find('.fc-title').append('<div onclick="openIntervento(' + event.id + ')" class="openIntervento btn-xs btn-flat btn-default" style="width:92%"><i class="fa fa-edit"></i> Dettagli</div>');
-                        if (event.id == '{{ $_REQUEST['eventId'] or ''}}') {
+                        if (event.id != '' && event.id == searchParams.get('eventId')) {
                             event.backgroundColor = '#ffdf65';
+                            loadIntervento(event)
+                            searchParams.delete('eventId');
                         }
                     }
                 },
             });
         }
 
+
         function loadIntervento(calEvent, onEnd) {
             onEnd = onEnd || function () {
                     };
             globale_intervento.loading = 1;
-            $('#calendar').fullCalendar('rerenderEvent');
-            if (calEvent.id != 'new') {
-                $('#calendar').fullCalendar('removeEvents', 'new');
-                if (calEvent.stampa == 0) {
-                    var events = $("#calendar").fullCalendar('clientEvents', calEvent.id);
-                    events.forEach(function (event) {
-                        event.backgroundColor = '#ffdf65';
-                    });
-                    $('#calendar').fullCalendar('rerenderEvents');
+            //caricamento dati da fare in ajax
+            $.ajax({
+                url: "/ajax/interventi/getIntervento",
+                type: "GET",
+                data: {id: calEvent.id},
+                dataType: "JSON",
+            }).done(function (data) {
+                if (data['status'] == 'success') {
+                    var intervento = data['intervento'];
+                    $('#attivitaPianificate').html(intervento.attivitaPianificate);
+                    $('#data').val(moment(intervento.data_start).format('L'));
+                    $('#ora_start').val(moment(intervento.data_start).format('HH:mm'));
+                    $('#ora_end').val(moment(intervento.data_end).format('HH:mm'));
 
-                    $('#form_title').text('Modifica Intervento ');
-                    $('.btnModifica').addClass('disabled');
-                    //caricamento dati da fare in ajax
-                    $.ajax({
-                        url: "/ajax/interventi/getIntervento",
-                        type: "GET",
-                        data: {id: calEvent.id},
-                        dataType: "JSON",
-                    }).done(function (data) {
-                        if (data['status'] == 'success') {
-                            var intervento = data['intervento'];
-                            $('#attivitaPianificate').html(intervento.attivitaPianificate);
-                            $('#data').val(moment(intervento.data_start).format('L'));
-                            $('#ora_start').val(moment(intervento.data_start).format('HH:mm'));
-                            $('#ora_end').val(moment(intervento.data_end).format('HH:mm'));
+                    globale_intervento.cliente_id = intervento.cliente_id;
+                    globale_intervento.progetto_id = intervento.progetto_id;
+                    globale_intervento.contratto_id = intervento.contratto_id;
+                    globale_intervento.attivita_id = intervento.attivita_id;
+                    globale_intervento.listino_id = intervento.listino_id;
 
-                            globale_intervento.cliente_id = intervento.cliente_id;
-                            globale_intervento.progetto_id = intervento.progetto_id;
-                            globale_intervento.contratto_id = intervento.contratto_id;
-                            globale_intervento.attivita_id = intervento.attivita_id;
-                            globale_intervento.listino_id = intervento.listino_id;
+                    $('#intervento_id').val(intervento.id).trigger("change");
+                    $('#cliente').val(intervento.cliente_id).trigger('change.select2');
+                    $('#cliente').trigger("change");
 
-                            $('#intervento_id').val(intervento.id).trigger("change");
-                            $('#cliente').val(intervento.cliente_id).trigger('change.select2');
-                            $('#cliente').trigger("change");
-
-                            //ACL - solo l'utente incaricato può moidificare l'intervento
-                            if (intervento.user_id == parseInt('{{Auth::User()->id}}'))
-                                $('.btnModifica').removeClass('disabled');
-                            onEnd();
-                        }
-                        else console.log(['Errore!!', data]);
-                    }).fail(function (jqXHR, textStatus, data) {
-                        console.log("Request failed: " + data);
-                    });
+                    //ACL - solo l'utente incaricato può moidificare l'intervento
+                    if (intervento.user_id == parseInt('{{Auth::User()->id}}'))
+                        $('.btnModifica').removeClass('disabled');
+                    onEnd();
                 }
-                else {
-                } //evento chiuso o vecchio
-            }
+                else console.log(['Errore!!', data]);
+            }).fail(function (jqXHR, textStatus, data) {
+                console.log("Request failed: " + data);
+            });
         }
+        ;
 
         function createIntervento() {
             var postData = {};

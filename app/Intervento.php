@@ -76,9 +76,14 @@ class Intervento extends Model {
         return $this->belongsTo(ContrattoIntervento::class, 'listino_id', 'id');
     }
 
+
     public function listinoInterventi_wt()
     {
         return $this->belongsTo(ContrattoIntervento::class, 'listino_id', 'id')->withTrashed();
+    }
+    public function contratto()
+    {
+        return $this->belongsTo(Contratto::class);
     }
 
     public function rimborsi()

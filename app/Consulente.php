@@ -35,11 +35,19 @@ class Consulente extends Model {
 
     public function contratti()
     {
-        return $this->belongsToMany(Contratto::class)->with('progetto')->withPivot('note','ruolo');
+        return $this->belongsToMany(Contratto::class)->with('progetto')->withPivot('note', 'ruolo');
     }
 
     public function capoProgetto()
     {
-        return $this->belongsToMany(Contratto::class)->withPivot('note','ruolo')->where('ruolo', 'Capo Progetto');;
+        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto');
+    }
+
+    public function canPianificare($contratto_id)
+    {
+        if ($this->contratti->where('id', $contratto_id)->count() > 0)
+            return true;
+        else
+            return false;
     }
 }

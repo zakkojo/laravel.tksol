@@ -17,6 +17,7 @@ class Mod1 extends Migration {
         {
             $table->increments('id')->change();
             $table->integer('intervento_padre')->unsigned()->nullable();
+            $table->integer('contratto_id')->unsigned();
             $table->integer('user_id_modifica')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->timestamp('data_accettazione');
@@ -73,7 +74,7 @@ class Mod1 extends Migration {
             if(Schema::hasColumn('intervento', 'storico')) $table->dropColumn('storico');
             if(Schema::hasColumn('intervento', 'sede')) $table->dropColumn('sede');
             if(Schema::hasColumn('intervento', 'ore_lavorate')) $table->dropColumn('ore_lavorate');
-
+            if(Schema::hasColumn('intervento', 'contratto_id')) $table->dropColumn('contratto_id');
         });
 
         Schema::table('cliente', function ($table)

@@ -9,7 +9,7 @@
         </div>
         <div class="box-body">
                 <div class="form-group">
-                    <textarea class="wysihtml5" name="attivitaPianificate"
+                    <textarea class="wysihtml5" name="attivitaPianificate" @if($intervento->inviato) disabled @endif
                               style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                               placeholder="">{!! htmlspecialchars_decode($intervento->attivitaPianificate) !!}</textarea>
                 </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="box-body">
                 <div class="form-group">
-                    <textarea class="wysihtml5" name="attivitaSvolte"
+                    <textarea class="wysihtml5" name="attivitaSvolte" @if($intervento->inviato) disabled @endif
                               style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                               placeholder="">{!! htmlspecialchars_decode($intervento->attivitaSvolte) !!}</textarea>
                 </div>
@@ -45,7 +45,7 @@
         </div>
         <div class="box-body">
                 <div class="form-group">
-                    <textarea class="wysihtml5" name="attivitaCaricoCliente"
+                    <textarea class="wysihtml5" name="attivitaCaricoCliente" @if($intervento->inviato) disabled @endif
                               style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                               placeholder="">{!! htmlspecialchars_decode($intervento->attivitaCaricoCliente) !!}</textarea>
                 </div>
@@ -63,7 +63,7 @@
         </div>
         <div class="box-body">
                 <div class="form-group">
-                    <textarea class="wysihtml5" name="problemiAperti"
+                    <textarea class="wysihtml5" name="problemiAperti" @if($intervento->inviato) disabled @endif
                               style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                               placeholder="">{!! htmlspecialchars_decode($intervento->problemiAperti) !!}</textarea>
                 </div>

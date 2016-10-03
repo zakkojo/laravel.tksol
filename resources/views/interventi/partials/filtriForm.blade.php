@@ -12,7 +12,7 @@ $listClienti->prepend('', 0);
 ?>
 <div class="box box-primary">
     <div id="searcheader" class="boxsearch box-header with-border">
-        <h3 id="search_title" class="box-title">Selezione Calendari</h3>
+        <h3 id="search_title" class="box-title">Filtro Calendari</h3>
         <div class="box-tools pull-right btn-filtri">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="boxsearch fa fa-minus"></i>
             </button>

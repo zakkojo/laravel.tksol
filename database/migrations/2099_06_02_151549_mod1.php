@@ -20,11 +20,12 @@ class Mod1 extends Migration {
             $table->integer('contratto_id')->unsigned();
             $table->integer('user_id_modifica')->unsigned();
             $table->integer('user_id')->unsigned();
+            $table->boolean('inviato')->defaul(0);
             $table->timestamp('data_accettazione');
             $table->timestamps();
             $table->string('sede', 100)->default('Sede Cliente');
             $table->boolean('fatturabile')->default(1)->change();
-            $table->integer('ore_lavorate')->defaul(0);
+            $table->decimal('ore_lavorate',3,1)->nullable()->change();
             if(Schema::hasColumn('intervento', 'stato')) $table->dropColumn('stato');
             if(Schema::hasColumn('intervento', 'consulente_id')) $table->dropColumn('consulente_id');
         });
@@ -76,6 +77,7 @@ class Mod1 extends Migration {
             if(Schema::hasColumn('intervento', 'sede')) $table->dropColumn('sede');
             if(Schema::hasColumn('intervento', 'ore_lavorate')) $table->dropColumn('ore_lavorate');
             if(Schema::hasColumn('intervento', 'contratto_id')) $table->dropColumn('contratto_id');
+            if(Schema::hasColumn('intervento', 'inviato')) $table->dropColumn('inviato');
         });
 
         Schema::table('cliente', function ($table)

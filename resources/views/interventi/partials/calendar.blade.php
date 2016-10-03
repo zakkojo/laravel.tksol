@@ -12,10 +12,9 @@
                 slotMinutes: 30,
                 slotLabelFormat: 'HH:mm',
                 timeFormat: 'H:mm',
-                minTime: "06:00:00",
-                maxTime: "22:00:00",
                 defaultView: 'agendaWeek',
                 locale: 'it',
+                columnFormat: 'ddd D/M',
                 agendaWeek: {
                     columnFormat: 'ddd D/M',
                 },
@@ -28,7 +27,7 @@
                     today: 'Oggi',
                     month: 'Mese',
                     week: 'Settimana',
-                    listMonth: 'Lista'
+                    listMonth: 'Agenda'
                 },
                 @if(isset($_REQUEST['data'])) defaultDate: moment('{{$_REQUEST['data']}}'), @endif
                 editable: true,
@@ -41,7 +40,7 @@
                     }
                 },
                 select: function (start, end, resource) {
-                    if(moment().diff(start, 'minutes')<0) {
+                    if(moment().isSameOrBefore(start, 'day')) {
                         $('#calendar').fullCalendar('removeEvents', 'new');
                         $('#form_title').text('Pianifica Nuovo Intervento');
                         $('#intervento_id').val('').trigger("change");

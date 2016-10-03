@@ -32,7 +32,7 @@
     <div class="row">
         @include('interventi.partials.textarea')
     </div>
-    @if($intervento->stampa == 0 )
+    @if($intervento->inviato == 0 )
     <div class="btn-group btn-block">
         @if(Auth::User()->id == $user->id)
             <button type="aggiorna" class="col-md-6 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
@@ -42,7 +42,7 @@
         </button>
         @endif
     </div>
-    @elseif($intervento->stampa == 1 )
+    @elseif($intervento->inviato == 1 )
         <a href="{{ action('InterventoController@show',$intervento->id) }}" type="stampa" value="stampa" class="btn-block btn btn-primary"><i class="fa fa-calendar"></i>
             Invio e Stampa
         </a>

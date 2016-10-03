@@ -138,6 +138,7 @@ else $progDisabled = 'enabled';
             //$('#cliente').trigger('change');
             //$('#intervento_id').trigger('change');
             //Consulente->Tipo
+
         });
 
 

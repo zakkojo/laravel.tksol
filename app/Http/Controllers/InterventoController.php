@@ -170,6 +170,8 @@ class InterventoController extends Controller {
     {
         $recipients = Input::get('recipients');
         $intervento = Intervento::findOrFail($id);
+        $intervento->stampa =1;
+        $intervento->save();
         $user = Auth::user();
         $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
 

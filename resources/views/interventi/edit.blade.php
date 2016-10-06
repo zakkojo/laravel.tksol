@@ -32,7 +32,7 @@
     <div class="row">
         @include('interventi.partials.textarea')
     </div>
-    @if($intervento->inviato == 0 )
+    @if($intervento->inviato == 0 AND \Carbon\Carbon::now()->gte(\Carbon\Carbon::parse($intervento->data_start)))
     <div class="btn-group btn-block">
         @if(Auth::User()->id == $user->id)
             <button type="aggiorna" class="col-md-6 btn btn-success"><i class="fa fa-remove"></i> Aggiorna

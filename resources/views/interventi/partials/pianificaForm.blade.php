@@ -9,6 +9,7 @@ $listConsulenti = $consulenti->each(function ($consulente)
 
     return $consulente;
 })->lists('nominativo', 'user_id');
+$listConsulenti->prepend('', 0);
 $consulente = $consulenti->find($cons);
 
 if (isset($contratto)) $cli = $contratto->cliente_id;
@@ -17,6 +18,7 @@ else $cli = 0;
 if ($cli) $cliDisabled = 'disabled';
 else $cliDisabled = 'enabled';
 $listClienti = $clienti->lists('ragione_sociale', 'id');
+$listClienti->prepend('', 0);
 
 if (isset($contratto)) $prog = $contratto->progetto_id;
 elseif (isset($_GET['prog'])) $prog = $_GET['prog'];
@@ -37,7 +39,7 @@ else $progDisabled = 'enabled';
             <label>Consulente</label>
             {!! Form::select('consulente',
             $listConsulenti,
-            $consulente->id,
+            $consulente->user_id,
             ['id'=>'consulente','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
             !!}
         </div>
@@ -63,15 +65,14 @@ else $progDisabled = 'enabled';
         </div>
         <div class="form-group">
             <label>Listino</label>
-            <select id="listinoContratto" style="width:100%"
+            <select id="listinoContratto" style="width:100%" data-minlength="1"
                     class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group">
             <label>Attività Pianificate</label>
             <div id="attivitaPianificate" name="attivitaPianificate" class="wysihtml5"
                  style="width: 100%; height: 150px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
-                 placeholder="">
-            </div>
+                 placeholder=""></div>
         </div>
         <div class="form-group row">
             <div class="col-md-4">
@@ -117,6 +118,9 @@ else $progDisabled = 'enabled';
 @section('page_scripts')
     <script>
         $('document').ready(function () {
+            if ({{$cli}} == 0
+            )
+            $('#cliente').select2('val', '');
             $('.wysihtml5').wysihtml5({
                 toolbar: {
                     "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
@@ -147,6 +151,10 @@ else $progDisabled = 'enabled';
             $('#progetto').html('');
             $('#contratto').val('');
             if ($('#cliente').val()) {
+                $('#progetto')
+                        .append($("<option></option>")
+                                .attr('value', 0)
+                                .text(''));
                 $.get('{{action('ConsulenteController@ajaxGetContratti')}}', {
                     cliente_id: $('#cliente').val(),
                     user: '{{Auth::User()->id}}'
@@ -157,11 +165,14 @@ else $progDisabled = 'enabled';
                                 c++;
                                 $('#progetto')
                                         .append($("<option></option>")
+                                                .attr('data-contratto', contratto.id)
                                                 .attr('value', contratto.progetto.id)
-                                                .text(contratto.progetto.area + ' / ' + contratto.progetto.nome));
+                                                .text(contratto.progetto.area + ' / ' + contratto.progetto.nome)
+                                        )
+
                                 if (c == '1' && globale_intervento.loading == 0) {
-                                    $('#contratto').val(contratto.id);
-                                    $('#progetto').select2('val', contratto.progetto.id);
+                                    //$('#contratto').val(contratto.id);
+                                    //$('#progetto').select2('val', contratto.progetto.id);
                                 }
                                 else if (globale_intervento.loading == 1 && contratto.id == globale_intervento.contratto_id) {
                                     $('#contratto').val(contratto.id);
@@ -186,6 +197,11 @@ else $progDisabled = 'enabled';
             if ($('#progetto').val()) {
                 $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
                         .done(function (data) {
+                            //creo prima scelta empty
+                            $('#attivita')
+                                    .append($("<option></option>")
+                                            .attr('value', 0)
+                                            .text(''));
                             //aggiorno la form
                             var d = 0;
                             $.each(data, function (id, dettagli) {
@@ -195,19 +211,24 @@ else $progDisabled = 'enabled';
                                                 .attr('value', dettagli.id)
                                                 .text(dettagli.descrizione));
                                 if (d == '1' && globale_intervento.loading == 0) {
-                                    $('#attivita').select2("val", dettagli.id);
+                                    //$('#attivita').select2("val", dettagli.id);
                                 }
                                 else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.attivita_id) {
                                     $('#attivita').select2("val", dettagli.id);
                                 }
+                                if (d == 0) $('#attivita').select2('val', '');
                             });
 
                             //Contratto->Listino
                             $('#listinoContratto').html('');
                             $('#listinoContratto').select2('val', '');
-                            if ($('#contratto').val()) {
-                                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': $('#contratto').val()})
+                            if (contratto_id  = $($('#progetto').select2('data')[0].element).attr('data-contratto')) {
+                                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': contratto_id})
                                         .done(function (data) {
+                                            $('#listinoContratto')
+                                                    .append($("<option></option>")
+                                                            .attr('value', 0)
+                                                            .text(''));
                                             var c = 0;
                                             $.each(data, function (id, dettagli) {
                                                 c++;
@@ -216,13 +237,14 @@ else $progDisabled = 'enabled';
                                                                 .attr('value', dettagli.id)
                                                                 .text(dettagli.descrizione));
                                                 if (c == '1' && globale_intervento.loading == 0) {
-                                                    $('#listinoContratto').select2("val", dettagli.id);
+                                                    //$('#listinoContratto').select2("val", dettagli.id);
                                                 }
                                                 else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.listino_id) {
                                                     $('#listinoContratto').select2("val", dettagli.id);
                                                     globale_intervento.func();
                                                     globale_intervento = {'loading': 0};
                                                 }
+                                                if (c == 0) $('#listinoContratto').select2('val', '');
                                             });
                                         });
                             }

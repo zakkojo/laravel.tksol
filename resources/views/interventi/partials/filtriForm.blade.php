@@ -128,6 +128,7 @@ $listClienti->prepend('', 0);
             });
             $('#search_cliente').on("select2:select", function (e) {
                 addFiltroCliente(e.params.data.id);
+                $('#search_cliente').select2("val", "");
             });
 
             //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}

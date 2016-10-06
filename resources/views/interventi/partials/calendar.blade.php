@@ -40,7 +40,7 @@
                     }
                 },
                 select: function (start, end, resource) {
-                    if(moment().isSameOrBefore(start, 'day')) {
+                    if (moment().isSameOrBefore(start, 'day')) {
                         $('#calendar').fullCalendar('removeEvents', 'new');
                         $('#form_title').text('Pianifica Nuovo Intervento');
                         $('#intervento_id').val('').trigger("change");
@@ -237,7 +237,12 @@
                 }
                 else console.log(['Errore!!', data]);
             }).fail(function (jqXHR, textStatus, data) {
-                console.log("Request failed: " + data);
+                console.log(jqXHR.responseJSON);
+                var testoErrore = '';
+                $.each(jqXHR.responseJSON, function (key, val) {
+                    testoErrore += val[0] + '\n';
+                });
+                alert(testoErrore);
             });
         }
 
@@ -273,7 +278,7 @@
                 }
                 else console.log(['Errore!!', data]);
             }).fail(function (jqXHR, textStatus) {
-                alert("Request failed: " + textStatus);
+                console.log("Request failed: " + textStatus);
             });
         }
 
@@ -292,6 +297,25 @@
                         },
                         color: bgcolor,   // a non-ajax option
                         textColor: 'black' // a non-ajax option
+                    }
+            );
+
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + cliente_id);
+            $('#calendar').fullCalendar('addEventSource',
+                    {
+                        id: cliente_id,
+                        url: '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'cliente_' + cliente_id,
+                        type: 'GET',
+                        data: {
+                            cliente_id: parseInt(cliente_id),
+                            inviato: 1
+                        },
+                        error: function () {
+                            alert('there was an error while fetching clienti inviati!');
+                        },
+                        color: bgcolor,   // a non-ajax option
+                        textColor: '#777777',
+                        editable: false
                     }
             )
         }
@@ -312,6 +336,26 @@
                         },
                         color: bgcolor,   // a non-ajax option
                         textColor: 'black' // a non-ajax option
+                    }
+            )
+
+            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + user_id);
+            $('#calendar').fullCalendar('addEventSource',
+                    {
+                        id: 'consulente_' + user_id,
+                        user_id: user_id,
+                        url: '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + user_id,
+                        type: 'GET',
+                        data: {
+                            user_id: parseInt(user_id),
+                            inviato: 1
+                        },
+                        error: function () {
+                            alert('there was an error while fetching clienti inviati!');
+                        },
+                        color: bgcolor,   // a non-ajax option
+                        textColor: '#777777',
+                        editable: false
                     }
             )
         }

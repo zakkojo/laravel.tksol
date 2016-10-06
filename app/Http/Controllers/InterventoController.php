@@ -96,64 +96,66 @@ class InterventoController extends Controller {
      */
     public function update(InterventiRequest $request, $id)
     {
-
         $intervento = Intervento::findOrFail($id);
-        $intervento->user_id_modifica = Auth::User()->id;
-
-        $intervento->listino_id = Input::get('listinoContratto');
-        $intervento->user_id = Input::get('user_id');
-        $intervento->attivita_id = Input::get('attivita');
-
-        $intervento->attivitaPianificate = Input::get('attivitaPianificate');
-        $intervento->attivitaSvolte = Input::get('attivitaSvolte');
-        $intervento->attivitaCaricoCliente = Input::get('attivitaCaricoCliente');
-        $intervento->problemiAperti = Input::get('problemiAperti');
-        $intervento->sede = Input::get('sede');
-
-        if (Input::get('fatturabile') == 'on') $fatturabile = 1; else $fatturabile = 0;
-        $intervento->fatturabile = $fatturabile;
-
-        $intervento->data_start_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start_reale'));
-        $intervento->data_end_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end_reale'));
-        $intervento->ore_lavorate = Input::get('ore_lavorate');
-        $intervento->save();
-        //se clicco sul pulsante stampa
-        if (Input::get('stampa') == 1)
+        if (Carbon::now()->gte(Carbon::parse($intervento->data_start))) //update solo dopo inizio evento
         {
-            //$temp = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')->where('intervento.id', $intervento->id)->get(['contratto_intervento.contratto_id'])->first();
-            //$prossimoIntervento = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')
-            //     ->where('contratto_intervento.contratto_id', $temp->contratto_id)
-            //     ->where('data_start', '>', $intervento->data_start_reale)
-            //     ->where('stampa', '<>', '1')->get();
-            //return $prossimoIntervento;
-            //se è già pianificato un intervento
-            $prossimiInterventi = $intervento->contratto->prossimiInterventi;
+            $intervento->user_id_modifica = Auth::User()->id;
 
-            if ($intervento->stampa != 1)
+            $intervento->listino_id = Input::get('listinoContratto');
+            $intervento->user_id = Input::get('user_id');
+            $intervento->attivita_id = Input::get('attivita');
+
+            $intervento->attivitaPianificate = Input::get('attivitaPianificate');
+            $intervento->attivitaSvolte = Input::get('attivitaSvolte');
+            $intervento->attivitaCaricoCliente = Input::get('attivitaCaricoCliente');
+            $intervento->problemiAperti = Input::get('problemiAperti');
+            $intervento->sede = Input::get('sede');
+
+            if (Input::get('fatturabile') == 'on') $fatturabile = 1; else $fatturabile = 0;
+            $intervento->fatturabile = $fatturabile;
+
+            $intervento->data_start_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start_reale'));
+            $intervento->data_end_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end_reale'));
+            $intervento->ore_lavorate = Input::get('ore_lavorate');
+            $intervento->save();
+            //se clicco sul pulsante stampa
+            if (Input::get('stampa') == 1)
             {
-                if (count($prossimiInterventi) == 0 AND Auth::user()->consulente->canPianificare($intervento->contratto->id))
-                {
-                    //altrimenti chiedo l'inserimento del prossimo intervento
-                    session()->flash('attivita', Input::get('problemiAperti'));
-                    session()->flash('stampaIntervento', $id);
-                    //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
-                    $filtroCalendar = new \stdClass();
-                    $filtroCalendar->clienti = [$intervento->contratto->cliente->id];
-                    $filtroCalendar->consulenti = [];
-                    session()->flash('filtri_calendar',json_encode($filtroCalendar));
+                //$temp = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')->where('intervento.id', $intervento->id)->get(['contratto_intervento.contratto_id'])->first();
+                //$prossimoIntervento = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')
+                //     ->where('contratto_intervento.contratto_id', $temp->contratto_id)
+                //     ->where('data_start', '>', $intervento->data_start_reale)
+                //     ->where('stampa', '<>', '1')->get();
+                //return $prossimoIntervento;
+                //se è già pianificato un intervento
+                $prossimiInterventi = $intervento->contratto->prossimiInterventi;
 
-                    return redirect()->action('InterventoController@create', ['data' => Carbon::parse($intervento->data_start)->format('Y-m-d'), 'eventId'=>$id]);
-                } else
+                if ($intervento->stampa != 1)
                 {
-                    $intervento->stampa = 1;
-                    $intervento->save();
+                    if (count($prossimiInterventi) == 0 AND Auth::user()->consulente->canPianificare($intervento->contratto->id))
+                    {
+                        //altrimenti chiedo l'inserimento del prossimo intervento
+                        session()->flash('attivita', Input::get('problemiAperti'));
+                        session()->flash('stampaIntervento', $id);
+                        //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
+                        $filtroCalendar = new \stdClass();
+                        $filtroCalendar->clienti = [$intervento->contratto->cliente->id];
+                        $filtroCalendar->consulenti = [];
+                        session()->flash('filtri_calendar', json_encode($filtroCalendar));
 
-                    return redirect()->action('InterventoController@show', $id);
+                        return redirect()->action('InterventoController@create', ['data' => Carbon::parse($intervento->data_start)->format('Y-m-d'), 'eventId' => $id]);
+                    } else
+                    {
+                        $intervento->stampa = 1;
+                        $intervento->save();
+
+                        return redirect()->action('InterventoController@show', $id);
+                    }
                 }
+            } else
+            {
+                return redirect()->action('InterventoController@edit', $id);
             }
-        } else
-        {
-            return redirect()->action('InterventoController@edit', $id);
         }
     }
 
@@ -170,7 +172,7 @@ class InterventoController extends Controller {
     {
         $recipients = Input::get('recipients');
         $intervento = Intervento::findOrFail($id);
-        $intervento->stampa =1;
+        $intervento->stampa = 1;
         $intervento->save();
         $user = Auth::user();
         $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
@@ -228,15 +230,15 @@ class InterventoController extends Controller {
         {
             $user_id = Input::get('user_id');
             $cliente_id = Input::get('cliente_id');
-            if (Input::get('stampa')) $stampa = 1;
-            else $stampa = 0;
+            if (Input::get('inviato')) $inviato = 1;
+            else $inviato = 0;
 
             $calendario = [];
 
             if ($user_id AND !$cliente_id)
             {
                 $where[0][] = ['user_id' => $user_id];
-                $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('stampa', $stampa)->get();
+                $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('inviato', $inviato)->get();
             }
             if ($cliente_id AND !$user_id)
             {
@@ -245,10 +247,10 @@ class InterventoController extends Controller {
                     ->where('cliente_id', $cliente_id)
                     ->where('data_start', '>=', $data_start)
                     ->where('data_start', '<=', $data_end)
-                    ->where('stampa', $stampa)->get(['intervento.*']);
+                    ->where('inviato', $inviato)->get(['intervento.*']);
 
             }
-            if ($calendario != [])
+            if (!$calendario->isEmpty())
             {
                 $calendario->each(function ($evento)
                 {
@@ -299,7 +301,6 @@ class InterventoController extends Controller {
         $intervento->user_id = Input::get('user_id'); //consulente associato ad intervento
         $intervento->user_id_modifica = Auth::User()->id; //utente che crea l'intervento
         $intervento->attivitaPianificate = Input::get('attivitaPianificate');
-        $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
         $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
         $intervento->contratto_id = ContrattoIntervento::findOrFail(Input::get('listinoContratto'))->contratto->id;
         //if (Input::get('creatore_id') == Input::get('consulente'))
@@ -318,6 +319,7 @@ class InterventoController extends Controller {
                     return ['status' => 'success', 'action' => 'stampa', 'id_padre' => $id_padre];
                 } else return ['status' => 'fail'];
             } else return ['status' => 'success', 'msg' => Input::get('stampaIntervento')];
+
             return ['status' => 'success'];
         }
 
@@ -326,6 +328,7 @@ class InterventoController extends Controller {
 
     public function ajaxUpdateIntervento(AjaxInterventiRequest $request)
     {
+
         $intervento = Intervento::findOrFail(Input::get('id'));
 
         $intervento->listino_id = Input::get('listinoContratto');

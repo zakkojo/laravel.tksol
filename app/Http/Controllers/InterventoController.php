@@ -301,6 +301,7 @@ class InterventoController extends Controller {
         $intervento->user_id = Input::get('user_id'); //consulente associato ad intervento
         $intervento->user_id_modifica = Auth::User()->id; //utente che crea l'intervento
         $intervento->attivitaPianificate = Input::get('attivitaPianificate');
+        $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
         $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
         $intervento->contratto_id = ContrattoIntervento::findOrFail(Input::get('listinoContratto'))->contratto->id;
         //if (Input::get('creatore_id') == Input::get('consulente'))

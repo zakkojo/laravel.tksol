@@ -14,9 +14,11 @@
                 timeFormat: 'H:mm',
                 defaultView: 'agendaWeek',
                 locale: 'it',
-                columnFormat: 'ddd D/M',
-                agendaWeek: {
-                    columnFormat: 'ddd D/M',
+                //columnFormat: 'ddd D/M',
+                views:{
+                    agendaWeek: {
+                        columnFormat: 'ddd D/M',
+                    }
                 },
                 header: {
                     right: 'prev,next today',

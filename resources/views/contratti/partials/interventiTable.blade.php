@@ -55,11 +55,7 @@
                     </td>
                     <td>{{$listinoIntervento->iva}} %, {{ucfirst(strtolower($listinoIntervento->tipo_iva))}}</td>
                     <td>{{ $listinoIntervento->ore_previste }}</td>
-                    <td>@if($listinoIntervento->ore_previste)
-                            {{ $listinoIntervento->tariffa_ora*$listinoIntervento->ore_previste }}
-                        @else {{$listinoIntervento->tariffa_ora}}
-                        @endif
-                    </td>
+                    <td>{{ $listinoIntervento->tariffa_ora*$listinoIntervento->ore_previste }}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -110,14 +106,14 @@
 
                     // Total over all pages
                     total = api
-                            .column(5)
-                            .data()
-                            .reduce(function (a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
+                        .column(5)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
                     // Update footer
                     $(api.column(4).footer()).html(
-                            'Totale Previsto: ' + Number(total).toLocaleString() + ' &euro;'
+                        'Totale Previsto: ' + Number(total).toLocaleString() + ' &euro;'
                     );
                 }
             });

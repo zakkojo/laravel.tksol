@@ -22,10 +22,10 @@ class Mod1 extends Migration {
             $table->integer('user_id')->unsigned();
             $table->boolean('inviato')->defaul(0);
             $table->timestamp('data_accettazione');
-            $table->timestamps();
             $table->string('sede', 100)->default('Sede Cliente');
             $table->boolean('fatturabile')->default(1)->change();
-            $table->decimal('ore_lavorate',3,1)->nullable()->change();
+            if(Schema::hasColumn('intervento', 'ore_lavorate')) $table->decimal('ore_lavorate',3,1)->nullable()->change();
+            else $table->decimal('ore_lavorate',3,1)->nullable();
             if(Schema::hasColumn('intervento', 'stato')) $table->dropColumn('stato');
             if(Schema::hasColumn('intervento', 'consulente_id')) $table->dropColumn('consulente_id');
         });

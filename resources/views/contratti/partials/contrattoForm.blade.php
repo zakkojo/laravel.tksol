@@ -21,11 +21,13 @@ if (isset($contratto))
     $periodo = $contratto->periodicita_pagamenti;
     $modalita = $contratto->modalita_fattura;
     $rimborsi = $contratto->rimborsi;
+    $stato = $contratto->stato;
 } else
 {
     $periodo = '';
     $modalita = '';
     $rimborsi = 'nessuno';
+    $stato = '';
 }
 ?>
 <div class="box-body">
@@ -51,7 +53,7 @@ if (isset($contratto))
         <label>Stato Contratto</label>
         {!! Form::select('stato',
             array('PROSPECT' => 'Prospect','FALL' => 'FALL','ACTIVE' => 'Attivo','CLOSED' => 'Chiuso'),
-            $modalita,
+            $stato,
             ['id'=>'stato','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
         !!}
     </div>

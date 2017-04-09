@@ -79,6 +79,7 @@ class ConsulenteController extends Controller {
             GROUP BY c.id,ragione_sociale, pro.nome
             HAVING (data_primo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR data_primo_intervento is null)
         ");
+
         //$interventiDaApprovare = Intervento::where('consulente_id',$consulente->id)->whereRaw('consulente_id <> creatore_id')->whereRaw('data_accettazione is null')->get();
 
 
@@ -137,24 +138,25 @@ class ConsulenteController extends Controller {
 
     public function ajaxGetContratti()
     {
-        $user = Input::get('user');
+        $user_id = Input::get('user_id');
         $cliente_id = Input::get('cliente_id');
+        $consulente = User::findOrFail($user_id)->consulente;
 
 
-        if (User::findOrFail($user)->consulente->tipo == 'Partner')
+        if ($consulente->tipo == 'Partner')
         {
             return Contratto::with('progetto')->where('cliente_id', $cliente_id)->get();
         } else
         {
-            $contratti = User::find($user)->consulente->contratti;
-            $return = $contratti->filter(function ($contratto) use ($cliente_id)
-            {
-                return $contratto->cliente_id == $cliente_id;
-            });
+            //return Contratto::with('progetto','consulenti')->where('cliente_id', $cliente_id)->get();
+            //$contratti = User::find($user)->consulente->contratti;
+            return $contratti = Contratto::with('progetto')
+                ->whereHas('consulenti', function ($query) use ($consulente)
+                {
+                    $query->where('consulente_id',$consulente->id);
+                })
+                ->where('cliente_id', $cliente_id)->get();
         }
-
-
-        return $return;
 
     }
 

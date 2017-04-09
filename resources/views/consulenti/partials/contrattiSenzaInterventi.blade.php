@@ -16,8 +16,8 @@
     </div>
     <div class="box-body">
         <table id="contrattiSenzaInterventi"
-               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap"
-               cellspacing="0" width="100%">
+               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0"
+               width="100%">
             <thead>
             <tr>
                 <td>Opzioni</td>
@@ -27,20 +27,16 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($contrattiSenzaInterventi as $contratto)
+            @foreach($contrattiSenzaInterventi as $contrattoSenzaIntervento)
                 <tr>
                     <td>
-                        <a href="{{ action('InterventoController@create',['contratto' =>$contratto->id]) }}"
-                           data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-calendar"></i></a>
+                        <a href="{{ action('InterventoController@create',['contratto' =>$contrattoSenzaIntervento->contratto_id]) }}"
+                           data-skin="skin-blue" class="btn btn-default btn-xs"><i
+                                    class="glyphicon glyphicon-calendar"></i></a>
                     </td>
-                    <td>{{ $contratto->ragione_sociale }}</td>
-                    <td class="pull-right">{{$contratto->nome}}</td>
-                    @if ( empty($contratto->prossimo_intervento) )
-                        <td></td>
-                    @else
-                        <td>{{ $contratto->prossimo_intervento->data_start OR ''}}</td>
-                    @endif
-
+                    <td>{{ $contrattoSenzaIntervento->ragione_sociale }}</td>
+                    <td class="pull-right">{{$contrattoSenzaIntervento->nome}}</td>
+                    <td>{{$contrattoSenzaIntervento->data_primo_intervento}}</td>
                 </tr>
             @endforeach
             </tbody>

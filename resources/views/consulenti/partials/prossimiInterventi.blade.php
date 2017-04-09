@@ -15,7 +15,9 @@
         </div>
     </div>
     <div class="box-body">
-        <table id="prossimiInterventi" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0" width="100%">
+        <table id="prossimiInterventi"
+               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0"
+               width="100%">
             <thead>
             <tr>
                 <th>Opzioni</th>
@@ -28,12 +30,16 @@
             <tbody>
             @foreach( $consulente->interventi as $intervento)
                 <tr>
-                    <td><a href="{{ action('InterventoController@edit',[$intervento->id]) }}"
-                           data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a></td>
+                    <td>
+                        <a href="{{ action('InterventoController@create',['data' =>$intervento->dataC]) }}"
+                           data-skin="skin-blue" class="btn btn-default btn-xs"><i
+                                    class="glyphicon glyphicon-calendar"></i></a>
+                        <a href="{{ action('InterventoController@edit',[$intervento->id]) }}" data-skin="skin-blue"
+                           class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a></td>
                     <td>{{ $intervento->listinoInterventi->contratto->cliente->ragione_sociale}}</td>
                     <td>{{ $intervento->attivita->descrizione }}</td>
                     <td>{{ $intervento->stato }}</td>
-                    <td>{{ $intervento->data_start }}</td>
+                    <td>{{ $intervento->data }}</td>
                 </tr>
             @endforeach
             </tbody>

@@ -407,7 +407,8 @@
         }
 
         function openIntervento(id) {
-            window.open('/interventi/' + id + '/edit', '_self');
+            if ( typeof id === "undefined") openIntervento($('#intervento_id').val());
+            else window.open('/interventi/' + id + '/edit', '_self');
         }
     </script>
 @append

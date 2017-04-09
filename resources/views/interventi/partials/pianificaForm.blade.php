@@ -110,6 +110,10 @@ else $progDisabled = 'enabled';
                     <div type="Modifica" onclick="updateIntervento()" class="btnModifica btn  btn-primary"><i
                                 class="fa fa-calendar"></i> Modifica
                     </div>
+                    <div type="Dettagli" onclick="openIntervento()" class="btn-default btn"><i class="fa fa-calendar"></i>
+                        Dettagli
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -241,7 +245,7 @@ else $progDisabled = 'enabled';
                                         }
                                         else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.listino_id) {
                                             $('#listinoContratto').select2("val", dettagli.id);
-                                            if (typeof globale_intervento.func === 'function'){
+                                            if (typeof globale_intervento.func === 'function') {
                                                 globale_intervento.func(); //SALVO L'AGGIORNAMENTO
                                                 globale_intervento = {'loading': 0};
                                             }

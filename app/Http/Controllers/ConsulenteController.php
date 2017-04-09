@@ -69,15 +69,15 @@ class ConsulenteController extends Controller {
         $prossimiInterventi = Intervento::where('consulente_id', '=', $consulente->id)->where('data_start', '>=', date('Y-m-d'));
         //$rapportiniDaInviare = Intervento::where('consulente_id', '=', $consulente->id)->where('stampa', '<', '2');
         $contrattiSenzaInterventi = DB::select("
-            SELECT c.id,ragione_sociale, pro.nome, min(data_start) prossimo_intervento FROM contratto c
+            SELECT c.id contratto_id, ragione_sociale, pro.nome, min(data_start) data_primo_intervento FROM contratto c
             JOIN cliente cli ON (c.cliente_id = cli.id)
             JOIN progetto pro ON (c.progetto_id = pro.id)
             LEFT JOIN contratto_intervento ci on (c.id = ci.contratto_id) 
-            LEFT JOIN consulente_contratto cc on (cc.contratto_id = ci.id) 
+            LEFT JOIN consulente_contratto cc on (cc.contratto_id = c.id) 
             LEFT JOIN intervento i ON (i.listino_id = ci.id) 
             WHERE cc.consulente_id = '" . $consulente->id . "'
             GROUP BY c.id,ragione_sociale, pro.nome
-            HAVING (prossimo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR prossimo_intervento is null)
+            HAVING (data_primo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR data_primo_intervento is null)
         ");
         //$interventiDaApprovare = Intervento::where('consulente_id',$consulente->id)->whereRaw('consulente_id <> creatore_id')->whereRaw('data_accettazione is null')->get();
 

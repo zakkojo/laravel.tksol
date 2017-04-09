@@ -23,9 +23,7 @@
         {!! Form::text('provincia', null,['class'=>'form-control', 'id'=>'provincia', 'placeholder'=>'Provincia']) !!}
         {!! Form::text('cap', null,['class'=>'form-control', 'id'=>'cap', 'placeholder'=>'CAP']) !!}
     </div>
-</div>
-<!-- /.box-body -->
-
+</div><!-- /.box-body -->
 <div class="box-footer">
     <button type="submit" class="btn btn-primary">Submit</button>
 </div>

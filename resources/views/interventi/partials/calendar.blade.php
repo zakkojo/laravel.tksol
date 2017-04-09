@@ -97,7 +97,7 @@
                 eventDragStart: function (calEvent, delta, revertFunc) {
                     if (calEvent.id != 'new') {
                         //$('#calendar').fullCalendar('removeEvents', 'new');
-                        $('#form_title').text('Modifica Intervento ');
+                        $('#form_title').text('Modifica Intervento');
                         $('#intervento_id').val(calEvent.id).trigger("change");
                         $('#cliente').val(calEvent.cliente_id).trigger('change');
                         $('#cliente').val(calEvent.cliente_id).trigger('change.select2');
@@ -173,6 +173,7 @@
 
 
         function loadIntervento(calEvent, onEnd) {
+            console.log('loadIntervento Fired');
             onEnd = onEnd || function () {
                     };
             globale_intervento.loading = 1;

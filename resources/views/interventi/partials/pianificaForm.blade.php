@@ -152,40 +152,40 @@ else $progDisabled = 'enabled';
             $('#contratto').val('');
             if ($('#cliente').val()) {
                 $('#progetto')
-                        .append($("<option></option>")
-                                .attr('value', 0)
-                                .text(''));
+                    .append($("<option></option>")
+                        .attr('value', 0)
+                        .text(''));
                 $.get('{{action('ConsulenteController@ajaxGetContratti')}}', {
                     cliente_id: $('#cliente').val(),
                     user: '{{Auth::User()->id}}'
                 })
-                        .done(function (data) {
-                            var c = 0;
-                            $.each(data, function (id, contratto) {
-                                c++;
-                                $('#progetto')
-                                        .append($("<option></option>")
-                                                .attr('data-contratto', contratto.id)
-                                                .attr('value', contratto.progetto.id)
-                                                .text(contratto.progetto.area + ' / ' + contratto.progetto.nome)
-                                        )
+                    .done(function (data) {
+                        var c = 0;
+                        $.each(data, function (id, contratto) {
+                            c++;
+                            $('#progetto')
+                                .append($("<option></option>")
+                                    .attr('data-contratto', contratto.id)
+                                    .attr('value', contratto.progetto.id)
+                                    .text(contratto.progetto.area + ' / ' + contratto.progetto.nome)
+                                )
 
-                                if (c == '1' && globale_intervento.loading == 0) {
-                                    //$('#contratto').val(contratto.id);
-                                    //$('#progetto').select2('val', contratto.progetto.id);
-                                }
-                                else if (globale_intervento.loading == 1 && contratto.id == globale_intervento.contratto_id) {
-                                    $('#contratto').val(contratto.id);
-                                    $('#progetto').select2('val', contratto.progetto.id);
-                                }
-                            });
-                            if (c == 0) $('#progetto').select2('val', '');
-                            if ($('#intervento_id').val() == '') {
-
+                            if (c == '1' && globale_intervento.loading == 0) {
+                                //$('#contratto').val(contratto.id);
+                                //$('#progetto').select2('val', contratto.progetto.id);
                             }
-                        }).fail(function (jqXHR, textStatus, data) {
-                            console.log("Request failed: " + data);
+                            else if (globale_intervento.loading == 1 && contratto.id == globale_intervento.contratto_id) {
+                                $('#contratto').val(contratto.id);
+                                $('#progetto').select2('val', contratto.progetto.id);
+                            }
+                        });
+                        if (c == 0) $('#progetto').select2('val', '');
+                        if ($('#intervento_id').val() == '') {
+
                         }
+                    }).fail(function (jqXHR, textStatus, data) {
+                        console.log("Request failed: " + data);
+                    }
                 )
             }
         });
@@ -196,59 +196,61 @@ else $progDisabled = 'enabled';
             //Progetto->Attivita
             if ($('#progetto').val()) {
                 $.get('{{ action('ProgettoController@ajaxGetAttivita') }}', {'progetto_id': $('#progetto').val()})
-                        .done(function (data) {
-                            //creo prima scelta empty
-                            $('#attivita')
-                                    .append($("<option></option>")
-                                            .attr('value', 0)
-                                            .text(''));
-                            //aggiorno la form
-                            var d = 0;
-                            $.each(data, function (id, dettagli) {
-                                d++;
-                                lastoption = $('#attivita')
+                    .done(function (data) {
+                        //creo prima scelta empty
+                        $('#attivita')
+                            .append($("<option></option>")
+                                .attr('value', '')
+                                .text(''));
+                        //aggiorno la form
+                        var d = 0;
+                        $.each(data, function (id, dettagli) {
+                            d++;
+                            lastoption = $('#attivita')
+                                .append($("<option></option>")
+                                    .attr('value', dettagli.id)
+                                    .text(dettagli.descrizione));
+                            if (d == '1' && globale_intervento.loading == 0) {
+                                //$('#attivita').select2("val", dettagli.id);
+                            }
+                            else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.attivita_id) {
+                                $('#attivita').select2("val", dettagli.id);
+                            }
+                            if (d == 0) $('#attivita').select2('val', '');
+                        });
+
+                        //Contratto->Listino
+                        $('#listinoContratto').html('');
+                        $('#listinoContratto').select2('val', '');
+                        if (contratto_id = $($('#progetto').select2('data')[0].element).attr('data-contratto')) {
+                            $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': contratto_id})
+                                .done(function (data) {
+                                    $('#listinoContratto')
                                         .append($("<option></option>")
+                                            .attr('value', '')
+                                            .text(''));
+                                    var c = 0;
+                                    $.each(data, function (id, dettagli) {
+                                        c++;
+                                        lastoption = $('#listinoContratto')
+                                            .append($("<option></option>")
                                                 .attr('value', dettagli.id)
                                                 .text(dettagli.descrizione));
-                                if (d == '1' && globale_intervento.loading == 0) {
-                                    //$('#attivita').select2("val", dettagli.id);
-                                }
-                                else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.attivita_id) {
-                                    $('#attivita').select2("val", dettagli.id);
-                                }
-                                if (d == 0) $('#attivita').select2('val', '');
-                            });
-
-                            //Contratto->Listino
-                            $('#listinoContratto').html('');
-                            $('#listinoContratto').select2('val', '');
-                            if (contratto_id  = $($('#progetto').select2('data')[0].element).attr('data-contratto')) {
-                                $.get('{{ action('ContrattoController@ajaxGetListinoInterventi') }}', {'contratto_id': contratto_id})
-                                        .done(function (data) {
-                                            $('#listinoContratto')
-                                                    .append($("<option></option>")
-                                                            .attr('value', 0)
-                                                            .text(''));
-                                            var c = 0;
-                                            $.each(data, function (id, dettagli) {
-                                                c++;
-                                                lastoption = $('#listinoContratto')
-                                                        .append($("<option></option>")
-                                                                .attr('value', dettagli.id)
-                                                                .text(dettagli.descrizione));
-                                                if (c == '1' && globale_intervento.loading == 0) {
-                                                    //$('#listinoContratto').select2("val", dettagli.id);
-                                                }
-                                                else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.listino_id) {
-                                                    $('#listinoContratto').select2("val", dettagli.id);
-                                                    globale_intervento.func();
-                                                    globale_intervento = {'loading': 0};
-                                                }
-                                                if (c == 0) $('#listinoContratto').select2('val', '');
-                                            });
-                                        });
-                            }
-                        });
+                                        if (c == '1' && globale_intervento.loading == 0) {
+                                            //$('#listinoContratto').select2("val", dettagli.id);
+                                        }
+                                        else if (globale_intervento.loading == 1 && dettagli.id == globale_intervento.listino_id) {
+                                            $('#listinoContratto').select2("val", dettagli.id);
+                                            if (typeof globale_intervento.func === 'function'){
+                                                globale_intervento.func(); //SALVO L'AGGIORNAMENTO
+                                                globale_intervento = {'loading': 0};
+                                            }
+                                        }
+                                        if (c == 0) $('#listinoContratto').select2('val', ''); // QUI NON HA SENSO
+                                    });
+                                });
+                        }
+                    });
             }
         });
 

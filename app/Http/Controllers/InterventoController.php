@@ -65,6 +65,7 @@ class InterventoController extends Controller {
     {
         $intervento = Intervento::findOrFail($id);
 
+        //return $intervento;
         if ($intervento->stampa == 0)
             return redirect()->action('InterventoController@edit', $id, ['ciccio' => 1]);
         else
@@ -119,6 +120,7 @@ class InterventoController extends Controller {
             $intervento->ore_lavorate = Input::get('ore_lavorate');
             $intervento->save();
             //se clicco sul pulsante stampa
+
             if (Input::get('stampa') == 1)
             {
                 //$temp = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')->where('intervento.id', $intervento->id)->get(['contratto_intervento.contratto_id'])->first();
@@ -130,31 +132,27 @@ class InterventoController extends Controller {
                 //se è già pianificato un intervento
                 $prossimiInterventi = $intervento->contratto->prossimiInterventi;
 
-                if ($intervento->stampa != 1)
+                if (count($prossimiInterventi) == 0 AND Auth::user()->consulente->canPianificare($intervento->contratto->id))
                 {
-                    if (count($prossimiInterventi) == 0 AND Auth::user()->consulente->canPianificare($intervento->contratto->id))
-                    {
-                        //altrimenti chiedo l'inserimento del prossimo intervento
-                        session()->flash('attivita', Input::get('problemiAperti'));
-                        session()->flash('stampaIntervento', $id);
-                        //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
-                        $filtroCalendar = new \stdClass();
-                        $filtroCalendar->clienti = [$intervento->contratto->cliente->id];
-                        $filtroCalendar->consulenti = [];
-                        session()->flash('filtri_calendar', json_encode($filtroCalendar));
+                    //altrimenti chiedo l'inserimento del prossimo intervento
+                    session()->flash('attivita', Input::get('problemiAperti'));
+                    session()->flash('stampaIntervento', $id);
+                    //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
+                    $filtroCalendar = new \stdClass();
+                    $filtroCalendar->clienti = [$intervento->contratto->cliente->id];
+                    $filtroCalendar->consulenti = [];
+                    session()->flash('filtri_calendar', json_encode($filtroCalendar));
 
-                        return redirect()->action('InterventoController@create', ['data' => Carbon::parse($intervento->data_start)->format('Y-m-d'), 'eventId' => $id]);
-                    } else
-                    {
-                        $intervento->stampa = 1;
-                        $intervento->save();
-
-                        return redirect()->action('InterventoController@show', $id);
-                    }
+                    return redirect()->action('InterventoController@create', ['data' => Carbon::parse($intervento->data_start)->format('Y-m-d'), 'eventId' => $id]);
+                } else
+                {
+                    $intervento->stampa = 1;
+                    $intervento->save();
+                    return redirect()->action('InterventoController@show', $id);
                 }
             } else
             {
-                return redirect()->action('InterventoController@edit', $id);
+                return redirect()->to('InterventoController@edit', $id);
             }
         }
     }

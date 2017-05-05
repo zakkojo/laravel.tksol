@@ -14,6 +14,7 @@ class Contratto extends Model {
     public $timestamps = true;
 
     protected $fillable = [
+        'societa_id',
         'cliente_id',
         'progetto_id',
         'stato',
@@ -82,6 +83,11 @@ class Contratto extends Model {
     {
         if ($date) return Carbon::parse($date)->format('d/m/Y');
         else return null;
+    }
+
+    public function societa()
+    {
+        return $this->belongsTo(Societa::class);
     }
 
     public function cliente()

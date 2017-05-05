@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title">Listino Interventi</h3>
+        <h3 class="box-title">Tipologia Interventi</h3>
         <div class="box-tools">
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
                 <button type="button" class="btn btn-default"

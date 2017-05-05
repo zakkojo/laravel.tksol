@@ -33,6 +33,7 @@ class ContrattiRequest extends Request {
             case 'POST':
             {
                 return [
+                    'societa_id'              => 'required',
                     'cliente_id'              => 'required',
                     'progetto_id'             => 'required',
                     'stato'                   => 'required',
@@ -48,6 +49,7 @@ class ContrattiRequest extends Request {
             case 'PATCH':
             {
                 return [
+                    'societa_id'              => 'required',
                     'cliente_id'              => 'required',
                     'progetto_id'             => 'required',
                     'stato'                   => 'required',

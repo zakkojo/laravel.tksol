@@ -64,7 +64,7 @@ else $progDisabled = 'enabled';
             <select id="attivita" style="width:100%" class="form-control select2 select2-hidden-accessible"></select>
         </div>
         <div class="form-group">
-            <label>Listino</label>
+            <label>Tipo Intervento</label>
             <select id="listinoContratto" style="width:100%" data-minlength="1"
                     class="form-control select2 select2-hidden-accessible"></select>
         </div>

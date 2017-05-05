@@ -1,4 +1,11 @@
 <?php
+if (isset($contratto)) $soc = $contratto->societa_id;
+elseif (isset($_GET['soc'])) $soc = $_GET['soc'];
+else $soc = 0;
+if ($soc) $socDisabled = 'disabled';
+else $socDisabled = 'enabled';
+$listSocieta = $societa->lists('nome', 'id');
+
 if (isset($contratto)) $cli = $contratto->cliente_id;
 elseif (isset($_GET['cli'])) $cli = $_GET['cli'];
 else $cli = 0;
@@ -31,6 +38,14 @@ if (isset($contratto))
 }
 ?>
 <div class="box-body">
+    <div class="form-group">
+        <label>Società</label>
+        {!! Form::select('societa_id',
+            $listSocieta,
+            $soc,
+            ['enabled' => 'enabled','id'=>'societa_id','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
+    </div>
     <div class="form-group">
         <label>Cliente</label>
         {!! Form::select('cliente_id',

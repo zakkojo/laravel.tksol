@@ -8,6 +8,7 @@ use App\Cliente;
 use App\Progetto;
 use App\Consulente;
 use App\Contratto;
+use App\Societa;
 use App\Http\Requests\ContrattiRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -33,11 +34,12 @@ class ContrattoController extends Controller {
      */
     public function create()
     {
+        $societa = Societa::all();
         $clienti = Cliente::all();
         $progetti = Progetto::all();
         $consulenti = Consulente::all();
 
-        return view('contratti.create', compact('clienti', 'progetti', 'consulenti'));
+        return view('contratti.create', compact('societa','clienti', 'progetti', 'consulenti'));
     }
 
     /**
@@ -80,12 +82,13 @@ class ContrattoController extends Controller {
      */
     public function edit($id)
     {
+        $societa = Societa::all();
         $clienti = Cliente::all();
         $progetti = Progetto::all();
         $contratto = Contratto::findOrFail($id);
         $consulentiContratto = ConsulenteContratto::with('consulente')->where('contratto_id', $id)->get();
 
-        return view('contratti.edit', compact('contratto', 'clienti', 'progetti', 'consulentiContratto'));
+        return view('contratti.edit', compact('contratto', 'societa','clienti', 'progetti', 'consulentiContratto'));
     }
 
     /**

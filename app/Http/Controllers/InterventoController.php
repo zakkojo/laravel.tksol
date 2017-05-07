@@ -182,6 +182,7 @@ class InterventoController extends Controller {
         {
             $m->from('rapportini@tksol.net', 'Rapportini Teikos Solutions');
             $m->replyTo($user->email, $user->consulente->nominativo);
+            if (config('app.debug')) $recipients = [];
             foreach ($recipients as $recipient)
             {
                 if ($recipient) $m->to($recipient);

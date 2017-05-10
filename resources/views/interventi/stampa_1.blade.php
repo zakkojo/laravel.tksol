@@ -188,7 +188,7 @@
         <div id='titolo'>DATI CLIENTE</div>
         <div class='bold'>{{$intervento->contratto->cliente->ragione_sociale}}</div>
         <div>{{$intervento->contratto->cliente->indirizzo}}</div>
-        <div>{{$intervento->contratto->cliente->citta}}, {{$intervento->contratto->cliente->provincia}}</div>
+        <div>{{$intervento->contratto->cliente->citta}}@if($intervento->contratto->cliente->provincia) , {{$intervento->contratto->cliente->provincia}} @endif</div>
         <div>{{$intervento->contratto->cliente->telefono}}</div>
         <div>{{$intervento->contratto->cliente->email}}</div>
     </div>

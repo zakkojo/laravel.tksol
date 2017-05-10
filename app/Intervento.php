@@ -44,7 +44,14 @@ class Intervento extends Model {
     {
         return Carbon::parse($this->data_start)->format('H:i') . ' - ' . Carbon::parse($this->data_end)->format('H:i');
     }
-
+    public function getOraInizioAttribute()
+    {
+        return Carbon::parse($this->data_start)->format('H:i');
+    }
+    public function getOraFineAttribute()
+    {
+        return Carbon::parse($this->data_end)->format('H:i');
+    }
     public function getDataAttribute()
     {
         return Carbon::parse($this->data_start)->format('d/m/Y');

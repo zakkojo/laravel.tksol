@@ -217,23 +217,25 @@
         <table style="border-collapse: collapse; height: 96px;" cellspacing="0">
             <tbody>
             <tr>
-                <td  width="119">Cliente:</td>
-                <td style="border: 1px solid black;" width="280">{{$intervento->contratto->cliente->ragione_sociale}}</td>
-                <td  width="92" style="padding-left:5px">Data:</td>
+                <td width="119">Cliente:</td>
+                <td style="border: 1px solid black;"
+                    width="280">{{$intervento->contratto->cliente->ragione_sociale}}</td>
+                <td width="92" style="padding-left:5px">Data:</td>
                 <td style="border: 1px solid black;" width="65">{{$intervento->data}}</td>
-                <td  width="87" style="padding-left:5px">n* rapportino:</td>
+                <td width="87" style="padding-left:5px">n* rapportino:</td>
                 <td style="border: 1px solid black;" width="65">&nbsp;</td>
             </tr>
             <tr>
-                <td >Localit&agrave;:</td>
-                <td style="border: 1px solid black;">{{$intervento->contratto->cliente->citta}}@if($intervento->contratto->cliente->provincia), {{$intervento->contratto->cliente->provincia}} @endif</td>
+                <td>Localit&agrave;:</td>
+                <td style="border: 1px solid black;">{{$intervento->contratto->cliente->citta}}@if($intervento->contratto->cliente->provincia)
+                        , {{$intervento->contratto->cliente->provincia}} @endif</td>
                 <td style="padding-left:5px">Ora inizio:</td>
                 <td style="border: 1px solid black;">{{$intervento->oraInizio}}</td>
                 <td style="padding-left:5px">Ora fine:</td>
                 <td style="border: 1px solid black;">{{$intervento->oraFine}}</td>
             </tr>
             <tr>
-                <td >Referenti cliente:</td>
+                <td>Referenti cliente:</td>
                 <td style="border: 1px solid black;">&nbsp;</td>
                 <td style="padding-left:5px">Ora inizio:</td>
                 <td style="border: 1px solid black;">&nbsp;</td>
@@ -241,19 +243,19 @@
                 <td style="border: 1px solid black;">&nbsp;</td>
             </tr>
             <tr>
-                <td >Consulente:</td>
+                <td>Consulente:</td>
                 <td style="border: 1px solid black;">{{$intervento->user->consulente->nominativo}}</td>
                 <td style="padding-left:5px">Totale ore:</td>
                 <td style="border: 1px solid black;">{{$intervento->ore_lavorate +0}}</td>
             </tr>
             <tr>
-                <td >Oggetto intervento:</td>
+                <td>Oggetto intervento:</td>
                 <td style="border: 1px solid black;">{{$intervento->attivita->descrizione}}</td>
                 <td style="padding-left:5px">Ore viaggio a/r:</td>
                 <td style="border: 1px solid black;">&nbsp;</td>
             </tr>
             <tr>
-                <td >Prodotto:</td>
+                <td>Prodotto:</td>
                 <td style="border: 1px solid black;"></td>
             </tr>
             </tbody>
@@ -262,21 +264,21 @@
     <div id='testo'>
     <!--div id='attivitaPianificate'>
             <div id='titolo'>ATTIVIT&Agrave; PIANIFICATE</div>
-            {{$intervento->attivita->attivitaPianificate}}
+    {{$intervento->attivitaPianificate}}
             </div-->
         <div id='attivitaSvolte'>
             <div id='titolo'>ATTIVIT&Agrave; SVOLTE</div>
-            {{$intervento->attivita->attivitaSvolte}}
+            {!! htmlspecialchars_decode($intervento->attivitaSvolte) !!}
         </div>
         @if($intervento->attivita->problemiAperti <> "")
             <div id='attivitaProgrammate'>
                 <div id='titolo'>ATTIVIT&Agrave; PROGRAMMATE</div>
-                {{$intervento->attivita->problemiAperti}}
+                {!! htmlspecialchars_decode($intervento->problemiAperti) !!}
             </div>
         @endif
         <div id='attivitaInCaricoCliente'>
             <div id='titolo'>NOTE</div>
-            {{$intervento->attivita->attivitaCaricoCliente}}
+            {!! htmlspecialchars_decode($intervento->attivitaCaricoCliente) !!}
         </div>
     </div>
     <div id='firmaCliente'>

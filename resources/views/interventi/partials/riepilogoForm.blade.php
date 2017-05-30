@@ -188,8 +188,9 @@
                         window.open('/interventi/create', '_self');
                     }
                     else {
-                        alert('Impossibile eliminare intervento!');
-                        console.log(['Errore!!', data]);
+                        var errori = data.msg.toString().replace(",","\n");
+                        alert('Impossibile eliminare intervento:\n'+errori);
+                        //console.log(['Errore!!', data]);
                     }
                 }).fail(function (jqXHR, textStatus) {
                     alert("Request failed: " + textStatus);

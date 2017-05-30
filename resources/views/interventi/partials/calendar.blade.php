@@ -15,7 +15,7 @@
                 defaultView: 'agendaWeek',
                 locale: 'it',
                 //columnFormat: 'ddd D/M',
-                views:{
+                views: {
                     agendaWeek: {
                         columnFormat: 'ddd D/M',
                     }
@@ -42,7 +42,7 @@
                     }
                 },
                 select: function (start, end, resource) {
-                    if (moment().isSameOrBefore(start, 'day')) {
+                    if (moment().isSameOrBefore(moment(start), 'day')) {
                         $('#calendar').fullCalendar('removeEvents', 'new');
                         $('#form_title').text('Pianifica Nuovo Intervento');
                         $('#intervento_id').val('').trigger("change");
@@ -143,17 +143,17 @@
                     //se l'evento non è NEW e non sono in fase di pianificazione prossimo intervento
                     if (calEvent.id != 'new' && $('#stampaIntervento').val() == 0) {
                         $('#calendar').fullCalendar('removeEvents', 'new');
-                        if (calEvent.stampa == 0) {
-                            var events = $("#calendar").fullCalendar('clientEvents', calEvent.id);
-                            events.forEach(function (event) {
-                                event.backgroundColor = '#ffdf65';
-                            });
-                            $('#calendar').fullCalendar('rerenderEvents');
-
-                            $('#form_title').text('Modifica Intervento ');
-                            $('.btnModifica').addClass('disabled');
-                            loadIntervento(calEvent);
+                        var events = $("#calendar").fullCalendar('clientEvents', calEvent.id);
+                        events.forEach(function (event) {
+                            event.backgroundColor = '#ffdf65';
+                        });
+                        $('#calendar').fullCalendar('rerenderEvents');
+                        $('#form_title').text('Modifica Intervento ');
+                        loadIntervento(calEvent);
+                        if (calEvent.inviato == 1){
+                            $('.btnModifica').hide();
                         }
+                        else $('.btnModifica').show();
                     }
                 },
                 eventRender: function (event, element) {
@@ -175,7 +175,7 @@
         function loadIntervento(calEvent, onEnd) {
             console.log('loadIntervento Fired');
             onEnd = onEnd || function () {
-                    };
+                };
             globale_intervento.loading = 1;
             //caricamento dati da fare in ajax
             $.ajax({
@@ -288,78 +288,78 @@
         function updateClienteSource(cliente_id, bgcolor) {
             $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=' + 'cliente_' + cliente_id);
             $('#calendar').fullCalendar('addEventSource',
-                    {
-                        id: cliente_id,
-                        url: '/ajax/interventi/getCalendar?calendar_id=' + 'cliente_' + cliente_id,
-                        type: 'GET',
-                        data: {
-                            cliente_id: parseInt(cliente_id),
-                        },
-                        error: function () {
-                            console.log('there was an error while fetching clienti!');
-                        },
-                        color: bgcolor,   // a non-ajax option
-                        textColor: 'black' // a non-ajax option
-                    }
+                {
+                    id: cliente_id,
+                    url: '/ajax/interventi/getCalendar?calendar_id=' + 'cliente_' + cliente_id,
+                    type: 'GET',
+                    data: {
+                        cliente_id: parseInt(cliente_id),
+                    },
+                    error: function () {
+                        console.log('there was an error while fetching clienti!');
+                    },
+                    color: bgcolor,   // a non-ajax option
+                    textColor: 'black' // a non-ajax option
+                }
             );
 
             $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + cliente_id);
             $('#calendar').fullCalendar('addEventSource',
-                    {
-                        id: cliente_id,
-                        url: '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'cliente_' + cliente_id,
-                        type: 'GET',
-                        data: {
-                            cliente_id: parseInt(cliente_id),
-                            inviato: 1
-                        },
-                        error: function () {
-                            alert('there was an error while fetching clienti inviati!');
-                        },
-                        color: bgcolor,   // a non-ajax option
-                        textColor: '#777777',
-                        editable: false
-                    }
+                {
+                    id: cliente_id,
+                    url: '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'cliente_' + cliente_id,
+                    type: 'GET',
+                    data: {
+                        cliente_id: parseInt(cliente_id),
+                        inviato: 1
+                    },
+                    error: function () {
+                        alert('there was an error while fetching clienti inviati!');
+                    },
+                    color: bgcolor,   // a non-ajax option
+                    textColor: '#777777',
+                    editable: false
+                }
             )
         }
 
         function updateConsulenteSource(user_id, bgcolor) {
             $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=' + 'consulente_' + user_id);
             $('#calendar').fullCalendar('addEventSource',
-                    {
-                        id: 'consulente_' + user_id,
-                        user_id: user_id,
-                        url: '/ajax/interventi/getCalendar?calendar_id=' + 'consulente_' + user_id,
-                        type: 'GET',
-                        data: {
-                            user_id: parseInt(user_id)
-                        },
-                        error: function () {
-                            console.log('there was an error while fetching consulenti!');
-                        },
-                        color: bgcolor,   // a non-ajax option
-                        textColor: 'black' // a non-ajax option
-                    }
+                {
+                    id: 'consulente_' + user_id,
+                    user_id: user_id,
+                    url: '/ajax/interventi/getCalendar?calendar_id=' + 'consulente_' + user_id,
+                    type: 'GET',
+                    data: {
+                        user_id: parseInt(user_id)
+                    },
+                    error: function () {
+                        console.log('there was an error while fetching consulenti!');
+                    },
+                    color: bgcolor,   // a non-ajax option
+                    textColor: 'black' // a non-ajax option
+                }
             )
 
             $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + user_id);
             $('#calendar').fullCalendar('addEventSource',
-                    {
-                        id: 'consulente_' + user_id,
-                        user_id: user_id,
-                        url: '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + user_id,
-                        type: 'GET',
-                        data: {
-                            user_id: parseInt(user_id),
-                            inviato: 1
-                        },
-                        error: function () {
-                            alert('there was an error while fetching clienti inviati!');
-                        },
-                        color: bgcolor,   // a non-ajax option
-                        textColor: '#777777',
-                        editable: false
-                    }
+                {
+                    id: 'consulente_' + user_id,
+                    user_id: user_id,
+                    url: '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + user_id,
+                    type: 'GET',
+                    data: {
+                        user_id: parseInt(user_id),
+                        inviato: 1
+                    },
+                    error: function () {
+                        alert('there was an error while fetching clienti inviati!');
+                    },
+                    color: bgcolor,   // a non-ajax option
+                    textColor: '#777777',
+                    editable: false
+                }
             )
         }
 
@@ -367,21 +367,21 @@
             $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=' + 'consulente_' + user_id);
             if ($('#progetto').val()) {
                 $('#calendar').fullCalendar('addEventSource',
-                        {
-                            id: 'consuntivoEvents',
-                            url: '/ajax/interventi/getCalendar?id=' + parseInt(cliente_id) - 2000 + 9000,
-                            type: 'GET',
-                            data: {
-                                cliente_id: parseInt(cliente_id) - 2000,
-                                stampa: 1
-                            },
-                            error: function () {
-                                alert('there was an error while fetching events!');
-                            },
-                            color: '#EAAFB0',   // a non-ajax option
-                            textColor: '#777777',
-                            editable: false
-                        }
+                    {
+                        id: 'consuntivoEvents',
+                        url: '/ajax/interventi/getCalendar?id=' + parseInt(cliente_id) - 2000 + 9000,
+                        type: 'GET',
+                        data: {
+                            cliente_id: parseInt(cliente_id) - 2000,
+                            stampa: 1
+                        },
+                        error: function () {
+                            alert('there was an error while fetching events!');
+                        },
+                        color: '#EAAFB0',   // a non-ajax option
+                        textColor: '#777777',
+                        editable: false
+                    }
                 )
             }
         }
@@ -391,23 +391,25 @@
         }
 
         function deleteIntervento() {
-            $.ajax({
-                url: "/ajax/interventi/deleteIntervento",
-                type: "POST",
-                data: {_method: 'DELETE', id: $('#intervento_id').val()},
-                dataType: "JSON"
-            }).done(function (data) {
-                if (data['status'] == 'success') {
-                    $('#calendar').fullCalendar('refetchEvents');
-                }
-                else console.log(['Errore!!', data]);
-            }).fail(function (jqXHR, textStatus) {
-                alert("Request failed: " + textStatus);
-            });
+            if (confirm("Vuoi eliminare l'intervento?")) {
+                $.ajax({
+                    url: "/ajax/interventi/deleteIntervento",
+                    type: "GET",
+                    data: {id: $('#intervento_id').val()},
+                    dataType: "JSON"
+                }).done(function (data) {
+                    if (data['status'] == 'success') {
+                        $('#calendar').fullCalendar('refetchEvents');
+                    }
+                    else console.log(['Errore!!', data]);
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
         }
 
         function openIntervento(id) {
-            if ( typeof id === "undefined") openIntervento($('#intervento_id').val());
+            if (typeof id === "undefined") openIntervento($('#intervento_id').val());
             else window.open('/interventi/' + id + '/edit', '_self');
         }
     </script>

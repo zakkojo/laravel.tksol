@@ -1,4 +1,3 @@
-<link href='http://fonts.googleapis.com/css?family=Jolly+Lodger' rel='stylesheet' type='text/css'>
 <style>
     @font-face {
         font-family: 'Segoe UI';
@@ -232,7 +231,7 @@
                 <td style="padding-left:5px">Ora inizio:</td>
                 <td style="border: 1px solid black;">{{$intervento->oraInizio}}</td>
                 <td style="padding-left:5px">Ora fine:</td>
-                <td style="border: 1px solid black;">{{$intervento->oraFine}}</td>
+                <td style="border: 1px solid black;"></td>
             </tr>
             <tr>
                 <td>Referenti cliente:</td>
@@ -240,7 +239,7 @@
                 <td style="padding-left:5px">Ora inizio:</td>
                 <td style="border: 1px solid black;">&nbsp;</td>
                 <td style="padding-left:5px">Ora fine:</td>
-                <td style="border: 1px solid black;">&nbsp;</td>
+                <td style="border: 1px solid black;">{{$intervento->oraFine}}</td>
             </tr>
             <tr>
                 <td>Consulente:</td>

@@ -110,10 +110,10 @@ else $progDisabled = 'enabled';
                     <div type="Modifica" onclick="updateIntervento()" class="btnModifica btn  btn-primary"><i
                                 class="fa fa-calendar"></i> Modifica
                     </div>
-                    <div type="Dettagli" onclick="openIntervento()" class="btn-default btn"><i class="fa fa-calendar"></i>
+                    <div type="Dettagli" onclick="openIntervento()" class="btn-default btn"><i
+                                class="fa fa-calendar"></i>
                         Dettagli
                     </div>
-
                 </div>
             </div>
         </div>

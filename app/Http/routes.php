@@ -86,7 +86,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('ajax/interventi/getIntervento', 'InterventoController@ajaxGetIntervento');
     Route::get('ajax/interventi/createIntervento', 'InterventoController@ajaxCreateIntervento');
     Route::get('ajax/interventi/updateIntervento', 'InterventoController@ajaxUpdateIntervento');
-    Route::delete('ajax/interventi/deleteIntervento', 'InterventoController@ajaxDeleteIntervento');
+    Route::get('ajax/interventi/deleteIntervento', 'InterventoController@ajaxDeleteIntervento');
     Route::get('ajax/interventi/getPermissionUpdatePianificazione', 'InterventoController@ajaxGetPermissionUpdatePianificazione');
     Route::get('ajax/interventi/acceptIntervento', 'InterventoController@ajaxAcceptIntervento');
 

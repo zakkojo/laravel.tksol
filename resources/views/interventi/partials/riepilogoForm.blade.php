@@ -174,4 +174,26 @@
                         });
             }
         });
+
+        function deleteIntervento() {
+            if (confirm("Vuoi eliminare l'intervento?")) {
+                $.ajax({
+                    url: "/ajax/interventi/deleteIntervento",
+                    type: "GET",
+                    data: {id: $('#intervento_id').val()},
+                    dataType: "JSON"
+                }).done(function (data) {
+                    if (data['status'] == 'success') {
+                        //$('#calendar').fullCalendar('refetchEvents');
+                        window.open('/interventi/create', '_self');
+                    }
+                    else {
+                        alert('Impossibile eliminare intervento!');
+                        console.log(['Errore!!', data]);
+                    }
+                }).fail(function (jqXHR, textStatus) {
+                    alert("Request failed: " + textStatus);
+                });
+            }
+        }
     </script>@append

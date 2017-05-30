@@ -35,12 +35,15 @@
     @if($intervento->inviato == 0 AND \Carbon\Carbon::now()->gte(\Carbon\Carbon::parse($intervento->data_start)))
         <div class="btn-group btn-block">
             @if(Auth::User()->id == $user->id)
-                <button type="aggiorna" class="col-md-6 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
+                <button type="aggiorna" class="col-md-4 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
                 </button>
-                <button type="stampa" value="stampa" class="stampaButton col-md-6 btn btn-primary"><i
+                <button type="stampa" value="stampa" class="stampaButton col-md-4 btn btn-primary"><i
                             class="fa fa-calendar"></i>
                     Salva e Stampa
                 </button>
+                <div type="Elimina" onclick="deleteIntervento()" class="col-md-4 btn btn-danger"><i class="fa fa-trash"></i>
+                    Elimina
+                </div>
             @endif
         </div>
     @elseif($intervento->inviato == 1 )

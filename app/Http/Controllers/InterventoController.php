@@ -148,6 +148,7 @@ class InterventoController extends Controller {
                 {
                     $intervento->stampa = 1;
                     $intervento->save();
+
                     return redirect()->action('InterventoController@show', $id);
                 }
             } else
@@ -161,7 +162,7 @@ class InterventoController extends Controller {
     {
         $intervento = Intervento::findOrFail($id);
 
-        $pdf = SnappyPdf::loadView('interventi.'.$intervento->contratto->societa->file_stampa, compact('intervento'));
+        $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'));
 
         return $pdf->setPaper('a5')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0)->inline();
     }
@@ -171,6 +172,7 @@ class InterventoController extends Controller {
         $recipients = Input::get('recipients');
         $intervento = Intervento::findOrFail($id);
         $intervento->stampa = 1;
+        $intervento->inviato = 1;
         $intervento->save();
         $user = Auth::user();
         $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
@@ -192,6 +194,7 @@ class InterventoController extends Controller {
             $m->attach($base_path . '/resources/tmp/rapportino_' . $id . '.pdf');
         });
 
+        $intervento->save();
         return ['status' => 'success'];
     }
 
@@ -346,13 +349,33 @@ class InterventoController extends Controller {
         return ['status' => 'fail'];
     }
 
-    public function ajaxDeleteIntervento(AjaxInterventiRequest $request)
+    public function ajaxDeleteIntervento()
     {
-        $response = Intervento::destroy(Input::get('id'));
+        $error = 0;
+        $id = Input::get('id');
+        $intervento = Intervento::findOrFail($id);
+        //intervento non consuntivato
+        if ($intervento->inviato == 1)
+        {
+            $error = 1;
+            $msg[] = "Intervento già inviato al cliente";
+        }
 
-        if ($response) return ['status' => 'success'];
+        //intervento futuro stesso contratto <=30gg
+        $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($element, $key) use ($id)
+        {
+            return ($element['id'] != $id AND Carbon::parse($element['data_start'])->gte(Carbon::today()));
+        });
+        if (is_null($nextIntervento)){
+            $error = 1;
+            $msg[] = "Nessun intervento nei prossimi 30 giorni";
+        }
 
-        return ['status' => 'fail'];
+        if ($error == 0){
+            $response = $intervento->delete();
+            if ($response) return ['status' => 'success'];
+        }
+            return ['status' => 'fail', 'msg' => $msg];
     }
 
     public function ajaxGetPermissionUpdatePianificazione()
@@ -373,3 +396,6 @@ class InterventoController extends Controller {
 }
 
 ?>
+
+
+

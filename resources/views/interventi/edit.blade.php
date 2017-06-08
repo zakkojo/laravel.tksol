@@ -32,23 +32,17 @@
     <div class="row">
         @include('interventi.partials.textarea')
     </div>
-    @php
-        $max_bottoni = 3;
-    @endphp
     @if($intervento->inviato == 0 AND Auth::User()->id == $user->id)
         <div class="btn-group btn-block">
-            <button type="aggiorna" class="col-md-{!!12/$max_bottoni!!} btn btn-success"><i class="fa fa-remove"></i> Aggiorna
+            <button type="aggiorna" class="col-md-4 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
             </button>
             @if(\Carbon\Carbon::now()->gte(\Carbon\Carbon::parse($intervento->data_start)))
-                @php
-                    $max_bottoni--;
-                @endphp
-                <button type="stampa" value="stampa" class="stampaButton col-md-{!!12/$max_bottoni!!} btn btn-primary"><i
+                <button type="stampa" value="stampa" class="stampaButton col-md-4 btn btn-primary"><i
                             class="fa fa-calendar"></i>
                     Salva e Stampa
                 </button>
             @endif
-            <div type="Elimina" onclick="deleteIntervento()" class="col-md-{!!12/$max_bottoni!!} btn btn-danger"><i class="fa fa-trash"></i>
+            <div type="Elimina" onclick="deleteIntervento()" class="col-md-4 btn btn-danger"><i class="fa fa-trash"></i>
                 Elimina
             </div>
         </div>

@@ -67,7 +67,7 @@ class InterventoController extends Controller {
 
         //return $intervento;
         if ($intervento->stampa == 0)
-            return redirect()->action('InterventoController@edit', $id);
+            return redirect('/interventi/'.$id.'/edit');
         else
             return view('interventi.inviaStampa', compact('intervento'));
     }

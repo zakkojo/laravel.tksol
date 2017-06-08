@@ -175,7 +175,7 @@ class InterventoController extends Controller {
         $intervento->inviato = 1;
         $intervento->save();
         $user = Auth::user();
-        $pdf = SnappyPdf::loadView('interventi.stampa', compact('intervento'));
+        $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'));
 
         $base_path = base_path();
         $pdf->save($base_path . '/resources/tmp/rapportino_' . $id . '.pdf', true);

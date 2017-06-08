@@ -32,20 +32,21 @@
     <div class="row">
         @include('interventi.partials.textarea')
     </div>
-    @if($intervento->inviato == 0 AND \Carbon\Carbon::now()->gte(\Carbon\Carbon::parse($intervento->data_start)))
+    @if(Auth::User()->id == $user->id)
         <div class="btn-group btn-block">
-            @if(Auth::User()->id == $user->id)
-                <button type="aggiorna" class="col-md-4 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
-                </button>
+            <button type="aggiorna" class="col-md-4 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
+            </button>
+            @if($intervento->inviato == 0 AND \Carbon\Carbon::now()->gte(\Carbon\Carbon::parse($intervento->data_start)))
                 <button type="stampa" value="stampa" class="stampaButton col-md-4 btn btn-primary"><i
                             class="fa fa-calendar"></i>
                     Salva e Stampa
                 </button>
-                <div type="Elimina" onclick="deleteIntervento()" class="col-md-4 btn btn-danger"><i class="fa fa-trash"></i>
-                    Elimina
-                </div>
             @endif
+            <div type="Elimina" onclick="deleteIntervento()" class="col-md-4 btn btn-danger"><i class="fa fa-trash"></i>
+                Elimina
+            </div>
         </div>
+    @endif
     @elseif($intervento->inviato == 1 )
         <a href="{{ action('InterventoController@show',$intervento->id) }}" type="stampa" value="stampa"
            class="btn-block btn btn-primary"><i class="fa fa-calendar"></i>

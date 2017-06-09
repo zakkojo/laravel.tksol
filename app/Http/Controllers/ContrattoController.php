@@ -56,7 +56,7 @@ class ContrattoController extends Controller {
         $data = $request->all();
         $ret = Contratto::create($data);
 
-        $consulenteContratto_data = ['contratto_id'=> $ret->id, 'consulente_id' => Auth::User()->id, 'ruolo' => 'Capo Progetto'];
+        $consulenteContratto_data = ['contratto_id'=> $ret->id, 'consulente_id' => Auth::User()->consulente->id, 'ruolo' => 'Capo Progetto'];
 
         ConsulenteContratto::create($consulenteContratto_data);
 

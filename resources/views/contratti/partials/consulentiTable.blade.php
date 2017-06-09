@@ -44,7 +44,7 @@
                         @endif
 
                     </td>
-                    <td>{{ $consulenteContratto->nominativo }}</td>
+                    <td>{{ $consulenteContratto->consulente->nominativo }}</td>
                     <td>{{ $consulenteContratto->ruolo }}</td>
                 </tr>
             @endforeach

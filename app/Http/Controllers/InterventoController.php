@@ -66,7 +66,7 @@ class InterventoController extends Controller {
         $intervento = Intervento::findOrFail($id);
 
         //return $intervento;
-        if ($intervento->stampa == 0)
+        if ($intervento->inviato == 0)
             return redirect('/interventi/'.$id.'/edit');
         else
             return view('interventi.inviaStampa', compact('intervento'));
@@ -97,6 +97,7 @@ class InterventoController extends Controller {
      */
     public function update(InterventiRequest $request, $id)
     {
+        //return Input::all();
         $intervento = Intervento::findOrFail($id);
         if (Carbon::now()->gte(Carbon::parse($intervento->data_start))) //update solo dopo inizio evento
         {
@@ -149,11 +150,13 @@ class InterventoController extends Controller {
                     $intervento->stampa = 1;
                     $intervento->save();
 
-                    return redirect()->action('InterventoController@show', $id);
+                    //return redirect()->action('InterventoController@show', $id);
+                    return view('interventi.inviaStampa', compact('intervento'));
                 }
             } else
             {
-                return redirect()->to('InterventoController@edit', $id);
+                //return redirect()->to('InterventoController@edit', $id);
+                return redirect('/interventi/'.$id.'/edit');
             }
         }
     }
@@ -362,7 +365,7 @@ class InterventoController extends Controller {
         }
 
         //intervento futuro stesso contratto <=30gg
-        $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($element, $key) use ($id)
+        $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($key,$element) use ($id)
         {
             return ($element['id'] != $id AND Carbon::parse($element['data_start'])->gte(Carbon::today()));
         });
@@ -372,8 +375,9 @@ class InterventoController extends Controller {
         }
 
         if ($error == 0){
-            $response = $intervento->delete();
-            if ($response) return ['status' => 'success'];
+            $response = 1;
+            //$response = $intervento->delete();
+            if ($response) return ['status' => 'success',$nextIntervento];
         }
             return ['status' => 'fail', 'msg' => $msg];
     }

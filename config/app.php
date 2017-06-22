@@ -168,6 +168,8 @@ return [
         
         Barryvdh\Snappy\ServiceProvider::class,
 
+        PulkitJalan\Google\GoogleServiceProvider::class
+
 
 
     ],
@@ -223,6 +225,7 @@ return [
 
         'PDF'      => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'Image'    => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'Google' => PulkitJalan\Google\Facades\Google::class
 
     ],
 

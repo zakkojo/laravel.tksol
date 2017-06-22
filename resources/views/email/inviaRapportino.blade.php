@@ -1,3 +1,3 @@
-<p>
-    In allegato trovi il rapportino oggetto dell'intervento Teikos Solutions del {{$intervento->data_start}}
+<p>Salve,<br/>
+    In allegato trova il rapportino oggetto dell'intervento {{$intervento->contratto->societa->nome}} del {{$intervento->data}}
 </p>

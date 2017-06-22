@@ -182,10 +182,10 @@ class InterventoController extends Controller {
 
         $base_path = base_path();
         $pdf->save($base_path . '/resources/tmp/rapportino_' . $id . '.pdf', true);
-
-        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $id, $base_path, $recipients)
+        $societa = $intervento->contratto->societa;
+        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user,$societa, $id, $base_path, $recipients)
         {
-            $m->from('rapportini@tksol.net', 'Rapportini Teikos Solutions');
+            $m->from($societa->email, 'Rapportini '.$societa->nome);
             $m->replyTo($user->email, $user->consulente->nominativo);
             if (config('app.debug')) $recipients = [];
             foreach ($recipients as $recipient)
@@ -193,7 +193,7 @@ class InterventoController extends Controller {
                 if ($recipient) $m->to($recipient);
             }
             $m->bcc($user->email, $user->consulente->nominativo);
-            $m->subject('Rapportino Teikos Solutions');
+            $m->subject('Rapportino '.$societa->nome);
             $m->attach($base_path . '/resources/tmp/rapportino_' . $id . '.pdf');
         });
 

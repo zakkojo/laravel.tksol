@@ -269,9 +269,9 @@
             <div id='titolo'>ATTIVIT&Agrave; SVOLTE</div>
             {!! htmlspecialchars_decode($intervento->attivitaSvolte) !!}
         </div>
-        @if($intervento->attivita->problemiAperti <> "")
+        @if($intervento->problemiAperti != "")
             <div id='attivitaProgrammate'>
-                <div id='titolo'>ATTIVIT&Agrave; PROGRAMMATE</div>
+                <div id='titolo'>PROSSIME ATTIVIT&Agrave;</div>
                 {!! htmlspecialchars_decode($intervento->problemiAperti) !!}
             </div>
         @endif

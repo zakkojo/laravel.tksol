@@ -67,7 +67,7 @@ class InterventoController extends Controller {
 
         //return $intervento;
         if ($intervento->inviato == 0)
-            return redirect('/interventi/'.$id.'/edit');
+            return redirect('/interventi/' . $id . '/edit');
         else
             return view('interventi.inviaStampa', compact('intervento'));
     }
@@ -156,7 +156,7 @@ class InterventoController extends Controller {
             } else
             {
                 //return redirect()->to('InterventoController@edit', $id);
-                return redirect('/interventi/'.$id.'/edit');
+                return redirect('/interventi/' . $id . '/edit');
             }
         }
     }
@@ -183,21 +183,24 @@ class InterventoController extends Controller {
         $base_path = base_path();
         $pdf->save($base_path . '/resources/tmp/rapportino_' . $id . '.pdf', true);
         $societa = $intervento->contratto->societa;
-        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user,$societa, $id, $base_path, $recipients)
+        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $societa, $id, $base_path, $recipients)
         {
-            $m->from($societa->email, 'Rapportini '.$societa->nome);
+            $m->from($societa->email, 'Rapportini ' . $societa->nome);
             $m->replyTo($user->email, $user->consulente->nominativo);
-            if (config('app.debug')) $recipients = [];
-            foreach ($recipients as $recipient)
+            if (config('app.customer_email'))
             {
-                if ($recipient) $m->to($recipient);
-            }
+                foreach ($recipients as $recipient)
+                {
+                    if ($recipient) $m->to($recipient);
+                }
+                $m->subject('Rapportino ' . $societa->nome);
+            } else $m->subject('***NON INVIATO AL CLIENTE*** Rapportino ' . $societa->nome);
             $m->bcc($user->email, $user->consulente->nominativo);
-            $m->subject('Rapportino '.$societa->nome);
             $m->attach($base_path . '/resources/tmp/rapportino_' . $id . '.pdf');
         });
 
         $intervento->save();
+
         return ['status' => 'success'];
     }
 
@@ -365,20 +368,23 @@ class InterventoController extends Controller {
         }
 
         //intervento futuro stesso contratto <=30gg
-        $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($key,$element) use ($id)
+        $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($key, $element) use ($id)
         {
             return ($element['id'] != $id AND Carbon::parse($element['data_start'])->gte(Carbon::today()));
         });
-        if (is_null($nextIntervento)){
+        if (is_null($nextIntervento))
+        {
             $error = 1;
             $msg[] = "Nessun intervento nei prossimi 30 giorni";
         }
 
-        if ($error == 0){
+        if ($error == 0)
+        {
             $response = $intervento->delete();
-            if ($response) return ['status' => 'success',$nextIntervento];
+            if ($response) return ['status' => 'success', $nextIntervento];
         }
-            return ['status' => 'fail', 'msg' => $msg];
+
+        return ['status' => 'fail', 'msg' => $msg];
     }
 
     public function ajaxGetPermissionUpdatePianificazione()

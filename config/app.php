@@ -110,6 +110,19 @@ return [
 
     'log' => env('APP_LOG', 'single'),
 
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logging Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Abilita invio di email ai clienti
+    |
+     */
+    'customer_email' => env('APP_CUSTOMER_EMAIL', false),
+
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

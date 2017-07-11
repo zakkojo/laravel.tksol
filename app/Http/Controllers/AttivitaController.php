@@ -80,7 +80,7 @@ class AttivitaController extends Controller {
         if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
             abort(503, 'Unauthorized action.');
         }
-        $attivita = Attivita::findOrFail($request->parent_id);
+        $attivita = Attivita::findOrFail($request->selected);
         $progetto = Progetto::findOrFail($request->progetto_id);
         $attivita->descrizione = $request->descrizione;
         $attivita->save();

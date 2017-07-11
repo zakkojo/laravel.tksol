@@ -6,7 +6,7 @@
                 <button id="btn-add" class="btn btn-success " onclick="nuovaAttivita()"><i class="fa fa-plus"></i>&nbsp;
                     Nuova Attività
                 </button>
-                <button id="btn-rem" class="btn btn-danger " onclick="trashAttivita($('#parent_id').val())"><i
+                <button id="btn-rem" class="btn btn-danger " onclick="trashAttivita($('#selected').val())"><i
                             class="fa fa-trash"></i>&nbsp; Elimina Attività
                 </button>
             </div>
@@ -28,9 +28,9 @@
 @section('page_scripts')
     @parent
     <script type="text/javascript">
+        var selected_node;
         function initTree(treeData, selectedId) {
-            if (typeof(selectedId) === 'undefined') selectedId =
-            {!! $_GET['attivita'] or 0 !!}
+            if (typeof(selectedId) === 'undefined') selectedId = {!! $_GET['attivita'] or 0 !!};
 
 
             if (typeof(treeData) === 'undefined') var treeData = {!!  $listAttivita !!};
@@ -67,7 +67,10 @@
                                 $('#descrizione').prop('disabled', false);
                                 $('#descrizione').val(node.text);
                                 $('[name = "_method"]').val('PATCH');
-                                $('#parent_id').val(node.id);
+                                $('#selected').val(node.id);
+                                //da modificare per eabilitare sub attivita
+                                //$('#parent_id').val(node.id);
+                                $('#parent_id').val('0');
                             }
                             else {
                                 $('#btn-up').addClass('disabled');
@@ -110,7 +113,7 @@
 
         function trashAttivita(id_attivita) {
             if (typeof(id_attivita) !== 'undefined') {
-                if (confirm('Confermi di voler eliminare l\'attivita selezionata e tutte le sotto attivita collegate?')) {
+                if (confirm('Confermi di voler eliminare l\'attivita selezionata?')) { // e tutte le sotto attivita collegate?')) {
                     window.location = "\\attivita\\"+id_attivita+"\\destroy";
                 }
             }

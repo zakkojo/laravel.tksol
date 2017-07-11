@@ -10,12 +10,12 @@
 	"laravelcollective/html": "5.2.*",
 	"orangehill/iseed": "^2.1",
         "acacha/admin-lte-template-laravel": "2.0.6",
-        "kalnoy/nestedset": "^4.1",
         "barryvdh/laravel-snappy": "^0.3.0",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "google/apiclient": "^2.0",
         "doctrine/dbal": "^2.5",
-        "pulkitjalan/google-apiclient": "^3.1"
+        "pulkitjalan/google-apiclient": "^3.1",
+        "kalnoy/nestedset": "4.2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

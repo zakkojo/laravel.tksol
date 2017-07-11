@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4aebbdaccdf7a8ca47422744354309e2",
+    "content-hash": "25ff43d57f8db9a51f6e7447ca1b67ea",
     "packages": [
         {
             "name": "acacha/admin-lte-template-laravel",
@@ -1222,22 +1222,22 @@
         },
         {
             "name": "kalnoy/nestedset",
-            "version": "v4.2.7",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lazychaser/laravel-nestedset.git",
-                "reference": "e6ab99fe457859a66bafa993d60f050ee11ded67"
+                "reference": "c7584ba0daa059f1f339f7d163f3042fd7d1d65d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lazychaser/laravel-nestedset/zipball/e6ab99fe457859a66bafa993d60f050ee11ded67",
-                "reference": "e6ab99fe457859a66bafa993d60f050ee11ded67",
+                "url": "https://api.github.com/repos/lazychaser/laravel-nestedset/zipball/c7584ba0daa059f1f339f7d163f3042fd7d1d65d",
+                "reference": "c7584ba0daa059f1f339f7d163f3042fd7d1d65d",
                 "shasum": ""
             },
             "require": {
-                "illuminate/database": "5.2.* | 5.3.* | 5.4.*",
-                "illuminate/events": "5.2.* | 5.3.* | 5.4.*",
-                "illuminate/support": "5.2.* | 5.3.* | 5.4.*",
+                "illuminate/database": "5.2.*|5.3.x",
+                "illuminate/events": "5.2.*|5.3.x",
+                "illuminate/support": "5.2.*|5.3.x",
                 "php": ">=5.5.9"
             },
             "require-dev": {
@@ -1272,7 +1272,7 @@
                 "nested sets",
                 "nsm"
             ],
-            "time": "2017-06-20T07:05:32+00:00"
+            "time": "2016-12-19T08:36:51+00:00"
         },
         {
             "name": "knplabs/knp-snappy",

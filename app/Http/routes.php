@@ -82,6 +82,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('interventi/{intervento_id}', 'InterventoController@edit');
     Route::get('interventi/{intervento_id}/stampa', 'InterventoController@stampa');
     Route::get('interventi/{intervento_id}/invia', 'InterventoController@invia');
+    Route::get('approva', 'InterventoController@approvaIntervento')->name('interventi.approva');;
     Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
     Route::get('ajax/interventi/getIntervento', 'InterventoController@ajaxGetIntervento');
     Route::get('ajax/interventi/createIntervento', 'InterventoController@ajaxCreateIntervento');
@@ -95,4 +96,5 @@ Route::group(['middleware' => 'web'], function () {
 
 
     Route::resource('prodotti','ProdottoController');
+    Route::get('test','TestController@show');
 });

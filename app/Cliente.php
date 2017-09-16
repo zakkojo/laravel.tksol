@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Cliente extends Model {
 
@@ -23,7 +24,7 @@ class Cliente extends Model {
         return Cliente::where('softwarehouse','=','1')->get();
 	}
 
-    //Mutator per update filed a null
+    //Mutator per update field a null
 	public function setRatingAttribute($target){
 		$this->attributes['rating'] = $target ?: null;
 	}
@@ -37,8 +38,15 @@ class Cliente extends Model {
 		return $this->hasMany(Contatto::class);
 	}
 
-	public function contratti(){
-		return $this->hasMany(Contratto::class);
-	}
+    public function contratti(){
+        return $this->hasMany(Contratto::class);
+    }
+
+    public function contrattiAttivi(){
+        return $this->hasMany(Contratto::class)->where('stato','<>','CLOSED');
+    }
+    public function contrattiScaduti(){
+        return $this->hasMany(Contratto::class)->where('stato','CLOSED');
+    }
 
 }

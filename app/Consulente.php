@@ -16,7 +16,7 @@ class Consulente extends Model {
     }
 
     protected $fillable = [
-        'codice_fiscale', 'cognome', 'nome', 'indirizzo', 'citta', 'provincia', 'cap', 'telefono', 'mobile', 'telefono2', 'mobile2', 'partita_iva', 'tipo',
+        'codice_fiscale', 'cognome', 'nome', 'indirizzo', 'citta', 'provincia', 'cap', 'telefono', 'mobile', 'telefono2', 'mobile2', 'partita_iva', 'tipo','rapportino','ripianifica',
     ];
 
     use SoftDeletes;
@@ -35,12 +35,12 @@ class Consulente extends Model {
 
     public function contratti()
     {
-        return $this->belongsToMany(Contratto::class)->with('progetto')->withPivot('note', 'ruolo');
+        return $this->belongsToMany(Contratto::class)->with('progetto')->withPivot('note', 'ruolo')->where('contratto.stato','<>','CLOSED');
     }
 
     public function capoProgetto()
     {
-        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto');
+        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto')->where('contratto.stato','<>','CLOSED');
     }
 
     public function canPianificare($contratto_id)

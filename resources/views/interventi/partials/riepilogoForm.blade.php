@@ -50,6 +50,7 @@
                 <label>Inizio Intervento</label>
                 <input type="text" id="ora_start_reale" onkeydown="return false;" name="ora_start_reale"
                        @if($intervento->inviato) readonly @endif
+                       @if (\Carbon\Carbon::now()->lte(\Carbon\Carbon::parse($intervento->data_start))) disabled @endif
                        style="width:100%" class="form-control clockpicker">
                 <input type="hidden" id="ora_start" name="ora_start" style="width:100%" readonly class="form-control">
             </div>
@@ -57,6 +58,7 @@
                 <label>Fine Intervento</label>
                 <input type="text" id="ora_end_reale" onkeydown="return false;" name="ora_end_reale" style="width:100%"
                        @if($intervento->inviato) readonly @endif
+                       @if (\Carbon\Carbon::now()->lte(\Carbon\Carbon::parse($intervento->data_start))) disabled @endif
                        class="form-control clockpicker">
                 <input type="hidden" id="ora_end" name="ora_end" style="width:100%" readonly class="form-control">
             </div>
@@ -66,6 +68,7 @@
                             class="fa fa-warning"></i></span>
                 <input type="text" id="ore_lavorate" name="ore_lavorate" style="width:100%"
                        @if($intervento->inviato) readonly @endif
+                       @if (\Carbon\Carbon::now()->lte(\Carbon\Carbon::parse($intervento->data_start))) disabled @endif
                        value="{{ $intervento->ore_lavorate or ''}}"
                        class="form-control @if( $intervento->ore_lavorate >0 ) modificato @endif">
             </div>

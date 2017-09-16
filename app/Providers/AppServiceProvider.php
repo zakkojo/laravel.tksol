@@ -6,7 +6,6 @@ use App\Intervento;
 use App\Storico;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
-
 class AppServiceProvider extends ServiceProvider {
 
     /**
@@ -16,7 +15,7 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        Intervento::saving(function ($intervento) {
+        Intervento::saved(function ($intervento) {
             if ($intervento->id)
             {
                 $attuale = Intervento::find($intervento->id);

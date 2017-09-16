@@ -77,7 +77,6 @@ class Intervento extends Model {
         return $this->belongsTo(User::class, 'user_id_modifica', 'id');
     }
 
-
     public function listinoInterventi()
     {
         return $this->belongsTo(ContrattoIntervento::class, 'listino_id', 'id');

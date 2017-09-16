@@ -4,14 +4,30 @@ elseif (isset($_GET['soc'])) $soc = $_GET['soc'];
 else $soc = 0;
 if ($soc) $socDisabled = 'disabled';
 else $socDisabled = 'enabled';
-$listSocieta = $societa->lists('nome', 'id');
+$listSocieta = $societa->pluck('nome', 'id');
 
 if (isset($contratto)) $cli = $contratto->cliente_id;
 elseif (isset($_GET['cli'])) $cli = $_GET['cli'];
 else $cli = 0;
 if ($cli) $cliDisabled = 'disabled';
 else $cliDisabled = 'enabled';
-$listClienti = $clienti->lists('ragione_sociale', 'id');
+$listClienti = $clienti->pluck('ragione_sociale', 'id');
+
+if (isset($contratto))
+{
+    $swhDisabled = 'disabled';
+    $swh = $contratto->fatturazione_id;
+    if ($swh == $contratto->cliente_id)
+        $softwarehouse->push(['id' => $swh, 'ragione_sociale' => 'Cliente']);
+} else
+{
+    $swhDisabled = 'enabled';
+    $swh = 0;
+    $softwarehouse->push(['id' => '0', 'ragione_sociale' => 'Cliente']);
+}
+$softwarehouse = $softwarehouse->sortBy('id');
+$listSW = $softwarehouse->pluck('ragione_sociale', 'id');
+
 
 if (isset($contratto)) $prog = $contratto->progetto_id;
 elseif (isset($_GET['prog'])) $prog = $_GET['prog'];
@@ -21,7 +37,7 @@ else $progDisabled = 'enabled';
 $listProgetto = $progetti->each(function ($progetto)
 {
     return $progetto['areanome'] = $progetto['area'] . ' / ' . $progetto['nome'];
-})->lists('areanome', 'id');
+})->pluck('areanome', 'id');
 
 if (isset($contratto))
 {
@@ -64,6 +80,15 @@ if (isset($contratto))
         !!}
         @if($prog)<input type="hidden" name="progetto_id" value="{{$prog}}">@endif
     </div>
+    <div class="form-group">
+        <label>Fatturazione</label>
+        {!! Form::select('fatturazione_id',
+            $listSW,
+            $swh,
+            [$swhDisabled => $swhDisabled,'id'=>'fatturazione_id','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
+    </div>
+    @if($swh)<input type="hidden" name="fatturazione_id" value="{{$swh}}">@endif
     <div class="form-group">
         <label>Stato Contratto</label>
         {!! Form::select('stato',
@@ -155,6 +180,36 @@ if (isset($contratto))
         !!}
     </div>
 
+    <div class="row">
+        <div class="col-xs-8">
+            <div class="checkbox icheck">
+                <label>
+                    <?php
+                    if (isset($contratto))
+                    {
+                        if ($contratto->ripianifica == '1') $ripianifica_check = true;
+                        else $ripianifica_check = '';
+                    } else $ripianifica_check = true
+                    ?>
+                    {!!  Form::checkbox('ripianifica', 'ripianifice', $ripianifica_check) !!} Obbligo Ripianificare
+                </label>
+            </div>
+        </div><!-- /.col -->
+        <div class="col-xs-8">
+            <div class="checkbox icheck">
+                <label>
+                    <?php
+                    if (isset($contratto))
+                    {
+                        if ($contratto->rapportino == '1') $rapportino_check = true;
+                        else $rapportino_check = false;
+                    } else $rapportino_check = true
+                    ?>
+                    {!! Form::checkbox('rapportino', 'rapportino',$rapportino_check) !!} Obbligo Invio Rapportino
+                </label>
+            </div>
+        </div><!-- /.col -->
+    </div>
 </div><!-- /.box-body -->
 
 <div class="box-footer">

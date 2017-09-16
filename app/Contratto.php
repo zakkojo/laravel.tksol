@@ -27,6 +27,9 @@ class Contratto extends Model {
         'data_avvio_progetto',
         'data_chiusura_progetto',
         'rimborsi',
+        'fatturazione_id',
+        'ripianifica',
+        'rapportino',
     ];
 
     protected $nullable = [
@@ -95,6 +98,11 @@ class Contratto extends Model {
         return $this->belongsTo(Cliente::class);
     }
 
+    public function fatturazione()
+    {
+        return $this->belongsTo(Cliente::class)->where('softwarehouse','1'); //where come controllo?!?
+    }
+
     public function progetto()
     {
         return $this->belongsTo(Progetto::class);
@@ -125,5 +133,9 @@ class Contratto extends Model {
         return $this->hasMany(Intervento::class);
     }
 
+    public function interventiDaApprovare()
+    {
+        return $this->hasMany(Intervento::class)->where('approvato','0');
+    }
 
 }

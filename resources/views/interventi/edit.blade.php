@@ -36,12 +36,18 @@
         <div class="btn-group btn-block">
             <button type="aggiorna" class="col-md-4 btn btn-success"><i class="fa fa-remove"></i> Aggiorna
             </button>
-            @if(\Carbon\Carbon::now()->gte(\Carbon\Carbon::parse($intervento->data_start)))
+            @if(\Carbon\Carbon::now()->gte(\Carbon\Carbon::parse($intervento->data_start)) AND $intervento->contratto->rapportino == 1)
                 <button type="stampa" value="stampa" class="stampaButton col-md-4 btn btn-primary"><i
                             class="fa fa-calendar"></i>
                     Salva e Stampa
                 </button>
+            @else
+                <button type="stampa" value="stampa" class="stampaButton col-md-4 btn btn-primary"><i
+                            class="fa fa-calendar"></i>
+                    Salva e Chiudi
+                </button>
             @endif
+
             <div type="Elimina" onclick="deleteIntervento()" class="col-md-4 btn btn-danger"><i class="fa fa-trash"></i>
                 Elimina
             </div>

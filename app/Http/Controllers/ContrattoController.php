@@ -38,8 +38,9 @@ class ContrattoController extends Controller {
         $clienti = Cliente::all();
         $progetti = Progetto::all();
         $consulenti = Consulente::all();
+        $softwarehouse = Cliente::all()->where('softwarehouse','1');
 
-        return view('contratti.create', compact('societa','clienti', 'progetti', 'consulenti'));
+        return view('contratti.create', compact('societa','clienti','softwarehouse', 'progetti', 'consulenti'));
     }
 
     /**
@@ -54,6 +55,7 @@ class ContrattoController extends Controller {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
+        if($data['fatturazione_id'] == 0) $data['fatturazione_id'] = $data['cliente_id'];
         $ret = Contratto::create($data);
 
         $consulenteContratto_data = ['contratto_id'=> $ret->id, 'consulente_id' => Auth::User()->consulente->id, 'ruolo' => 'Capo Progetto'];
@@ -86,9 +88,10 @@ class ContrattoController extends Controller {
         $clienti = Cliente::all();
         $progetti = Progetto::all();
         $contratto = Contratto::findOrFail($id);
+        $softwarehouse = Cliente::all()->where('softwarehouse','1');
         $consulentiContratto = ConsulenteContratto::with('consulente')->where('contratto_id', $id)->get();
 
-        return view('contratti.edit', compact('contratto', 'societa','clienti', 'progetti', 'consulentiContratto'));
+        return view('contratti.edit', compact('contratto', 'societa','clienti','softwarehouse', 'progetti', 'consulentiContratto'));
     }
 
     /**
@@ -104,6 +107,11 @@ class ContrattoController extends Controller {
             abort(503, 'Unauthorized action.');
         }
         //return $request->all();
+        if ($request->ripianifica) $request->merge(array('ripianifica' => 1));
+        else $request->merge(array('ripianifica' => 0));
+        if ($request->rapportino) $request->merge(array('rapportino' => 1));
+        else $request->merge(array('rapportino' => 0));
+
         $contratto = Contratto::findOrFail($id);
         $contratto->update($request->all());
 

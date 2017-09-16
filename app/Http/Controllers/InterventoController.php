@@ -111,7 +111,7 @@ class InterventoController extends Controller {
         $intervento->problemiAperti = Input::get('problemiAperti');
         $intervento->sede = Input::get('sede');
 
-        if (Input::get('fatturabile') == 'on') $fatturabile = 1; else $fatturabile = 0;
+        if (Input::get('fatturabile')) $fatturabile = 1; else $fatturabile = 0;
         $intervento->fatturabile = $fatturabile;
         //se l'intervento è iniziato secondo calendario posso aggioranre l'oraio di lavoro effettivo
         if (Carbon::now()->gte(Carbon::parse($intervento->data_start)))

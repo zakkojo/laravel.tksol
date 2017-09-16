@@ -76,6 +76,7 @@ class ConsulenteController extends Controller {
             LEFT JOIN consulente_contratto cc on (cc.contratto_id = c.id) 
             LEFT JOIN intervento i ON (i.listino_id = ci.id) 
             WHERE cc.consulente_id = '" . $consulente->id . "'
+            AND c.stato <> 'CLOSED'
             GROUP BY c.id,ragione_sociale, pro.nome
             HAVING (data_primo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR data_primo_intervento is null)
         ");

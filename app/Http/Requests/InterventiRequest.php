@@ -44,23 +44,34 @@ class InterventiRequest extends Request {
             case 'PUT':
             case 'PATCH':
             {
-                return [
+                $rules = [
                     "listinoContratto" => 'required|numeric',
                     "user_id"          => 'required|numeric',
                     "attivita"         => 'required|numeric',
                     "intervento_id"    => 'required|numeric',
 
-                    "data"            => 'required',
-                    "ora_start_reale" => 'required',
-                    "ora_end_reale"   => 'required',
-                    "ore_lavorate"    => 'required',
-                    "sede"            => 'required',
-
-                    //"attivitaPianificate"   => "0",
-                    //"attivitaSvolte"        => "",
-                    //"attivitaCaricoCliente" => "",
-                    //"problemiAperti"        => "",
+                    "data" => 'required',
+                    "sede" => 'required',
                 ];
+                if ($this->attributes->get('stampa') == '1')
+                {
+                    $rules->push(
+                        ["ora_start_reale" => 'required',
+                         "ora_end_reale"   => 'required',
+                         "ore_lavorate"    => 'required',
+                        ]
+                    );
+                }
+
+                return $rules;
+                //"ora_start_reale" => 'required',
+                //"ora_end_reale"   => 'required',
+                //"ore_lavorate"    => 'required',
+
+                //"attivitaPianificate"   => "0",
+                //"attivitaSvolte"        => "",
+                //"attivitaCaricoCliente" => "",
+                //"problemiAperti"        => "",
             }
             default:
                 break;

@@ -38,9 +38,9 @@ class ContrattoController extends Controller {
         $clienti = Cliente::all();
         $progetti = Progetto::all();
         $consulenti = Consulente::all();
-        $softwarehouse = Cliente::all()->where('softwarehouse','1');
+        $softwarehouse = Cliente::all()->where('softwarehouse', '1');
 
-        return view('contratti.create', compact('societa','clienti','softwarehouse', 'progetti', 'consulenti'));
+        return view('contratti.create', compact('societa', 'clienti', 'softwarehouse', 'progetti', 'consulenti'));
     }
 
     /**
@@ -55,10 +55,10 @@ class ContrattoController extends Controller {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
-        if($data['fatturazione_id'] == 0) $data['fatturazione_id'] = $data['cliente_id'];
+        if ($data['fatturazione_id'] == 0) $data['fatturazione_id'] = $data['cliente_id'];
         $ret = Contratto::create($data);
 
-        $consulenteContratto_data = ['contratto_id'=> $ret->id, 'consulente_id' => Auth::User()->consulente->id, 'ruolo' => 'Capo Progetto'];
+        $consulenteContratto_data = ['contratto_id' => $ret->id, 'consulente_id' => Auth::User()->consulente->id, 'ruolo' => 'Capo Progetto'];
 
         ConsulenteContratto::create($consulenteContratto_data);
 
@@ -88,10 +88,10 @@ class ContrattoController extends Controller {
         $clienti = Cliente::all();
         $progetti = Progetto::all();
         $contratto = Contratto::findOrFail($id);
-        $softwarehouse = Cliente::all()->where('softwarehouse','1');
+        $softwarehouse = Cliente::all()->where('softwarehouse', '1');
         $consulentiContratto = ConsulenteContratto::with('consulente')->where('contratto_id', $id)->get();
 
-        return view('contratti.edit', compact('contratto', 'societa','clienti','softwarehouse', 'progetti', 'consulentiContratto'));
+        return view('contratti.edit', compact('contratto', 'societa', 'clienti', 'softwarehouse', 'progetti', 'consulentiContratto'));
     }
 
     /**
@@ -130,10 +130,19 @@ class ContrattoController extends Controller {
         {
             abort(503, 'Unauthorized action.');
         }
-        $cliente_id = Contratto::find($id)->cliente->id;
-        $resp = Contratto::destroy($id);
+        $contratto = Contratto::find($id);
+        $cliente_id = $contratto->cliente->id;
+        if (count($contratto->interventi) > 0)
+        {
+            $errors = ['Impossibile eliminare il contratto perchè sono presenti interventi'];
 
-        return redirect()->action('ClienteController@show', $cliente_id);
+            return redirect()->action('ClienteController@show', $cliente_id)->withErrors($errors);
+        } else
+        {
+            $resp = Contratto::destroy($id);
+
+            return redirect()->action('ClienteController@show', $cliente_id);
+        }
     }
 
     public function ajaxGetListinoInterventi()

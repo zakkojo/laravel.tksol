@@ -286,10 +286,10 @@
         }
 
         function updateClienteSource(cliente_id, bgcolor) {
-            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=' + 'cliente_' + cliente_id);
+            $('#calendar').fullCalendar('removeEventSource', "cliente_" + cliente_id);
             $('#calendar').fullCalendar('addEventSource',
                 {
-                    id: cliente_id,
+                    id: 'cliente_' + cliente_id,
                     url: '/ajax/interventi/getCalendar?calendar_id=' + 'cliente_' + cliente_id,
                     type: 'GET',
                     data: {
@@ -303,10 +303,10 @@
                 }
             );
 
-            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + cliente_id);
+            $('#calendar').fullCalendar('removeEventSource', "cliente_inviato_" + cliente_id);
             $('#calendar').fullCalendar('addEventSource',
                 {
-                    id: cliente_id,
+                    id: 'cliente_inviato_' + cliente_id,
                     url: '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'cliente_' + cliente_id,
                     type: 'GET',
                     data: {
@@ -321,10 +321,11 @@
                     editable: false
                 }
             )
+            //console.log($('#calendar').fullCalendar('getEventSources'));
         }
 
         function updateConsulenteSource(user_id, bgcolor) {
-            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?calendar_id=' + 'consulente_' + user_id);
+            $('#calendar').fullCalendar('removeEventSource', "consulente_" + user_id);
             $('#calendar').fullCalendar('addEventSource',
                 {
                     id: 'consulente_' + user_id,
@@ -342,10 +343,10 @@
                 }
             )
 
-            $('#calendar').fullCalendar('removeEventSource', '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + user_id);
+            $('#calendar').fullCalendar('removeEventSource', "consulente_inviato_" + user_id);
             $('#calendar').fullCalendar('addEventSource',
                 {
-                    id: 'consulente_' + user_id,
+                    id: 'consulente_inviato_' + user_id,
                     user_id: user_id,
                     url: '/ajax/interventi/getCalendar?inviato=1&calendar_id=' + 'consulente_' + user_id,
                     type: 'GET',

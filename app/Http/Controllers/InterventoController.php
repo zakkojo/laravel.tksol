@@ -408,7 +408,13 @@ class InterventoController extends Controller {
         if ($error == 0)
         {
             $response = $intervento->delete();
-            if ($response) return ['status' => 'success', $nextIntervento];
+
+            if ($response)
+            {
+                if (isset($nextIntervento))
+                    return ['status' => 'success', $nextIntervento];
+                else return ['status' => 'success'];
+            }
         }
 
         return ['status' => 'fail', 'msg' => $msg];

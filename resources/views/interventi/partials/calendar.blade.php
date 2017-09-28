@@ -42,6 +42,7 @@
                     }
                 },
                 select: function (start, end, resource) {
+                    $("#btn-pianifica").removeAttr("disabled");
                     if (moment().isSameOrBefore(moment(start), 'day')) {
                         $('#calendar').fullCalendar('removeEvents', 'new');
                         $('#form_title').text('Pianifica Nuovo Intervento');
@@ -150,7 +151,7 @@
                         $('#calendar').fullCalendar('rerenderEvents');
                         $('#form_title').text('Modifica Intervento ');
                         loadIntervento(calEvent);
-                        if (calEvent.inviato == 1){
+                        if (calEvent.inviato == 1) {
                             $('.btnModifica').hide();
                         }
                         else $('.btnModifica').show();
@@ -214,39 +215,49 @@
         ;
 
         function createIntervento() {
-            var postData = {};
-            postData.contratto = $('#contratto').val();
-            postData.listinoContratto = $('#listinoContratto').val();
-            postData.attivita = $('#attivita').val();
-            postData.user_id = $('#consulente').val();
-            postData.data = $('#data').val();
-            postData.ora_start = $('#ora_start').val();
-            postData.ora_end = $('#ora_end').val();
-            postData.attivitaPianificate = $('#attivitaPianificate').html();
-            postData.stampaIntervento = $('#stampaIntervento').val();
-            postData.user_id_modifica = {{Auth::User()->consulente->id}};
-            console.log(postData);
-            $.ajax({
-                url: "/ajax/interventi/createIntervento",
-                type: "GET",
-                data: postData,
-                dataType: "JSON"
-            }).done(function (data) {
-                if (data['status'] == 'success') {
-                    console.log(data);
-                    $('#calendar').fullCalendar('removeEvents', 'new');
-                    $('#calendar').fullCalendar('refetchEvents');
-                    if (data['action'] == 'stampa') window.location.href = '/interventi/' + data['id_padre'];
-                }
-                else console.log(['Errore!!', data]);
-            }).fail(function (jqXHR, textStatus, data) {
-                console.log(jqXHR.responseJSON);
-                var testoErrore = '';
-                $.each(jqXHR.responseJSON, function (key, val) {
-                    testoErrore += val[0] + '\n';
+            $("#btn-pianifica").attr("disabled", "disabled");
+            if (confirm('Vuoi pianificare?\n'
+                    + $('#consulente').select2('data')[0].text + ' - '
+                    + $('#cliente').select2('data')[0].text + '\n'
+                    + $('#progetto').select2('data')[0].text + ' - '
+                    + $('#attivita').select2('data')[0].text + '\n'
+                    + 'dalle ' + $('#ora_start').val() + ' alle ' + $('#ora_end').val()
+                )) {
+                var postData = {};
+                postData.contratto = $('#contratto').val();
+                postData.listinoContratto = $('#listinoContratto').val();
+                postData.attivita = $('#attivita').val();
+                postData.user_id = $('#consulente').val();
+                postData.data = $('#data').val();
+                postData.ora_start = $('#ora_start').val();
+                postData.ora_end = $('#ora_end').val();
+                postData.attivitaPianificate = $('#attivitaPianificate').html();
+                postData.stampaIntervento = $('#stampaIntervento').val();
+                postData.user_id_modifica = {{Auth::User()->consulente->id}};
+                console.log(postData);
+                $.ajax({
+                    url: "/ajax/interventi/createIntervento",
+                    type: "GET",
+                    data: postData,
+                    dataType: "JSON"
+                }).done(function (data) {
+                    if (data['status'] == 'success') {
+                        console.log(data);
+                        $('#calendar').fullCalendar('removeEvents', 'new');
+                        $('#calendar').fullCalendar('refetchEvents');
+                        if (data['action'] == 'stampa') window.location.href = '/interventi/' + data['id_padre'];
+                    }
+                    else console.log(['Errore!!', data]);
+                }).fail(function (jqXHR, textStatus, data) {
+                    console.log(jqXHR.responseJSON);
+                    var testoErrore = '';
+                    $.each(jqXHR.responseJSON, function (key, val) {
+                        testoErrore += val[0] + '\n';
+                    });
+                    alert(testoErrore);
                 });
-                alert(testoErrore);
-            });
+            }
+            else $("#btn-pianifica").removeAttr("disabled");
         }
 
         function updateIntervento() {

@@ -94,7 +94,7 @@ else $progDisabled = 'enabled';
                     <!--div type="Annulla" onclick="annullaCreateIntervento()" class="btn btn-default"><i
                                 class="fa fa-remove"></i> Annulla
                     </div-->
-                    <div type="Pianifica" onclick="createIntervento()" class="btn  btn-primary"><i
+                    <div id="btn-pianifica" type="Pianifica" onclick="createIntervento()" class="btn  btn-primary"><i
                                 class="fa fa-calendar"></i> Pianifica
                     </div>
                 </div>

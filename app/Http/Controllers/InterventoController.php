@@ -180,7 +180,6 @@ class InterventoController extends Controller {
         $intervento = Intervento::findOrFail($id);
         $intervento->stampa = 1;
         $intervento->inviato = 1;
-        $intervento->save();
         $user = Auth::user();
         $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'));
 

@@ -104,6 +104,7 @@
             var emails = $("input:checkbox:checked").map(function () {
                 if ($(this).val() != 'on') return $(this).val();
             }).get();
+            console.log(emails);
             $.ajax({
                 url: "{{action('InterventoController@invia',$intervento->id)}}",
                 type: "get",
@@ -111,7 +112,6 @@
                 dataType: "JSON"
             }).done(function (data) {
                 if (data['status'] == 'success') {
-                    alert('email inviata');
                     $("#invioOK").fadeIn().delay(5000).fadeOut();
                 }
                 else {

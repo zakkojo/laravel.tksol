@@ -90,6 +90,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('ajax/interventi/deleteIntervento', 'InterventoController@ajaxDeleteIntervento');
     Route::get('ajax/interventi/getPermissionUpdatePianificazione', 'InterventoController@ajaxGetPermissionUpdatePianificazione');
     Route::get('ajax/interventi/acceptIntervento', 'InterventoController@ajaxAcceptIntervento');
+    Route::get('ajax/interventi/approvaIntervento', 'InterventoController@ajaxApprovaIntervento');
 
     Route::resource('interventi/{intervento_id}/rimborsi','RimborsoController');
 

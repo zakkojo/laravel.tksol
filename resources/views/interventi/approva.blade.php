@@ -68,7 +68,7 @@
         }
 
         #tRDAlist tr:hover {
-            font-weight: bold;
+            background-color: rgb(204, 230, 255);
         }
 
         #tRDAlist tr.sel {
@@ -88,10 +88,10 @@
         <div>Filtro: <input size='40' type='text' id='filtro'></div>
 
         <div>Righe selezionate: <input id='vRighe' size='10' readonly value='0'/></div>
-        <div>Totale valore selezionato: <input id='vTotale' size='20' readonly value='0'/></div>
 
-        <div>Valutazione: <input type='button' onclick='autorizza();' value='Si autorizza'/>
-            <input type='button' onclick='rifiuta();' value='Si rifiuta'/>
+        <div>Valutazione:
+            <input type='button' class="btn btn-success" onclick='autorizza();' value='Si autorizza'/>
+            <input type='button' class="btn btn-danger" onclick='rifiuta();' value='Si rifiuta'/>
         </div>
     </div>
 
@@ -106,19 +106,27 @@
                     <th>Cliente</th>
                     <th>Progetto</th>
                     <th>Ore Lavorate</th>
-                    <th>Approvate</th>
+                    <th style="width:180px">Approvate</th>
                 </tr>
                 </thead>
                 <tobody>
                     @foreach($daApprovare as $intervento)
-                        <tr>
-                            <td style='padding:1pt'><input name='selettoreRDA' type='checkbox' valore='???'></td>
+                        <tr class='intervento' data-id_intervento='{{$intervento->id}}'>
+                            <td style='padding:1pt'><input name='selettoreRDA' type='checkbox'></td>
                             <td>{{$intervento->data}}</td>
                             <td>{{$intervento->user->consulente->nominativo}}</td>
                             <td>{{$intervento->contratto->cliente->ragione_sociale}}</td>
                             <td>{{$intervento->contratto->progetto->nome}}</td>
-                            <td>{{$intervento->ore_lavorate}}</td>
-                            <td><input name='valoreRDA' type='text' valore='{{$intervento->ore_fatturate}}'></td>
+                            <td class="ore_lavorate">{{$intervento->ore_lavorate}}</td>
+                            <td>
+                                <input name='valoreRDA' type='text'
+                                       value='@if($intervento->approvato == 1){{$intervento->ore_fatturate}}@endif'
+                                       data-id_intervento='{{$intervento->id}}'>
+                                <span class="invioOK label label-success" style="display:none"><i
+                                            class="fa fa-check"></i> </span>
+                                <span class="invioKO label label-danger" style="display:none"><i
+                                            class="fa fa-remove"></i> </span>
+                            </td>
                         </tr>
                     @endforeach
                 </tobody>
@@ -131,17 +139,41 @@
 @section('page_scripts')
     <script>
 
-        $("input[type='button']").button();
-
-        $("#RDAValutazione").dialog({
-            autoOpen: false,
-            resizable: false,
-            height: "auto",
-            width: 600,
-            height: 400,
-            modal: true,
-            position: {my: "center", at: "center", of: window}
+        $("input[name='valoreRDA']").keyup(function () {
+            var $prima = $(this).val();
+            $(this).val($prima.replace(/[^\d.]/g, ''));
+            clearTimeout($.data(this, 'timer'));
+            var wait = setTimeout(approvaRiga, 1500, $(this).attr('data-id_intervento'));
+            $(this).data('timer', wait);
         });
+
+        function approvaRiga(id, reset) {
+            //SALVA RIGA
+            reset = reset || 0;
+            if (reset == 0)
+                var ore_approvate = $(".intervento[data-id_intervento='" + id + "']").find("input[name='valoreRDA']").val();
+            else
+                var ore_approvate = '';
+            //alert('id:' + id + ' ore:' + ore_approvate);
+            $.ajax({
+                url: "/ajax/interventi/approvaIntervento",
+                type: "GET",
+                data: {id: id, ore_approvate: ore_approvate},
+                dataType: "JSON",
+            }).done(function (data) {
+                if (data.status == 'success') {
+                    console.log(data.ore + ' ore approvate per intervento id:' + data.id);
+                    $("input[data-id_intervento='" + data.id + "']").siblings(".invioOK").fadeIn().delay(5000).fadeOut();
+                }
+                else {
+                    console.log('ERRORE: salvataggio ore approvate intervento ' + data.id);
+                    $("input[data-id_intervento='" + data.id + "']").siblings(".invioKO").fadeIn().delay(5000).fadeOut();
+                }
+            }).fail(function (jqXHR, textStatus, data) {
+                console.log("Request failed: " + data);
+            });
+        }
+
 
         $("#filtro").keyup(function () {
             var i = 0;
@@ -149,39 +181,33 @@
                 i++;
                 var x = false;
                 if ($(this).children('th').length == 0) {
-                    $(this).find('td').each(function () {
-                        var str = $(this).html() + $(this).attr('title');
-                        str = str.toLowerCase();
-                        var n = str.indexOf($("#filtro").val().toLowerCase());
-                        if (n != -1) x = x || true;
-                    })
-                    //alert('riga '+i+' vis:'+x);
+                    //se checkato mantieni visibile
+                    if ($(this).find("input[name='selettoreRDA']").iCheck('update')[0].checked) x = true;
+                    //altrimenti verifica testo
+                    else {
+                        $(this).find('td').each(function () {
+                            var str = $(this).text();
+                            str = str.toLowerCase();
+                            var n = str.indexOf($("#filtro").val().toLowerCase());
+                            if (n != -1) x = x || true;
+                        })
+                    }
+                    //rendi visibile o nascondi di conseguenza
                     if (x) $(this).show(); else $(this).hide();
                 }
             })
         });
 
-
-        $('#articolo').keyup(function () {
-
-            clearTimeout($.data(this, 'timer'));
-            var wait = setTimeout(myDelay, 1500, $(this).attr('id'));
-            $(this).data('timer', wait);
-
+        $('#selezionaTutti').on('ifChecked', function () {
+            $("input[name='selettoreRDA']:visible").not(this).iCheck('check');//.prop('checked', this.checked);
+            calcolaTotale();
         });
-
-        function myDelay(id) {
-
-            myForm.submit();
-
-        }
-
-        $('#selezionaTutti').click(function () {
-            $("input[name='selettoreRDA']:visible").not(this).prop('checked', this.checked);
+        $('#selezionaTutti').on('ifUnchecked', function () {
+            $("input[name='selettoreRDA']:visible").not(this).iCheck('uncheck');//.prop('checked', this.checked);
             calcolaTotale();
         });
 
-        $("input[name='selettoreRDA']").click(function () {
+        $("input[name='selettoreRDA']").on('ifChanged', function () {
             calcolaTotale();
         });
 
@@ -189,18 +215,19 @@
             var v = 0;
             var r = 0;
             var rT = 0;
-            $("input[name='selettoreRDA']:checkbox").each(function () {
-                $(this).parent().parent().removeClass('sel');
+
+            $("input[name='selettoreRDA']").each(function () {
+                //$(this).parent().parent().removeClass('sel');
                 rT++;
             });
 
             $("input[name='selettoreRDA']:checkbox:checked").each(function () {
-                v = v + parseFloat($(this).attr('valore'));
+                //v = v + parseFloat($(this).attr('valore'));
                 r++;
-                $(this).parent().parent().addClass('sel');
+                //$(this).parent().parent().addClass('sel');
             });
-            v = Math.round(v * 100) / 100;
-            $("#vTotale").val(number_format(v, 2, ",", ".", "\u20AC"));
+            //v = Math.round(v * 100) / 100;
+            //$("#vTotale").val(number_format(v, 2, ",", ".", "\u20AC"));
             $("#vRighe").val(number_format(r, 0, ",", ".", "") + " / " + number_format(rT, 0, ",", ".", ""));
         }
 
@@ -227,77 +254,18 @@
             return prefix + s.join(dec);
         }
         function autorizza() {
-            //Verificare superamento budget
-            //In caso di superamento è necessario chiedere conferma e, in caso di autorizzazione, richiedere una motivazione obbligatoria
-            $("#RDAValutazione").dialog("option", "title", "Autorizzazione RDA selezionate");
-
-            var v = 0;
-            var r = 0;
             $("input[name='selettoreRDA']:checkbox:checked").each(function () {
-                v = v + parseFloat($(this).attr('valore'));
-                r++;
+                if ($(this).closest('.intervento').find("input[name='valoreRDA']").val() == '')
+                    $(this).closest('.intervento').find("input[name='valoreRDA']").val($(this).closest('.intervento').find(".ore_lavorate").text());
+                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'));
             });
-
-            if (r == 0) {
-                alert("Nessuna riga selezionata");
-            } else {
-
-                $("#RDAValutazione").dialog("option", "buttons",
-                    [
-                        {
-                            text: "Autorizzo",
-                            click: function () {
-                                $(this).dialog("close");
-                            }
-                        },
-                        {
-                            text: "Annulla",
-                            click: function () {
-                                $(this).dialog("close");
-                            }
-                        }
-                    ]
-                );
-
-                $("#RDAValutazione").dialog("open");
-            }
         }
 
         function rifiuta() {
-            //Specificare motivo
-            $("#RDAValutazione").dialog("option", "title", "Rifiuta RDA selezionate");
-
-            var v = 0;
-            var r = 0;
             $("input[name='selettoreRDA']:checkbox:checked").each(function () {
-                v = v + parseFloat($(this).attr('valore'));
-                r++;
+                $(this).closest('.intervento').find("input[name='valoreRDA']").val('');
+                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'), 1);
             });
-
-            if (r == 0) {
-                alert("Nessuna riga selezionata");
-            } else {
-
-                $("#RDAValutazione").dialog("option", "buttons",
-                    [
-                        {
-                            text: "Rifiuto",
-                            click: function () {
-                                $(this).dialog("close");
-                            }
-                        },
-                        {
-                            text: "Annnulla",
-                            click: function () {
-                                $(this).dialog("close");
-                            }
-                        }
-                    ]
-                );
-
-                $("#RDAValutazione").dialog("open");
-            }
-
         }
     </script>
 @endsection

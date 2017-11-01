@@ -160,11 +160,11 @@ class InterventoController extends Controller {
         }
         //}
         $intervento->save();
+
         return redirect('/interventi/' . $id . '/edit');
     }
 
-    public
-    function stampa($id)
+    public function stampa($id)
     {
         $intervento = Intervento::findOrFail($id);
 
@@ -173,8 +173,7 @@ class InterventoController extends Controller {
         return $pdf->setPaper('a5')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0)->inline();
     }
 
-    public
-    function invia($id)
+    public function invia($id)
     {
         $recipients = Input::get('recipients');
         $intervento = Intervento::findOrFail($id);
@@ -213,8 +212,7 @@ class InterventoController extends Controller {
      * @param  int $id
      * @return Response
      */
-    public
-    function destroy($id)
+    public function destroy($id)
     {
 
     }
@@ -232,14 +230,13 @@ class InterventoController extends Controller {
         } else return ['status' => 'Non autorizzato', 'result' => false];
     }*/
 
-    public
-    function approvaIntervento()
+    public function approvaIntervento()
     {
         $consulente = Auth::User()->consulente;
         $daApprovare = collect();
         $consulente->capoProgetto->each(function ($contratto, $key) use ($daApprovare)
         {
-            $contratto->interventiDaApprovare->each(function ($intervento, $key) use ($daApprovare)
+            $contratto->interventiDaFatturare->each(function ($intervento, $key) use ($daApprovare)
             {
                 $daApprovare->push($intervento);
             });
@@ -248,8 +245,7 @@ class InterventoController extends Controller {
         return view('interventi.approva', compact('daApprovare'));
     }
 
-    public
-    function ajaxGetCalendar()
+    public function ajaxGetCalendar()
     {
         $data_start = Input::get('start');
         $data_end = Input::get('end');
@@ -306,8 +302,7 @@ class InterventoController extends Controller {
         return ['msg' => 'errore', 'input' => Input::all()];
     }
 
-    public
-    function ajaxGetIntervento()
+    public function ajaxGetIntervento()
     {
         $intervento = Intervento::find(Input::get('id'));
 
@@ -321,8 +316,7 @@ class InterventoController extends Controller {
     }
 
 
-    public
-    function ajaxCreateIntervento(AjaxInterventiRequest $request)
+    public function ajaxCreateIntervento(AjaxInterventiRequest $request)
     {
         $intervento = new Intervento();
         $intervento->listino_id = Input::get('listinoContratto');
@@ -356,8 +350,7 @@ class InterventoController extends Controller {
         return ['status' => 'fail', 'input' => Input::all()];
     }
 
-    public
-    function ajaxUpdateIntervento(AjaxInterventiRequest $request)
+    public function ajaxUpdateIntervento(AjaxInterventiRequest $request)
     {
 
         $intervento = Intervento::findOrFail(Input::get('id'));
@@ -377,8 +370,7 @@ class InterventoController extends Controller {
         return ['status' => 'fail'];
     }
 
-    public
-    function ajaxDeleteIntervento()
+    public function ajaxDeleteIntervento()
     {
         $error = 0;
         $id = Input::get('id');
@@ -391,7 +383,7 @@ class InterventoController extends Controller {
         }
 
         //se è necessario ripianificare
-        if($intervento->contratto->ripianifica == '1')
+        if ($intervento->contratto->ripianifica == '1')
         {
             //intervento futuro stesso contratto <=30gg
             $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($key, $element) use ($id)
@@ -419,8 +411,7 @@ class InterventoController extends Controller {
         return ['status' => 'fail', 'msg' => $msg];
     }
 
-    public
-    function ajaxGetPermissionUpdatePianificazione()
+    public function ajaxGetPermissionUpdatePianificazione()
     {
         $res = Intervento::where('id', Input::get('intervento_id'))->where('consulente_id', Input::get('user_id'))->count();
         /*
@@ -435,8 +426,19 @@ class InterventoController extends Controller {
 
     }
 
+    public function ajaxApprovaIntervento()
+    {
+        $id = Input::get('id');
+        $ore_fatturate = Input::get('ore_approvate');
+        $intervento = Intervento::findOrFail($id);
+        $intervento->ore_fatturate = $ore_fatturate;
+        if ($ore_fatturate != '')  $intervento->approvato = 1;
+        else $intervento->approvato = 0;
+        $res = $intervento->save();
+        if ($res) return ['status' => 'success', 'id' => $id, 'ore'=>$ore_fatturate];
+        else return ['status' => 'fail', 'id' => $id];
+    }
 }
-
 ?>
 
 

@@ -63,12 +63,11 @@ class InterventoController extends Controller {
     public function show($id)
     {
         $intervento = Intervento::findOrFail($id);
-
         //return $intervento;
-        if ($intervento->inviato == 0)
-            return redirect('/interventi/' . $id . '/edit');
-        else
+        if ($intervento->fatturato == 1 OR session()->get('stampaIntervento') == $intervento->id)
             return view('interventi.inviaStampa', compact('intervento'));
+        else
+            return redirect('/interventi/' . $id . '/edit');
     }
 
     /**
@@ -125,10 +124,8 @@ class InterventoController extends Controller {
         $intervento->save();
 
         //se clicco sul pulsante stampa o chiudi
-        if (Input::get('stampa') == 1 OR $intervento->stampa == 1)
+        if (Input::get('stampa') == 1)
         {
-            $intervento->stampa = 1;
-            $intervento->save();
             //se posso pianificare e è necessario
             if (Auth::user()->consulente->canPianificare($intervento->contratto->id) AND $intervento->contratto->ripianifica == 1)
             {
@@ -341,6 +338,7 @@ class InterventoController extends Controller {
             if ($id_padre = Input::get('stampaIntervento'))
             {
                 $intervento = Intervento::findOrFail($id_padre);
+                session()->flash('stampaIntervento',$id_padre);
                 $intervento->stampa = 1;
                 if ($intervento->save())
                 {

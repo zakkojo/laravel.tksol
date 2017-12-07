@@ -134,7 +134,7 @@ class InterventoController extends Controller {
                 if (count($prossimiInterventi) == 0)
                 {
                     //altrimenti chiedo l'inserimento del prossimo intervento
-                    session()->flash('attivita', Input::get('problemiAperti'));
+                    //session()->flash('attivita', str_replace("\r\n","",Input::get('problemiAperti')));
                     session()->flash('stampaIntervento', $id);
                     //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
                     $filtroCalendar = new \stdClass();

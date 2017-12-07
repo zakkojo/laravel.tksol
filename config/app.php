@@ -108,8 +108,7 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
-
+    'log'            => env('APP_LOG', 'single'),
 
 
     /*
@@ -178,11 +177,12 @@ return [
         Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
 
         Orangehill\Iseed\IseedServiceProvider::class,
-        
+
         Barryvdh\Snappy\ServiceProvider::class,
 
-        PulkitJalan\Google\GoogleServiceProvider::class
+        PulkitJalan\Google\GoogleServiceProvider::class,
 
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
 
     ],
@@ -236,10 +236,10 @@ return [
 
         'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
 
-        'PDF'      => Barryvdh\Snappy\Facades\SnappyPdf::class,
-        'Image'    => Barryvdh\Snappy\Facades\SnappyImage::class,
-        'Google' => PulkitJalan\Google\Facades\Google::class
-
+        'PDF'    => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'Image'  => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'Google' => PulkitJalan\Google\Facades\Google::class,
+        'Excel'  => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

@@ -11,7 +11,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
-
+use Excel;
+use DB;
 class InterventoController extends Controller {
 
     /**
@@ -124,8 +125,10 @@ class InterventoController extends Controller {
         $intervento->save();
 
         //se clicco sul pulsante stampa o chiudi
-        if (Input::get('stampa') == 1)
+        if (Input::get('stampa') == 1 OR $intervento->stampa == 1)
         {
+            $intervento->stampa = 1;
+            $intervento->save();
             //se posso pianificare e è necessario
             if (Auth::user()->consulente->canPianificare($intervento->contratto->id) AND $intervento->contratto->ripianifica == 1)
             {
@@ -145,9 +148,7 @@ class InterventoController extends Controller {
                     return redirect()->action('InterventoController@create', ['data' => Carbon::parse($intervento->data_start)->format('Y-m-d'), 'eventId' => $id]);
                 }
             }
-            $intervento->stampa = 1;
-            $intervento->save();
-            //se è neceaario inviare il rapportino
+            //se è necessario inviare il rapportino
             if ($intervento->contratto->rapportino == 1)
                 return view('interventi.inviaStampa', compact('intervento'));
             else
@@ -191,9 +192,12 @@ class InterventoController extends Controller {
             $m->replyTo($user->email, $user->consulente->nominativo);
             if (config('app.customer_email'))
             {
-                foreach ($recipients as $recipient)
+                if(is_array($recipients))
                 {
-                    if ($recipient) $m->to($recipient);
+                    foreach ($recipients as $recipient)
+                    {
+                        if ($recipient) $m->to($recipient);
+                    }
                 }
                 $m->subject('Rapportino ' . $societa->nome);
             } else $m->subject('***NON INVIATO AL CLIENTE*** Rapportino ' . $societa->nome);
@@ -432,13 +436,75 @@ class InterventoController extends Controller {
         $ore_fatturate = Input::get('ore_approvate');
         $intervento = Intervento::findOrFail($id);
         $intervento->ore_fatturate = $ore_fatturate;
-        if ($ore_fatturate != '')  $intervento->approvato = 1;
+        if ($ore_fatturate != '') $intervento->approvato = 1;
         else $intervento->approvato = 0;
         $res = $intervento->save();
-        if ($res) return ['status' => 'success', 'id' => $id, 'ore'=>$ore_fatturate];
+        if ($res) return ['status' => 'success', 'id' => $id, 'ore' => $ore_fatturate];
         else return ['status' => 'fail', 'id' => $id];
     }
+
+    public function export_xlsx()
+    {
+//        $consulente = Auth::User()->consulente;
+//        $daApprovare = collect();
+//        $consulente->capoProgetto->each(function ($contratto, $key) use ($daApprovare)
+//        {
+//            $contratto->interventiDaFatturare->each(function ($intervento, $key) use ($daApprovare)
+//            {
+//                $intervento['attivitaSvolte'] = strip_tags($intervento['attivitaSvolte']);
+//                $daApprovare->push($intervento);
+//            });
+//        });
+        $daApprovare = DB::select("
+        SELECT 				
+            inter.id intervento_id,				
+            fat.id dst_fatturazione_id,				
+            soc.id src_fatturazione_id,				
+            cli.id cliente_id,				
+            con.id contratto_id,				
+            cons.id consulente_id,				
+            date(inter.data_Start) data_intervento,				
+            users.email consulente_login,				
+            pro.nome progetto,				
+            cli.ragione_sociale cliente,				
+            fat.ragione_sociale destinazioneFattura,				
+            soc.nome origineFattura,				
+            inter.attivitaSvolte,				
+            inter.ore_fatturate ore_fatturare,
+            inter.sede,
+            inter.fatturabile,
+            '' as 'Numero Fattura',
+            '' as 'Data Fattura',
+            '' as 'Note Fattura'
+        FROM 				
+            laravel_tksol.intervento inter 				
+            join users on(users.id = inter.user_id)						
+	            join consulente cons on(cons.user_id = users.id)			
+            join contratto_intervento conint on (inter.listino_id = conint.id) 				
+                join contratto con on (conint.contratto_id = con.id) 			
+                    join cliente cli on (con.cliente_id = cli.id)		
+                    join cliente fat on (con.fatturazione_id = fat.id)				
+                    join progetto pro on (con.progetto_id = pro.id)				
+                    join societa soc on(con.societa_id = soc.id)				
+            join attivita att on (att.id = inter.attivita_id)
+        where inter.approvato=1
+        ");
+        for ($i = 0, $c = count($daApprovare); $i < $c; ++$i) {
+            $daApprovare[$i] = (array) $daApprovare[$i];
+        }
+        //dd($daApprovare);
+        ob_clean();
+        Excel::create('Filename', function ($excel) use ($daApprovare)
+        {
+            $excel->sheet('Sheetname', function ($sheet) use ($daApprovare)
+            {
+                $sheet->fromArray($daApprovare);
+
+            });
+        })->export('xlsx');
+    }
 }
+
 ?>
 
 

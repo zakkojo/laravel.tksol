@@ -78,11 +78,13 @@ Route::group(['middleware' => 'web'], function () {
 
 
 
+
+    Route::get('interventi/export_xlsx', 'InterventoController@export_xlsx');
+    Route::get('interventi/approva', 'InterventoController@approvaIntervento');
     Route::resource('interventi', 'InterventoController');
     Route::get('interventi/{intervento_id}', 'InterventoController@edit');
     Route::get('interventi/{intervento_id}/stampa', 'InterventoController@stampa');
     Route::get('interventi/{intervento_id}/invia', 'InterventoController@invia');
-    Route::get('approva', 'InterventoController@approvaIntervento')->name('interventi.approva');;
     Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
     Route::get('ajax/interventi/getIntervento', 'InterventoController@ajaxGetIntervento');
     Route::get('ajax/interventi/createIntervento', 'InterventoController@ajaxCreateIntervento');
@@ -98,4 +100,8 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::resource('prodotti','ProdottoController');
     Route::get('test','TestController@show');
+
+    //TEST
+    Route::get('export_xlsx', 'InterventoController@export_xlsx')->name('interventi.export_xlsx');
+
 });

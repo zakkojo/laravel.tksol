@@ -15,7 +15,8 @@
         "google/apiclient": "^2.0",
         "doctrine/dbal": "^2.5",
         "pulkitjalan/google-apiclient": "^3.1",
-        "kalnoy/nestedset": "4.2.0"
+        "kalnoy/nestedset": "4.2.0",
+        "maatwebsite/excel": "~2.1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

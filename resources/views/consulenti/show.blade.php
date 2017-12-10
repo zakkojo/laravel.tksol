@@ -25,14 +25,25 @@
         </div>
     @endif
     <div class="row">
-        <div class="col-md-6">
-            <div class="info-box">
+        <div class="col-md-3">
+            <div id="infoApprovazione" class="info-box">
                 <!-- Apply any bg-* class to to the icon to color it -->
-                <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>
+                <span class="info-box-icon bg-red"><i class="fa fa-line-chart"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">Likes</span>
-                    <span class="info-box-number">93,139</span>
-                    <span class="info-box-button">93,139</span>
+                    <span class="info-box-text">Interventi da approvare</span>
+                    <span class="info-box-number">--</span>
+                </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
+        </div>
+        <div class="col-md-3">
+            <div id="infoFatturazione" class="info-box">
+                <!-- Apply any bg-* class to to the icon to color it -->
+                <span class="info-box-icon bg-green"><i class="fa fa-table"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">
+                        <a href="{{action('InterventoController@export_xlsx')}}">Scarica report per Fatturazione</a>
+                    </span>
+                    <span class="info-box-number"></span>
                 </div><!-- /.info-box-content -->
             </div><!-- /.info-box -->
         </div>
@@ -51,4 +62,33 @@
         </div>
     </div>
 @endsection
-
+@section('page_scripts')
+    @parent
+    <script>
+        function updateInterventiDaApprovare() {
+            $('#infoApprovazione').addClass('loading');
+            $.get('{{action('ConsulenteController@ajaxGetInterventiDaApprovare')}}')
+                .done(function (data) {
+                    $('#infoApprovazione').find('.info-box-number').text(data);
+                    return data;
+                })
+                .fail(function (jqXHR, textStatus, data) {
+                    $('#infoApprovazione').find('.info-box-number').text('--');
+                    console.log("Request failed: " + data);
+                    return false;
+                })
+                .always(function (jqXHR, textStatus, data) {
+                    $('#infoApprovazione').toggleClass('loading');
+                });
+        }
+        $(document).ready(function () {
+            updateInterventiDaApprovare();
+            $('#infoApprovazione').on('click','.info-box-icon', function () {
+                updateInterventiDaApprovare();
+            });
+            $('#infoApprovazione').on('click','.info-box-content', function () {
+                window.location.href = "{{action('InterventoController@approvaIntervento')}}";
+            });
+        });
+    </script>
+@endsection

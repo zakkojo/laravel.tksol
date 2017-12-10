@@ -55,7 +55,7 @@
             </div>
         </div>
     @elseif($intervento->inviato == 1 )
-        <a href="{{ action('InterventoController@show',$intervento->id) }}" type="stampa" value="stampa"
+        <a href="{{ action('InterventoController@invia',$intervento->id) }}" type="stampa" value="stampa"
            class="btn-block btn btn-primary"><i class="fa fa-calendar"></i>
             Invio e Stampa
         </a>

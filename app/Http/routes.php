@@ -50,6 +50,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('ajax/toggleUser', 'UserController@ajaxToggleUser');
     Route::get('ajax/consulenti/getConsulente', 'ConsulenteController@ajaxGetConsulente');
     Route::get('ajax/consulenti/getContratti', 'ConsulenteController@ajaxGetContratti');
+    Route::get('ajax/consulenti/getInterventiDaApprovare', 'ConsulenteController@ajaxGetInterventiDaApprovare');
 
     Route::resource('contatti','ContattoController');
 
@@ -93,6 +94,8 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('ajax/interventi/getPermissionUpdatePianificazione', 'InterventoController@ajaxGetPermissionUpdatePianificazione');
     Route::get('ajax/interventi/acceptIntervento', 'InterventoController@ajaxAcceptIntervento');
     Route::get('ajax/interventi/approvaIntervento', 'InterventoController@ajaxApprovaIntervento');
+
+
 
     Route::resource('interventi/{intervento_id}/rimborsi','RimborsoController');
 

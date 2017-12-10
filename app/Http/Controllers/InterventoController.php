@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
 use Excel;
 use DB;
+
 class InterventoController extends Controller {
 
     /**
@@ -65,8 +66,10 @@ class InterventoController extends Controller {
         $intervento = Intervento::findOrFail($id);
         //return $intervento;
         if ($intervento->fatturato == 1 OR session()->get('stampaIntervento') == $intervento->id)
+        {
+            if (session()->get('stampaIntervento')) session()->forget('stampaIntervento');
             return view('interventi.inviaStampa', compact('intervento'));
-        else
+        } else
             return redirect('/interventi/' . $id . '/edit');
     }
 
@@ -189,7 +192,7 @@ class InterventoController extends Controller {
             $m->replyTo($user->email, $user->consulente->nominativo);
             if (config('app.customer_email'))
             {
-                if(is_array($recipients))
+                if (is_array($recipients))
                 {
                     foreach ($recipients as $recipient)
                     {
@@ -235,7 +238,7 @@ class InterventoController extends Controller {
     {
         $consulente = Auth::User()->consulente;
         $daApprovare = collect();
-        $consulente->capoProgetto->each(function ($contratto, $key) use ($daApprovare)
+        $consulente->capoProgettoAlways->each(function ($contratto, $key) use ($daApprovare)
         {
             $contratto->interventiDaFatturare->each(function ($intervento, $key) use ($daApprovare)
             {
@@ -338,7 +341,7 @@ class InterventoController extends Controller {
             if ($id_padre = Input::get('stampaIntervento'))
             {
                 $intervento = Intervento::findOrFail($id_padre);
-                session()->flash('stampaIntervento',$id_padre);
+                session()->set('stampaIntervento', $id_padre);
                 $intervento->stampa = 1;
                 if ($intervento->save())
                 {
@@ -453,7 +456,7 @@ class InterventoController extends Controller {
 //                $daApprovare->push($intervento);
 //            });
 //        });
-        $daApprovare = DB::select("
+        $daFatturare = DB::select("
         SELECT 				
             inter.id intervento_id,				
             fat.id dst_fatturazione_id,				
@@ -487,16 +490,17 @@ class InterventoController extends Controller {
             join attivita att on (att.id = inter.attivita_id)
         where inter.approvato=1
         ");
-        for ($i = 0, $c = count($daApprovare); $i < $c; ++$i) {
-            $daApprovare[$i] = (array) $daApprovare[$i];
+        for ($i = 0, $c = count($daFatturare); $i < $c; ++$i)
+        {
+            $daFatturare[$i] = (array)$daFatturare[$i];
         }
         //dd($daApprovare);
         ob_clean();
-        Excel::create('Filename', function ($excel) use ($daApprovare)
+        Excel::create('Filename', function ($excel) use ($daFatturare)
         {
-            $excel->sheet('Sheetname', function ($sheet) use ($daApprovare)
+            $excel->sheet('Sheetname', function ($sheet) use ($daFatturare)
             {
-                $sheet->fromArray($daApprovare);
+                $sheet->fromArray($daFatturare);
 
             });
         })->export('xlsx');

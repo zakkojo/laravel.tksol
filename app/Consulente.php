@@ -43,6 +43,11 @@ class Consulente extends Model {
         return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto')->where('contratto.stato','<>','CLOSED');
     }
 
+    public function capoProgettoAlways()
+    {
+        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto');
+    }
+
     public function canPianificare($contratto_id)
     {
         if ($this->contratti->where('id', $contratto_id)->count() > 0)

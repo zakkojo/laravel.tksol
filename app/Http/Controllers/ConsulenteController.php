@@ -161,6 +161,20 @@ class ConsulenteController extends Controller {
 
     }
 
+    public function ajaxGetInterventiDaApprovare()
+    {
+        $consulente = Auth::User()->consulente;
+        $daApprovare=0;
+        $consulente->capoProgettoAlways->each(function ($contratto, $key) use (&$daApprovare)
+        {
+            $daApp = $contratto->interventiDaFatturare->count();
+            $daApprovare =$daApprovare+$daApp;
+        });
+        return $daApprovare;
+    }
+
 }
+
+
 
 ?>

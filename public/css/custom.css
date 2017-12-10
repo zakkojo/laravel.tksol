@@ -23,3 +23,30 @@
 .customsearch > li > span:hover{
     color: #fff;
 }
+
+.loading.info-box:before {
+    width: 90%;
+    min-height: inherit;
+    z-index: 50;
+    background: rgba(255,255,255,0.8);
+    /*   border-radius: 3px; */
+    content: " ";
+    position: absolute;
+}
+
+.loading.info-box .info-box-icon i{
+    display: none;
+}
+
+.loading.info-box .info-box-icon:after {
+    position: absolute;
+    margin-top: 20px;
+    margin-left: -.4em;
+    /*   text-align: center; */
+    content: "\f021";
+    font: normal normal normal 1em/1 FontAwesome;
+    webkit-animation: fa-spin .8s infinite linear;
+    animation: fa-spin .8s infinite linear;
+    z-index: 999;
+    color: #555;
+}

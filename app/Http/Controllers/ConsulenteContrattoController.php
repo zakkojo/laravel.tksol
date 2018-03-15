@@ -81,21 +81,24 @@ class ConsulenteContrattoController extends Controller {
     public function update(ConsulentiContrattiRequest $request,$contratto_id, $id)
     {
         if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($contratto_id))){
-            abort(503, 'Unauthorized action.');
+            return back()->withErrors(['ERRORE' => 'Non autorizzato']);
         }
-        $consulenteContratto = ConsulenteContratto::findOrFail($id);
-        $originale['ruolo'] = $consulenteContratto->ruolo;
-        $originale['consulente_id'] = $consulenteContratto->consulente_id;
-        $consulenteContratto->update($request->all());
-        $consulenteContratto->save();
-
-        $capoProgetto = ConsulenteContratto::where('contratto_id', $contratto_id)->where('ruolo', 'Capo Progetto')->count();
-        if (!$capoProgetto) {
-            $consulenteContratto->update($originale);
+        else
+        {
+            $consulenteContratto = ConsulenteContratto::findOrFail($id);
+            $originale['ruolo'] = $consulenteContratto->ruolo;
+            $originale['consulente_id'] = $consulenteContratto->consulente_id;
+            $consulenteContratto->update($request->all());
             $consulenteContratto->save();
+            $capoProgetto = ConsulenteContratto::where('contratto_id', $contratto_id)->where('ruolo', 'Capo Progetto')->count();
+            if ($capoProgetto == 0)
+            {
+                $consulenteContratto->update($originale);
+                $consulenteContratto->save();
+                return back()->withErrors(['ERRORE' => 'Nessun Capo Progetto per il contratto']);
+            }
+            return redirect()->action('ContrattoController@edit', $contratto_id);
         }
-
-        return redirect()->action('ContrattoController@edit', $contratto_id);
     }
 
     /**

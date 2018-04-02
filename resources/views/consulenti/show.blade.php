@@ -2,11 +2,11 @@
 
 
 @section('htmlheader_title')
-    DASHBOARD {{{ $consulente->nome." ".$consulente->cognome }}}
+    DASHBOARD {{$consulente->nominativo}}
 @endsection
 @section('contentheader_title')
     @if($consulente->id)
-        {{{ $consulente->nome." ".$consulente->cognome}}}
+        {{$consulente->nominativo}}
     @else
         Nuovo Utente
     @endif

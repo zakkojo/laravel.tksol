@@ -2,10 +2,10 @@
 
 
 @section('htmlheader_title')
-    Approvazione Fatturazione
+    Registrazione Fatture
 @endsection
 @section('contentheader_title')
-    Approvazione Fatturazione
+    Registrazione Fatture
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -17,7 +17,7 @@
 
         table#tRDAlist {
             border-collapse: collapse;
-            border: 0pt solid grey;
+            border: 1pt solid grey;
         }
 
         table#tRDAlist th {
@@ -30,7 +30,7 @@
 
         table#tRDAlist td {
             font-size: 10pt;
-            border: 1pt solid grey;
+            border: 0pt solid grey;
             padding: 5pt;
         }
 
@@ -59,7 +59,7 @@
             display: inline;
         }
 
-        #selezione{
+        #selezione {
             text-align: left;
             border: 0pt;
             font-size: 12pt;
@@ -79,13 +79,24 @@
             height: 90%;
             overflow-Y: auto;
         }
+
+        td.textarea {
+            padding: 3px 1px 0 1px !important;
+        }
+
+        textarea.textarea {
+            height: 100%;
+            width: 200px;
+            font-size: 12px;
+            line-height: 12px;
+        }
     </style>
 
     <div class='rdaHEAD'>
         <div>Filtro: <input size='30' type='text' id='filtro'></div>
         <div>Da: <input size='10' type='text' id='di' class="datepicker"></div>
         <div>A: <input size='10' type='text' id='df' class="datepicker"></div>
-        <div>Righe selezionate: <input id="selezione" readonly value=''/></div>
+        <div>Righe selezionate: <input id="selezione" readonly value='0'/></div>
         <div>Valutazione:
             <input type='button' class="btn btn-success" onclick='autorizza();' value='Si autorizza'/>
             <input type='button' class="btn btn-danger" onclick='rifiuta();' value='Si rifiuta'/>
@@ -93,27 +104,31 @@
     </div>
 
     <div id='dRDAlist'>
-        @if($daApprovare)
+        @if($daFatturare)
             <table id='tRDAlist'>
                 <thead>
                 <tr>
                     <th style='padding:1pt'><input id='selezionaTutti' type='checkbox'></th>
                     <th>Data Intervento</th>
                     <th>Consulente</th>
-                    <th>Cliente</th>
                     <th>Link</th>
+                    <th>Società</th>
                     <th>Progetto</th>
-                    <th>Ore Lavorate</th>
-                    <th style="width:180px">Approvate</th>
+                    <th>Cliente</th>
+                    <th>Destinazione Fattura</th>
+                    <th>Ore</th>
+                    <th>Sede</th>
+                    <th>n° Fattura</th>
+                    <th>Data Fattura</th>
+                    <th>Note</th>
                 </tr>
                 </thead>
                 <tobody>
-                    @foreach($daApprovare as $intervento)
+                    @foreach($daFatturare as $intervento)
                         <tr class='intervento' data-id_intervento='{{$intervento->id}}'>
                             <td style='padding:1pt'><input name='selettoreRDA' type='checkbox'></td>
                             <td class="date">{{$intervento->data}}</td>
                             <td>{{$intervento->user->consulente->nominativo}}</td>
-                            <td>{{$intervento->contratto->cliente->ragione_sociale}}</td>
                             <td>
                                 <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                     <button type="button" class="btn btn-default"
@@ -128,12 +143,28 @@
                                     </button>
                                 </div>
                             </td>
+                            <td>{{$intervento->contratto->societa->nome}}</td>
                             <td>{{$intervento->contratto->progetto->nome}}</td>
+                            <td>{{$intervento->contratto->cliente->ragione_sociale}}</td>
+                            <td>@if($intervento->contratto->fatturazione) {{$intervento->contratto->fatturazione->ragione_sociale}}
+                                @else {{$intervento->contratto->societa->nome}}
+                                @endif
+                            </td>
                             <td class="ore_lavorate">{{$intervento->ore_lavorate}}</td>
+                            <td>{{$intervento->sede}}</td>
                             <td>
-                                <input name='valoreRDA' type='text'
-                                       value='@if($intervento->approvato == 1){{$intervento->ore_fatturate}}@endif'
+                                <input name='nFattura' size="12" type='text' value='{{$intervento->fatturato}}'
                                        data-id_intervento='{{$intervento->id}}'>
+                            </td>
+                            <td>
+                                <input name='dataFattura' class="datepicker" size="8" type='text'
+                                       value='{{$intervento->data_fattura}}' data-id_intervento='{{$intervento->id}}'>
+                            </td>
+
+                            <td class="textarea">
+                                <textarea class="textarea" name='noteFattura' value='{{$intervento->note_fattura}}'
+                                          data-id_intervento='{{$intervento->id}}'>
+                                </textarea>
                                 <span class="invioOK label label-success" style="display:none"><i
                                             class="fa fa-check"></i> </span>
                                 <span class="invioKO label label-danger" style="display:none"><i
@@ -153,6 +184,7 @@
         $(function() {
             calcolaTotale();
         });
+
         $("input[name='valoreRDA']").keyup(function () {
             var $prima = $(this).val();
             $(this).val($prima.replace(/[^\d.]/g, ''));
@@ -259,7 +291,7 @@
             });
             //v = Math.round(v * 100) / 100;
             //$("#vTotale").val(number_format(v, 2, ",", ".", "\u20AC"));
-            $("#vRighe").val(number_format(r, 0, ",", ".", "") + " / " + number_format(rT, 0, ",", ".", ""));
+            $("#selezione").val(number_format(r, 0, ",", ".", "") + "/" + number_format(rT, 0, ",", ".", ""));
         }
 
 
@@ -285,18 +317,18 @@
             return prefix + s.join(dec);
         }
         function autorizza() {
-            $("input[name='selettoreRDA']:checkbox:checked").each(function () {
-                if ($(this).closest('.intervento').find("input[name='valoreRDA']").val() == '')
-                    $(this).closest('.intervento').find("input[name='valoreRDA']").val($(this).closest('.intervento').find(".ore_lavorate").text());
-                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'));
-            });
+//            $("input[name='selettoreRDA']:checkbox:checked").each(function () {
+//                if ($(this).closest('.intervento').find("input[name='valoreRDA']").val() == '')
+//                    $(this).closest('.intervento').find("input[name='valoreRDA']").val($(this).closest('.intervento').find(".ore_lavorate").text());
+//                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'));
+//            });
         }
 
         function rifiuta() {
-            $("input[name='selettoreRDA']:checkbox:checked").each(function () {
-                $(this).closest('.intervento').find("input[name='valoreRDA']").val('');
-                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'), 1);
-            });
+//            $("input[name='selettoreRDA']:checkbox:checked").each(function () {
+//                $(this).closest('.intervento').find("input[name='valoreRDA']").val('');
+//                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'), 1);
+//            });
         }
     </script>
 @endsection

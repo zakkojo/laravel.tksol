@@ -68,6 +68,7 @@ class InterventoController extends Controller {
         if ($intervento->fatturato == 1 OR session()->get('stampaIntervento') == $intervento->id)
         {
             if (session()->get('stampaIntervento')) session()->forget('stampaIntervento');
+
             return view('interventi.inviaStampa', compact('intervento'));
         } else
             return redirect('/interventi/' . $id . '/edit');
@@ -240,13 +241,21 @@ class InterventoController extends Controller {
         $daApprovare = collect();
         $consulente->capoProgettoAlways->each(function ($contratto, $key) use ($daApprovare)
         {
-            $contratto->interventiDaFatturare->each(function ($intervento, $key) use ($daApprovare)
+            $contratto->interventiDaApprovare->each(function ($intervento, $key) use ($daApprovare)
             {
                 $daApprovare->push($intervento);
             });
         });
 
         return view('interventi.approva', compact('daApprovare'));
+    }
+
+    public function registraFatturaIntervento()
+    {
+
+        $daFatturare = Intervento::whereNull('fatturato')->where('approvato','1')->get();
+
+        return view('interventi.registraFattura', compact('daFatturare'));
     }
 
     public function ajaxGetCalendar()
@@ -450,7 +459,7 @@ class InterventoController extends Controller {
 //        $daApprovare = collect();
 //        $consulente->capoProgetto->each(function ($contratto, $key) use ($daApprovare)
 //        {
-//            $contratto->interventiDaFatturare->each(function ($intervento, $key) use ($daApprovare)
+//            $contratto->interventiDaApprovare->each(function ($intervento, $key) use ($daApprovare)
 //            {
 //                $intervento['attivitaSvolte'] = strip_tags($intervento['attivitaSvolte']);
 //                $daApprovare->push($intervento);

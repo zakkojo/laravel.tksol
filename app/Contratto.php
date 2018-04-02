@@ -100,7 +100,7 @@ class Contratto extends Model {
 
     public function fatturazione()
     {
-        return $this->belongsTo(Cliente::class)->where('softwarehouse','1'); //where come controllo?!?
+        return $this->belongsTo(Cliente::class)->where('softwarehouse', '1'); //where come controllo?!?
     }
 
     public function progetto()
@@ -125,7 +125,7 @@ class Contratto extends Model {
 
     public function prossimiInterventi()
     {
-        return $this->hasMany(Intervento::class)->whereDate('data_start','>',date('Y-m-d'));
+        return $this->hasMany(Intervento::class)->whereDate('data_start', '>', date('Y-m-d'));
     }
 
     public function interventi()
@@ -133,9 +133,8 @@ class Contratto extends Model {
         return $this->hasMany(Intervento::class);
     }
 
-    public function interventiDaFatturare()
+    public function interventiDaApprovare()
     {
-        return $this->hasMany(Intervento::class)->whereNull('fatturato');
+        return $this->hasMany(Intervento::class)->where('approvato','0');
     }
-
 }

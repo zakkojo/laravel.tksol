@@ -123,6 +123,16 @@
     div#infoRapportino div {
     }
 
+    .draft{
+        position: absolute;
+        top: 3cm;
+        left: 2cm;
+        height: 15cm;
+        width: 15cm;
+        opacity: 0.5;
+        z-index: 100000;
+    }
+
     div#testo {
         position: absolute;
         top: 11cm;
@@ -213,6 +223,7 @@
         </div>
     </div>
     <div id="dettagli">
+        @if($intervento->inviato!='1')<img class="draft" src="<?=public_path()?>/img/draft.png">@endif
         <table style="border-collapse: collapse; height: 96px;" cellspacing="0">
             <tbody>
             <tr>

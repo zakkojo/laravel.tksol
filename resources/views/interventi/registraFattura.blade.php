@@ -98,8 +98,7 @@
         <div>A: <input size='10' type='text' id='df' class="datepicker"></div>
         <div>Righe selezionate: <input id="selezione" readonly value='0'/></div>
         <div>Valutazione:
-            <input type='button' class="btn btn-success" onclick='autorizza();' value='Si autorizza'/>
-            <input type='button' class="btn btn-danger" onclick='rifiuta();' value='Si rifiuta'/>
+           
         </div>
     </div>
 

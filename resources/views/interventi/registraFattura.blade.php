@@ -98,7 +98,7 @@
         <div>A: <input size='10' type='text' id='df' class="datepicker"></div>
         <div>Righe selezionate: <input id="selezione" readonly value='0'/></div>
         <div>Valutazione:
-           
+
         </div>
     </div>
 

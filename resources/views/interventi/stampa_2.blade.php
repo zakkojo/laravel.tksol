@@ -223,7 +223,7 @@
         </div>
     </div>
     <div id="dettagli">
-        @if($intervento->inviato!='1')<img class="draft" src="<?=public_path()?>/img/draft.png">@endif
+        @if($intervento->inviato!='1')<!--img class="draft" src="<?=public_path()?>/img/draft.png"-->@endif
         <table style="border-collapse: collapse; height: 96px;" cellspacing="0">
             <tbody>
             <tr>

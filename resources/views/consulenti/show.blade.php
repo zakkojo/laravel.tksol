@@ -71,6 +71,7 @@
             $.get('{{action('ConsulenteController@ajaxGetInterventiDaApprovare')}}')
                 .done(function (data) {
                     $('#infoApprovazione').find('.info-box-number').text(data);
+                    console.log("OK: " + data);
                     return data;
                 })
                 .fail(function (jqXHR, textStatus, data) {

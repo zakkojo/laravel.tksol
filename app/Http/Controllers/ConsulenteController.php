@@ -168,8 +168,8 @@ class ConsulenteController extends Controller {
         $daApprovare=0;
         $consulente->capoProgettoAlways->each(function ($contratto, $key) use (&$daApprovare)
         {
-            if($contratto->interventiDaFatturare)
-            $daApprovare =$daApprovare->$contratto->interventiDaFatturarecount();
+            if($contratto->interventiDaApprovare)
+            $daApprovare = $daApprovare + $contratto->interventiDaApprovare->count();
         });
         return $daApprovare;
     }

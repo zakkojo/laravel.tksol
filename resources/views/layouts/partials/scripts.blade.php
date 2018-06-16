@@ -21,7 +21,9 @@
 <!-- ClockPicker -->
 <script src="{{asset('/plugins/clockpicker/clockpicker.min.js')}}" type="text/javascript" ></script>
 <!-- wysightml5 -->
-<script src="{{asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}" type="text/javascript" ></script>
+<script src="{{asset('/plugins/bootstrap-wysihtml5/wysihtml5x-toolbar.min.js')}}" type="text/javascript" ></script>
+<script src="{{asset('/plugins/bootstrap-wysihtml5/handlebars.runtime.min.js')}}" type="text/javascript" ></script>
+<script src="{{asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.js')}}" type="text/javascript" ></script>
 <!-- Tree-View -->
 <script src="{{asset('/plugins/bootstrap-treeview/bootstrap-treeview.min.js')}}" type="text/javascript" ></script>
 <!-- FullCalendar -->

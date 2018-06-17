@@ -80,13 +80,16 @@ Route::group(['middleware' => 'web'], function () {
 
 
 
-    Route::get('interventi/export_xlsx', 'InterventoController@export_xlsx');
+    //Route::get('interventi/export_xlsx_daFatturare', 'InterventoController@export_xlsx_daFatturare');
+    Route::get('export_xlsx_daFatturare', 'InterventoController@export_xlsx_daFatturare')->name('interventi.export_xlsx_daFatturare');
+    Route::get('interventi/estrazione', 'InterventoController@estrazioneConsulente');
+    Route::get('interventi/estrazioneXlsx', 'InterventoController@estrazioneConsulenteExportXlsx');
     Route::get('interventi/approva', 'InterventoController@approvaIntervento');
     Route::get('interventi/registraFattura', 'InterventoController@registraFattura');
-    Route::resource('interventi', 'InterventoController');
     Route::get('interventi/{intervento_id}', 'InterventoController@edit');
     Route::get('interventi/{intervento_id}/stampa', 'InterventoController@stampa');
     Route::get('interventi/{intervento_id}/invia', 'InterventoController@invia');
+    Route::resource('interventi', 'InterventoController');
     Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
     Route::get('ajax/interventi/getIntervento', 'InterventoController@ajaxGetIntervento');
     Route::get('ajax/interventi/createIntervento', 'InterventoController@ajaxCreateIntervento');
@@ -95,17 +98,11 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('ajax/interventi/getPermissionUpdatePianificazione', 'InterventoController@ajaxGetPermissionUpdatePianificazione');
     Route::get('ajax/interventi/acceptIntervento', 'InterventoController@ajaxAcceptIntervento');
     Route::get('ajax/interventi/approvaIntervento', 'InterventoController@ajaxApprovaIntervento');
-
-
-
     Route::resource('interventi/{intervento_id}/rimborsi','RimborsoController');
 
 
 
     Route::resource('prodotti','ProdottoController');
     Route::get('test','TestController@show');
-
-    //TEST
-    Route::get('export_xlsx', 'InterventoController@export_xlsx')->name('interventi.export_xlsx');
 
 });

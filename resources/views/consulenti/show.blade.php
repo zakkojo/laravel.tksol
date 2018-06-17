@@ -42,7 +42,12 @@
                 <div class="info-box-content">
                     <span class="info-box-text">
                         <a href="{{action('InterventoController@registraFattura')}}">Registra Fatture</a>
-                        <!--a href="{{action('InterventoController@export_xlsx')}}">Scarica report per Fatturazione</a-->
+                    </span>
+                    <span class="info-box-text">
+                        <a href="{{action('InterventoController@export_xlsx_daFatturare')}}">Scarica report per Fatturazione</a>
+                    </span>
+                    <span class="info-box-text">
+                        <a href="{{action('InterventoController@estrazioneConsulente')}}">Estrazione Interventi</a>
                     </span>
                     <span class="info-box-number"></span>
                 </div><!-- /.info-box-content -->

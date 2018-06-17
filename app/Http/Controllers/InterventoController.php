@@ -4,7 +4,9 @@ use App\Cliente;
 use App\Consulente;
 use App\ContrattoIntervento;
 use App\Http\Requests\AjaxInterventiRequest;
+use App\Http\Requests\InterventiEstrazioneXlsxRequest;
 use App\Http\Requests\InterventiRequest;
+use App\Http\Requests\Request;
 use App\Intervento;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Carbon\Carbon;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
 use Excel;
 use DB;
+use Html2Text\Html2Text;
 
 class InterventoController extends Controller {
 
@@ -170,6 +173,7 @@ class InterventoController extends Controller {
     {
         $intervento = Intervento::findOrFail($id);
         $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'));
+
         return $pdf->setPaper('a5')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0)->inline();
     }
 
@@ -451,8 +455,17 @@ class InterventoController extends Controller {
         else return ['status' => 'fail', 'id' => $id];
     }
 
-    public function export_xlsx()
+    private function excel_format_cell(&$item1, $key, $val)
     {
+        $item1 = str_replace("<br>", "\n", $val);
+        $item1 = str_replace("<br/>", "\n", $val);
+        $item1 = strip_tags($val);
+
+    }
+
+    public function export_xlsx_daFatturare()
+    {
+
 //        $consulente = Auth::User()->consulente;
 //        $daApprovare = collect();
 //        $consulente->capoProgetto->each(function ($contratto, $key) use ($daApprovare)
@@ -480,11 +493,12 @@ class InterventoController extends Controller {
             inter.attivitaSvolte,				
             inter.ore_fatturate ore_fatturare,
             inter.sede,
-            inter.fatturabile,
-            '' as 'Numero Fattura',
-            '' as 'Data Fattura',
-            '' as 'Note Fattura'
-        FROM 				
+            inter.fatturabile " .
+//            ,
+//            '' as 'Numero Fattura',
+//            '' as 'Data Fattura',
+//            '' as 'Note Fattura'
+            "FROM 				
             laravel_tksol.intervento inter 				
             join users on(users.id = inter.user_id)						
 	            join consulente cons on(cons.user_id = users.id)			
@@ -501,13 +515,76 @@ class InterventoController extends Controller {
         {
             $daFatturare[$i] = (array)$daFatturare[$i];
         }
-        //dd($daApprovare);
+
+        foreach ($daFatturare as $k => $array)
+        {
+            $daFatturare[$k]["attivitaSvolte"] = Html2Text::convert($daFatturare[$k]["attivitaSvolte"]);
+        }
         ob_clean();
-        Excel::create('Filename', function ($excel) use ($daFatturare)
+        $date = Carbon::now();
+        $filename = 'crm_daFatturare_' . $date->format('Ymd');;
+        Excel::create($filename, function ($excel) use ($daFatturare)
         {
             $excel->sheet('Sheetname', function ($sheet) use ($daFatturare)
             {
                 $sheet->fromArray($daFatturare);
+
+            });
+        })->export('xlsx');
+    }
+
+    public function estrazioneConsulente()
+    {
+        return view('interventi.estrazioneConsulente');
+    }
+
+    public function estrazioneConsulenteExportXlsx(InterventiEstrazioneXlsxRequest $request)
+    {
+        $di = Carbon::createFromFormat('d/m/Y', $request->di);
+        $df = Carbon::createFromFormat('d/m/Y', $request->df);
+        $dataset = DB::select("
+        SELECT 
+            i.id intervento_id,
+            cli.id cliente_id,
+            con.id contratto_id,
+            cons.id consulente_id,
+            date(i.data_Start) data_intervento,
+            users.email consulente_login, 
+            pro.nome progetto,
+            cli.ragione_sociale cliente,						
+            soc.nome origineFattura,				
+            i.ore_fatturate ore_fatturare,
+            i.sede,
+            i.fatturabile,
+            GROUP_CONCAT(rim.tipo_spesa ORDER BY rim.id separator ', ') rimborso,
+            SUM(rim.importo) rimborso_tot,
+            SUM(IF(rim.um='Km', rim.quantita, null)) AS km
+            FROM laravel_tksol.intervento i 				
+                        join users on(users.id = i.user_id)						
+                            join consulente cons on(cons.user_id = users.id)			
+                        join contratto_intervento conint on (i.listino_id = conint.id) 				
+                            join contratto con on (conint.contratto_id = con.id) 			
+                                join cliente cli on (con.cliente_id = cli.id)		
+                                join cliente fat on (con.fatturazione_id = fat.id)				
+                                join progetto pro on (con.progetto_id = pro.id)				
+                                join societa soc on(con.societa_id = soc.id)				
+                        join attivita att on (att.id = i.attivita_id)
+                        left join rimborsoIntervento rim ON (i.id = rim.intervento_id)
+            WHERE date(i.data_Start) >= '{$di->format('Y-m-d')}' AND date(i.data_Start) <= '{$df->format('Y-m-d')}' 
+            GROUP BY i.id 
+        ");
+        for ($i = 0, $c = count($dataset); $i < $c; ++$i)
+        {
+            $dataset[$i] = (array)$dataset[$i];
+        }
+        ob_clean();
+        $date = Carbon::now();
+        $filename = 'crm_interventi_' . $date->format('Ymd');;
+        Excel::create($filename, function ($excel) use ($dataset)
+        {
+            $excel->sheet('Interventi', function ($sheet) use ($dataset)
+            {
+                $sheet->fromArray($dataset);
 
             });
         })->export('xlsx');

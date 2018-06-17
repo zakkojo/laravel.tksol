@@ -184,7 +184,6 @@ return [
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
-
     ],
 
     /*

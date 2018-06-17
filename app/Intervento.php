@@ -17,7 +17,11 @@ class Intervento extends Model {
     public $timestamps = true;
 
     use SoftDeletes;
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
 
     protected $fillable = [
         'listino_id',
@@ -60,6 +64,13 @@ class Intervento extends Model {
     public function getDataCAttribute()
     {
         return Carbon::parse($this->data_start)->format('Y-m-d');
+    }
+    public function getDatafAttribute()
+    {
+        if($this->data_fattura)
+            return Carbon::parse($this->data_fattura)->format('d/m/Y');
+        else
+            return null;
     }
 
     public function attivita()

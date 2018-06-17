@@ -120,6 +120,7 @@
                     <th>n° Fattura</th>
                     <th>Data Fattura</th>
                     <th>Note</th>
+                    <th>Stato</th>
                 </tr>
                 </thead>
                 <tobody>
@@ -152,35 +153,47 @@
                             <td class="ore_lavorate">{{$intervento->ore_lavorate}}</td>
                             <td>{{$intervento->sede}}</td>
                             <td>
-                                <input name='nFattura' size="12" type='text' value='{{$intervento->fatturato}}'
-                                       data-id_intervento='{{$intervento->id}}'>
+                                <input class='nFattura' name='nFattura' size="12" type='text'
+                                       value='{{$intervento->fatturato}}' data-id_intervento='{{$intervento->id}}'>
                             </td>
                             <td>
-                                <input name='dataFattura' class="datepicker" size="8" type='text'
-                                       value='{{$intervento->data_fattura}}' data-id_intervento='{{$intervento->id}}'>
+                                <input class='dataFattura datepicker' name='dataFattura' size="8" type='text'
+                                       value='{{$intervento->dataf}}' data-id_intervento='{{$intervento->id}}'>
                             </td>
 
                             <td class="textarea">
-                                <textarea class="textarea" name='noteFattura' value='{{$intervento->note_fattura}}'
-                                          data-id_intervento='{{$intervento->id}}'>
-                                </textarea>
-                                <span class="invioOK label label-success" style="display:none"><i
-                                            class="fa fa-check"></i> </span>
-                                <span class="invioKO label label-danger" style="display:none"><i
-                                            class="fa fa-remove"></i> </span>
+                                <textarea class="noteFattura textarea" name='noteFattura'
+                                          data-id_intervento='{{$intervento->id}}'>{{$intervento->note_fattura}}</textarea>
+                            </td>
+                            <td>
+                                <button type="button"
+                                        class="btn btn-default azione sblocca {{ $intervento->fatturato ? "" : "hidden" }}"
+                                        onClick="approvaRiga({{$intervento->id}},'reset')" title="Sblocca fattura">
+                                    <i class="fa fa-lock"></i>
+                                </button>
+                                <div class="btn-group btn-group-sm group-azione {{ $intervento->fatturato ? "hidden" : "" }}"
+                                     role="group" aria-label="...">
+                                    <button type="button" class="btn btn-success azione registra"
+                                            onClick="approvaRiga({{$intervento->id}})" title="Registra Fattura">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-default disabled" onClick="" title="">
+                                        <i class="fa fa-unlock"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
                 </tobody>
             </table>
         @else
-            <a>Nessun Intervento da approvare.</a>
+            <a>Nessun Fattura da emettere.</a>
         @endif
     </div>
 @endsection
 @section('page_scripts')
     <script>
-        $(function() {
+        $(function () {
             calcolaTotale();
         });
 
@@ -195,28 +208,36 @@
         function approvaRiga(id, reset) {
             //SALVA RIGA
             reset = reset || 0;
-            if (reset == 0)
-                var ore_approvate = $(".intervento[data-id_intervento='" + id + "']").find("input[name='valoreRDA']").val();
-            else
-                var ore_approvate = '';
-            //alert('id:' + id + ' ore:' + ore_approvate);
-            $.ajax({
-                url: "/ajax/interventi/approvaIntervento",
-                type: "GET",
-                data: {id: id, ore_approvate: ore_approvate},
-                dataType: "JSON",
-            }).done(function (data) {
-                if (data.status == 'success') {
-                    console.log(data.ore + ' ore approvate per intervento id:' + data.id);
-                    $("input[data-id_intervento='" + data.id + "']").siblings(".invioOK").fadeIn().delay(5000).fadeOut();
-                }
-                else {
-                    console.log('ERRORE: salvataggio ore approvate intervento ' + data.id);
-                    $("input[data-id_intervento='" + data.id + "']").siblings(".invioKO").fadeIn().delay(5000).fadeOut();
-                }
-            }).fail(function (jqXHR, textStatus, data) {
-                console.log("Request failed: " + data);
-            });
+            if (reset == 'reset') {
+                $('tr[data-id_intervento=' + id + ']').find('.sblocca').prop('disabled', true);
+                alert('funzione non disponibile');
+                $('tr[data-id_intervento=' + id + ']').find('.sblocca').prop('disabled', false);
+            }
+            //get resetFattura
+            else {
+                $('tr[data-id_intervento=' + id + ']').find('.registra').prop('disabled', true);
+                nFattura = $('tr[data-id_intervento=' + id + ']').find('.nFattura').val();
+                dataFattura = $('tr[data-id_intervento=' + id + ']').find('.dataFattura').val();
+                dataFattura = moment(dataFattura,'DD/MM/YYYY').format();
+                noteFattura = $('tr[data-id_intervento=' + id + ']').find('.noteFattura').val();
+                $.ajax({
+                    url: "/ajax/interventi/registraFattura",
+                    type: "GET",
+                    data: {id: id, fatturato: nFattura, data: dataFattura, note: noteFattura},
+                    dataType: "JSON",
+                }).done(function (data) {
+                    if (data.status == 'success') {
+                        $('tr[data-id_intervento=' + id + ']').find('.group-azione').addClass("hidden");
+                        $('tr[data-id_intervento=' + id + ']').find('.sblocca').removeClass("hidden");
+                    }
+                    else {
+                        $('tr[data-id_intervento=' + id + ']').find('.registra').prop('disabled', false);
+                        console.log(data);
+                    }
+                }).fail(function (jqXHR, textStatus, data) {
+                    console.log("Request failed: " + data);
+                });
+            }
         }
 
         $('.datepicker').on('changeDate', function () {
@@ -315,11 +336,12 @@
             if (prefix) prefix = prefix + " "; else prefix = "";
             return prefix + s.join(dec);
         }
-        function autorizza() {
+        function autorizza(fattura_id) {
+            approvaRiga(fattura_id);
 //            $("input[name='selettoreRDA']:checkbox:checked").each(function () {
 //                if ($(this).closest('.intervento').find("input[name='valoreRDA']").val() == '')
 //                    $(this).closest('.intervento').find("input[name='valoreRDA']").val($(this).closest('.intervento').find(".ore_lavorate").text());
-//                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'));
+//
 //            });
         }
 

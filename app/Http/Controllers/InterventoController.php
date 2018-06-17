@@ -254,10 +254,30 @@ class InterventoController extends Controller {
 
     public function registraFattura()
     {
-
-        $daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
-
+        //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
+        $daFatturare = Intervento::where('approvato', '1')->get();
         return view('interventi.registraFattura', compact('daFatturare'));
+    }
+    public function ajaxRegistraFattura()
+    {
+        $intervento_id = Input::get('id');
+        $data = Input::get('data');
+        $numero = Input::get('fatturato');
+        $note = Input::get('note');
+
+        if ($intervento_id AND $numero){
+            $intervento= Intervento::findOrFail($intervento_id);
+            if(!$intervento->fatturato){
+                $intervento->data_fattura = $data;
+                $intervento->fatturato = $numero;
+                $intervento->note_fattura = $note;
+            }
+        }
+        else {
+            return ['status' => 'errore', 'input' => Input::all() ];
+        }
+        $intervento->save();
+        return json_encode(['status' => 'success', 'intervento' => $intervento]);
     }
 
     public function ajaxGetCalendar()

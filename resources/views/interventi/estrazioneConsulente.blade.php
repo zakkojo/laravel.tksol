@@ -22,7 +22,7 @@
         @endif
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 id="form_title" class="box-title">Filri</h3>
+                <h3 id="form_title" class="box-title">Filtri</h3>
             </div>
             {{ Form::open(['url' => 'interventi/estrazioneXlsx', 'method' => 'GET' ]) }}
             <div class="box-body">

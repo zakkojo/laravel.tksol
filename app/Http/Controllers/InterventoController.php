@@ -576,6 +576,8 @@ class InterventoController extends Controller {
             i.ore_fatturate ore_fatturare,
             i.sede,
             i.fatturabile,
+            att.descrizione,
+            ci.descrizione,
             GROUP_CONCAT(rim.tipo_spesa ORDER BY rim.id separator ', ') rimborso,
             SUM(rim.importo) rimborso_tot,
             SUM(IF(rim.um='Km', rim.quantita, null)) AS km
@@ -589,8 +591,10 @@ class InterventoController extends Controller {
                                 join progetto pro on (con.progetto_id = pro.id)				
                                 join societa soc on(con.societa_id = soc.id)				
                         join attivita att on (att.id = i.attivita_id)
+                        join contratto_intervento ci on (ci.id = i.listino_id)
                         left join rimborsoIntervento rim ON (i.id = rim.intervento_id)
             WHERE date(i.data_Start) >= '{$di->format('Y-m-d')}' AND date(i.data_Start) <= '{$df->format('Y-m-d')}' 
+            AND i.deleted_at is null
             GROUP BY i.id 
         ");
         for ($i = 0, $c = count($dataset); $i < $c; ++$i)

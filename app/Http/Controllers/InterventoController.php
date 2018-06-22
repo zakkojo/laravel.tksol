@@ -2,6 +2,7 @@
 
 use App\Cliente;
 use App\Consulente;
+use App\User;
 use App\ContrattoIntervento;
 use App\Http\Requests\AjaxInterventiRequest;
 use App\Http\Requests\InterventiEstrazioneXlsxRequest;
@@ -256,8 +257,10 @@ class InterventoController extends Controller {
     {
         //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
         $daFatturare = Intervento::where('approvato', '1')->get();
+
         return view('interventi.registraFattura', compact('daFatturare'));
     }
+
     public function ajaxRegistraFattura()
     {
         $intervento_id = Input::get('id');
@@ -265,18 +268,21 @@ class InterventoController extends Controller {
         $numero = Input::get('fatturato');
         $note = Input::get('note');
 
-        if ($intervento_id AND $numero){
-            $intervento= Intervento::findOrFail($intervento_id);
-            if(!$intervento->fatturato){
+        if ($intervento_id AND $numero)
+        {
+            $intervento = Intervento::findOrFail($intervento_id);
+            if (!$intervento->fatturato)
+            {
                 $intervento->data_fattura = $data;
                 $intervento->fatturato = $numero;
                 $intervento->note_fattura = $note;
             }
-        }
-        else {
-            return ['status' => 'errore', 'input' => Input::all() ];
+        } else
+        {
+            return ['status' => 'errore', 'input' => Input::all()];
         }
         $intervento->save();
+
         return json_encode(['status' => 'success', 'intervento' => $intervento]);
     }
 
@@ -555,13 +561,36 @@ class InterventoController extends Controller {
 
     public function estrazioneConsulente()
     {
-        return view('interventi.estrazioneConsulente');
+        $consulenti = Consulente::all();
+        $clienti = Cliente::all();
+
+        return view('interventi.estrazioneConsulente', compact('consulenti', 'clienti'));
     }
 
     public function estrazioneConsulenteExportXlsx(InterventiEstrazioneXlsxRequest $request)
     {
+        $filtro_consulenti = " ";
+        $filtro_clienti = " ";
+        //dd(session()->get('filtri_estrazioneConsulente'));
         $di = Carbon::createFromFormat('d/m/Y', $request->di);
         $df = Carbon::createFromFormat('d/m/Y', $request->df);
+        if ($consulenti = session()->get('filtri_estrazioneConsulente.consulenti'))
+        {
+            foreach ( $consulenti as $k => $v)
+            {
+                $k = User::findorFail($k)->consulente->id;
+                $filtro_consulenti .= $k . ',';
+            }
+            $filtro_consulenti = " AND cons.id IN (" . substr($filtro_consulenti, 0, -1) . ") ";
+        }
+        if ($clienti = session()->get('filtri_estrazioneConsulente.clienti'))
+        {
+            foreach ($clienti as $k => $v)
+            {
+                $filtro_clienti .= $k . ',';
+            }
+            $filtro_clienti = " AND cli.id IN (" . substr($filtro_clienti, 0, -1) . ") ";
+        }
         $dataset = DB::select("
         SELECT 
             i.id intervento_id,
@@ -594,6 +623,7 @@ class InterventoController extends Controller {
                         join contratto_intervento ci on (ci.id = i.listino_id)
                         left join rimborsoIntervento rim ON (i.id = rim.intervento_id)
             WHERE date(i.data_Start) >= '{$di->format('Y-m-d')}' AND date(i.data_Start) <= '{$df->format('Y-m-d')}' 
+            {$filtro_consulenti}{$filtro_clienti}
             AND i.deleted_at is null
             GROUP BY i.id 
         ");

@@ -81,11 +81,12 @@ $listClienti->prepend('', 0);
 
             </div>
             <div class="box-footer">
+                <button id="inviaBtn" type="submit" class="btn  btn-primary"><i class="fa fa-download"></i>&nbsp;
+                    Estrai
+                </button>
                 <button id="resetBtn" type="reset" onClick="resetForm()" class="btn  btn-primary"><i
                             class="fa fa-download"></i>&nbsp; Reset
-                    <button id="inviaBtn" type="submit" class="btn  btn-primary"><i class="fa fa-download"></i>&nbsp;
-                        Estrai
-                    </button>
+                </button>
             </div>
             {!! Form::close() !!}
         </div>

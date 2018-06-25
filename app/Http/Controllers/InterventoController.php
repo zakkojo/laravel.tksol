@@ -180,8 +180,10 @@ class InterventoController extends Controller {
 
     public function invia($id)
     {
-        $recipients = Input::get('recipients');
         $intervento = Intervento::findOrFail($id);
+        if (Input::get('invia') != 1)
+            return view('interventi.inviaStampa', compact('intervento'));
+        $recipients = Input::get('recipients');
         $intervento->stampa = 1;
         $intervento->inviato = 1;
         $user = Auth::user();
@@ -576,7 +578,7 @@ class InterventoController extends Controller {
         $df = Carbon::createFromFormat('d/m/Y', $request->df);
         if ($consulenti = session()->get('filtri_estrazioneConsulente.consulenti'))
         {
-            foreach ( $consulenti as $k => $v)
+            foreach ($consulenti as $k => $v)
             {
                 $k = User::findorFail($k)->consulente->id;
                 $filtro_consulenti .= $k . ',';

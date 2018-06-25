@@ -108,7 +108,7 @@
             $.ajax({
                 url: "{{action('InterventoController@invia',$intervento->id)}}",
                 type: "get",
-                data: {recipients: emails},
+                data: {recipients: emails, invia:1},
                 dataType: "JSON"
             }).done(function (data) {
                 if (data['status'] == 'success') {

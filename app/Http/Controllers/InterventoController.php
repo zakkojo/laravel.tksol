@@ -54,6 +54,10 @@ class InterventoController extends Controller {
         $request->request->add(['data_modifica' => Carbon::now()]);
         $request->request->add(['creatore_id' => Auth::User()->id]);
         $request->request->add(['contratto_id' => ContrattoIntervento::findOrFail($request->listinoContratto)->contratto->id]);
+        if (ContrattoIntervento::findOrFail($request->listinoContratto)->contratto->fatturazione_default)
+            $request->request->add(['fatturabile' => 1]);
+        else
+            $request->request->add(['fatturabile' => 0]);
         $data = $request->all();
         if (Intervento::create($data)) return true;
         else return false;
@@ -129,6 +133,7 @@ class InterventoController extends Controller {
             $intervento->ore_lavorate = Input::get('ore_lavorate');
             $intervento->ore_fatturate = Input::get('ore_lavorate');
         }
+        //dd($request->all());
         $intervento->save();
 
         //se clicco sul pulsante stampa o chiudi
@@ -186,31 +191,33 @@ class InterventoController extends Controller {
         $recipients = Input::get('recipients');
         $intervento->stampa = 1;
         $intervento->inviato = 1;
-        $user = Auth::user();
-        $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'));
-
-        $base_path = base_path();
-        $pdf->save($base_path . '/resources/tmp/rapportino_' . $id . '.pdf', true);
-        $societa = $intervento->contratto->societa;
-        Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $societa, $id, $base_path, $recipients)
+        if (config('app.debug') == false)
         {
-            $m->from($societa->email, 'Rapportini ' . $societa->nome);
-            $m->replyTo($user->email, $user->consulente->nominativo);
-            if (config('app.customer_email'))
-            {
-                if (is_array($recipients))
-                {
-                    foreach ($recipients as $recipient)
-                    {
-                        if ($recipient) $m->to($recipient);
-                    }
-                }
-                $m->subject('Rapportino ' . $societa->nome);
-            } else $m->subject('***NON INVIATO AL CLIENTE*** Rapportino ' . $societa->nome);
-            $m->bcc($user->email, $user->consulente->nominativo);
-            $m->attach($base_path . '/resources/tmp/rapportino_' . $id . '.pdf');
-        });
+            $user = Auth::user();
+            $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'));
 
+            $base_path = base_path();
+            $pdf->save($base_path . '/resources/tmp/rapportino_' . $id . '.pdf', true);
+            $societa = $intervento->contratto->societa;
+            Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $societa, $id, $base_path, $recipients)
+            {
+                $m->from($societa->email, 'Rapportini ' . $societa->nome);
+                $m->replyTo($user->email, $user->consulente->nominativo);
+                if (config('app.customer_email'))
+                {
+                    if (is_array($recipients))
+                    {
+                        foreach ($recipients as $recipient)
+                        {
+                            if ($recipient) $m->to($recipient);
+                        }
+                    }
+                    $m->subject('Rapportino ' . $societa->nome);
+                } else $m->subject('***NON INVIATO AL CLIENTE*** Rapportino ' . $societa->nome);
+                $m->bcc($user->email, $user->consulente->nominativo);
+                $m->attach($base_path . '/resources/tmp/rapportino_' . $id . '.pdf');
+            });
+        }
         $intervento->save();
 
         return ['status' => 'success'];
@@ -370,6 +377,7 @@ class InterventoController extends Controller {
         $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
         $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
         $intervento->contratto_id = ContrattoIntervento::findOrFail(Input::get('listinoContratto'))->contratto->id;
+        $intervento->fatturabile = ContrattoIntervento::findOrFail(Input::get('listinoContratto'))->contratto->fatturazione_default;
         //if (Input::get('creatore_id') == Input::get('consulente'))
         //    $data['data_accettazione'] = Carbon::now();
         //-------------------------------------------

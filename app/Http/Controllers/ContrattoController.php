@@ -111,10 +111,11 @@ class ContrattoController extends Controller {
         else $request->merge(array('ripianifica' => 0));
         if ($request->rapportino) $request->merge(array('rapportino' => 1));
         else $request->merge(array('rapportino' => 0));
+        if ($request->fatturazione_default) $request->merge(array('fatturazione_default' => 1));
+        else $request->merge(array('fatturazione_default' => 0));
 
         $contratto = Contratto::findOrFail($id);
         $contratto->update($request->all());
-
         return redirect()->action('ContrattoController@edit', $contratto->id);
     }
 

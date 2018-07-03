@@ -32,6 +32,7 @@ class Intervento extends Model {
         'attivitaPianificate',
         'creatore_id',
         'data_modifica',
+        'fatturabile',
     ];
 
     public function storico()

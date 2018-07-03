@@ -181,7 +181,7 @@ if (isset($contratto))
     </div>
 
     <div class="row">
-        <div class="col-xs-8">
+        <div class="col-xs-6">
             <div class="checkbox icheck">
                 <label>
                     <?php
@@ -192,6 +192,20 @@ if (isset($contratto))
                     } else $ripianifica_check = true
                     ?>
                     {!!  Form::checkbox('ripianifica', 'ripianifice', $ripianifica_check) !!} Obbligo Ripianificare
+                </label>
+            </div>
+        </div><!-- /.col -->
+        <div class="col-xs-6">
+            <div class="checkbox icheck">
+                <label>
+                    <?php
+                    if (isset($contratto))
+                    {
+                        if ($contratto->fatturazione_default == '1') $fatturazione_default_check = true;
+                        else $fatturazione_default_check = '';
+                    } else $fatturazione_default_check = true
+                    ?>
+                    {!!  Form::checkbox('fatturazione_default', 'fatturazione_default', $fatturazione_default_check) !!} Default Fatturazione
                 </label>
             </div>
         </div><!-- /.col -->

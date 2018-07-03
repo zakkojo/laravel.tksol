@@ -30,6 +30,7 @@ class Contratto extends Model {
         'fatturazione_id',
         'ripianifica',
         'rapportino',
+        'fatturazione_default',
     ];
 
     protected $nullable = [

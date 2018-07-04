@@ -31,26 +31,18 @@
 
     div#logo {
         position: absolute;
-        top: 1.5cm;
-        left: 1.5cm;
+        top: 1cm;
+        left: 1cm;
         height: 4cm;
         width: 4cm;
     }
 
     div#intestazione {
         position: absolute;
-        top: 3.3cm;
-        left: 1.5cm;
-        height: 3.5cm;
-        width: 9.5cm;
-    }
-
-    div#intestazione2 {
-        position: absolute;
-        top: 3.7cm;
-        left: 11.5cm;
+        top: 1.5cm;
+        left: 7cm;
         height: 3cm;
-        width: 11cm;
+        width: 14cm;
         overflow: hidden;
     }
 
@@ -60,15 +52,24 @@
         line-height: 0.8cm;
     }
 
+    div#intestazione span.sub {
+        font-size: 9pt;
+        line-height: 0.5cm;
+    }
+
+    div#intestazione2 {
+        position: absolute;
+        top: 4cm;
+        left: 9cm;
+        height: 4cm;
+        width: 11cm;
+        overflow: hidden;
+    }
+
     div#intestazione2 span.main {
         font-size: 18pt;
         font-weight: bold;
         line-height: 0.8cm;
-    }
-
-    div#intestazione span.sub {
-        font-size: 9pt;
-        line-height: 0.5cm;
     }
 
     div#infoCliente {
@@ -211,7 +212,7 @@
 <div id='rapportino'>
     <div id='testata'>
         <div id="logo">
-            <img src='<?=public_path()?>/img/sfn_adriatica.gif'>
+            <img src='<?=public_path()?>/img/SFNAdriatica.png'>
         </div>
         <div id="intestazione">
             <span class='main'>SFN ADRIATICA S.r.l. </span><br/>

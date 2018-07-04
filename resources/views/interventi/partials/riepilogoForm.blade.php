@@ -134,7 +134,9 @@
                 if (decimale < 0.33) dec = 0;
                 else if (decimale < 0.67) dec = 0.5;
                 else dec = 1;
-                $('#ore_lavorate').attr('value', Math.floor(oraend.diff(orastart, 'hours', true)) + dec);
+                var totale =  Math.floor(oraend.diff(orastart, 'hours', true)) + dec;
+                if (totale > 8) totale = 8;
+                $('#ore_lavorate').attr('value', totale);
             }
             else $('#ore_mod').hide();
         }

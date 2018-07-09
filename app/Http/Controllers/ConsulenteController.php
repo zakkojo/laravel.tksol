@@ -78,6 +78,7 @@ class ConsulenteController extends Controller {
             WHERE cc.consulente_id = '" . $consulente->id . "'
             AND c.stato <> 'CLOSED' 
             AND c.deleted_at is null
+            AND cc.ruolo = 'Capo Progetto'
             GROUP BY c.id,ragione_sociale, pro.nome
             HAVING (data_primo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR data_primo_intervento is null)
         ");

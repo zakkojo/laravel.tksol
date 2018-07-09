@@ -48,7 +48,7 @@
     <script>
         $(document).ready(function () {
             var clientiTable = $('#contrattiSenzaInterventi').DataTable({
-                "scrollY": "200px",
+                "scrollY": "400px",
                 "scrollCollapse": false,
                 "paging": false,
                 "lengthChange": false,

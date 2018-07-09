@@ -52,7 +52,7 @@
     <script>
         $(document).ready(function () {
             var clientiTable = $('#prossimiInterventi').DataTable({
-                "scrollY": "200px",
+                "scrollY": "400px",
                 "scrollCollapse": false,
                 "paging": false,
                 "lengthChange": false,

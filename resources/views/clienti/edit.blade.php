@@ -21,14 +21,21 @@
         </div>
     @endif
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="box box-primary">
                 {!! Form::model($cliente, ['url' => 'clienti/'.$cliente->id, 'method' => 'PATCH' ]) !!}
                 @include('clienti.partials.clienteForm')
-                {!! Form::close() !!}
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-primary">
+                @include('clienti.partials.idGammaForm')
+
             </div>
         </div>
     </div>
-
+    <button type="submit" class="btn btn-primary">Submit</button>
+    {!! Form::close() !!}
 @endsection
 

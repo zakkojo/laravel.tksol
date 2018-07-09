@@ -4,6 +4,9 @@ use App\Http\Requests;
 use App\Http\Requests\ClientiRequest;
 use App\Cliente;
 use App\Contratto;
+use App\Societa;
+use App\ClienteSocieta;
+
 
 use Illuminate\Support\Facades\Auth;
 use Request;
@@ -50,6 +53,12 @@ class ClienteController extends Controller {
         $data = $request->all();
         $ret = Cliente::create($data);
 
+        foreach ($request->idGamma as $societaId => $idGamma)
+        {
+            ClienteSocieta::updateOrCreate(['cliente_id' => $ret->id, 'societa_id' => $societaId],
+                ['cliente_id' => $ret->id, 'societa_id' => $societaId, 'idGamma' => $idGamma]);
+        }
+
         return redirect()->action('ClienteController@show', $ret->id);
     }
 
@@ -75,8 +84,10 @@ class ClienteController extends Controller {
     public function edit($id)
     {
         $cliente = Cliente::findOrFail($id);
+        $societas = Societa::all();
+        $cliente_societa = ClienteSocieta::where('cliente_id',$id)->get();
 
-        return view('clienti.edit', compact('cliente'));
+        return view('clienti.edit', compact('cliente', 'societas','cliente_societa'));
     }
 
     /**
@@ -93,6 +104,12 @@ class ClienteController extends Controller {
         else $request->merge(array('softwarehouse' => 0));
 
         $cliente = Cliente::findOrFail($id);
+        foreach ($request->idGamma as $societaId => $idGamma)
+        {
+            ClienteSocieta::updateOrCreate(['cliente_id' => $cliente->id, 'societa_id' => $societaId],
+                ['cliente_id' => $cliente->id, 'societa_id' => $societaId, 'idGamma' => $idGamma]);
+        }
+
         $cliente->update($request->all());
 
         return redirect()->action('ClienteController@show', $id);
@@ -114,7 +131,8 @@ class ClienteController extends Controller {
      */
     public function destroy($id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin'))
+        {
             abort(503, 'Unauthorized action.');
         }
     }

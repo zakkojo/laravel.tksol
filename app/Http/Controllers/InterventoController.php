@@ -526,7 +526,8 @@ class InterventoController extends Controller {
             cli.ragione_sociale cliente,				
             fat.ragione_sociale destinazioneFattura,				
             soc.nome origineFattura,				
-            inter.attivitaSvolte,				
+            inter.attivitaSvolte,			
+            inter.ore_lavorate ore_lavorate,
             inter.ore_fatturate ore_fatturare,
             inter.sede,
             inter.fatturabile " .
@@ -612,6 +613,7 @@ class InterventoController extends Controller {
             pro.nome progetto,
             cli.ragione_sociale cliente,						
             soc.nome origineFattura,				
+            i.ore_lavorate ore_lavorate,
             i.ore_fatturate ore_fatturare,
             i.sede,
             i.fatturabile,

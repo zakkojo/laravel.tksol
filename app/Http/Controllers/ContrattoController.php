@@ -54,6 +54,14 @@ class ContrattoController extends Controller {
         {
             abort(503, 'Unauthorized action.');
         }
+
+        if ($request->ripianifica) $request->merge(array('ripianifica' => 1));
+        else $request->merge(array('ripianifica' => 0));
+        if ($request->rapportino) $request->merge(array('rapportino' => 1));
+        else $request->merge(array('rapportino' => 0));
+        if ($request->fatturazione_default) $request->merge(array('fatturazione_default' => 1));
+        else $request->merge(array('fatturazione_default' => 0));
+
         $data = $request->all();
         if ($data['fatturazione_id'] == 0) $data['fatturazione_id'] = $data['cliente_id'];
         $ret = Contratto::create($data);

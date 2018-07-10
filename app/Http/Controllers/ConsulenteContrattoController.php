@@ -30,7 +30,7 @@ class ConsulenteContrattoController extends Controller {
         $consulenti = Consulente::all();
         $contratto = Contratto::findOrFail($contratto_id);
 
-        return view('consulentiContratti.create', compact('contratto','consulenti'));
+        return view('consulentiContratti.create', compact('contratto', 'consulenti'));
     }
 
     /**
@@ -40,18 +40,20 @@ class ConsulenteContrattoController extends Controller {
      */
     public function store(ConsulentiContrattiRequest $request)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($request->contratto_id))){
+        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($request->contratto_id)))
+        {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
         $ret = ConsulenteContratto::create($data);
+
         return redirect()->action('ContrattoController@edit', $data['contratto_id']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
     public function show($id)
@@ -62,28 +64,29 @@ class ConsulenteContrattoController extends Controller {
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
-    public function edit($contratto_id,$id)
+    public function edit($contratto_id, $id)
     {
         $consulenteContratto = ConsulenteContratto::findOrFail($id);
         $consulenti = Consulente::all();
-        return view('consulentiContratti.edit', compact('consulenteContratto','consulenti'));
+
+        return view('consulentiContratti.edit', compact('consulenteContratto', 'consulenti'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
-    public function update(ConsulentiContrattiRequest $request,$contratto_id, $id)
+    public function update(ConsulentiContrattiRequest $request, $contratto_id, $id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($contratto_id))){
+        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($contratto_id)))
+        {
             return back()->withErrors(['ERRORE' => 'Non autorizzato']);
-        }
-        else
+        } else
         {
             $consulenteContratto = ConsulenteContratto::findOrFail($id);
             $originale['ruolo'] = $consulenteContratto->ruolo;
@@ -95,8 +98,10 @@ class ConsulenteContrattoController extends Controller {
             {
                 $consulenteContratto->update($originale);
                 $consulenteContratto->save();
+
                 return back()->withErrors(['ERRORE' => 'Nessun Capo Progetto per il contratto']);
             }
+
             return redirect()->action('ContrattoController@edit', $contratto_id);
         }
     }
@@ -104,18 +109,22 @@ class ConsulenteContrattoController extends Controller {
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return Response
      */
-    public function destroy($contratto_id,$id)
+    public function destroy($contratto_id, $id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($contratto_id))){
+        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($contratto_id)))
+        {
             abort(503, 'Unauthorized action.');
         }
-        $capoProgetto = ConsulenteContratto::where('contratto_id', $contratto_id)->where('id','<>', $id)->where('ruolo', 'Capo Progetto')->count();
-        $resp = ConsulenteContratto::destroy($id);
+        $capoProgetto = ConsulenteContratto::where('contratto_id', $contratto_id)->where('id', '<>', $id)->where('ruolo', 'Capo Progetto')->count();
+        if ($capoProgetto)
+            $resp = ConsulenteContratto::destroy($id);
+
         return redirect()->action('ContrattoController@edit', $contratto_id);
     }
 
 }
+
 ?>

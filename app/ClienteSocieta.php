@@ -8,7 +8,7 @@ class ClienteSocieta extends Model
 {
     protected $table = 'cliente_societa';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'cliente_id',

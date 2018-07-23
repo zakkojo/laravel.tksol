@@ -53,12 +53,14 @@ class ClienteController extends Controller {
         $data = $request->all();
         $ret = Cliente::create($data);
 
-        foreach ($request->idGamma as $societaId => $idGamma)
+        if(is_array($request->idGamma))
         {
-            ClienteSocieta::updateOrCreate(['cliente_id' => $ret->id, 'societa_id' => $societaId],
-                ['cliente_id' => $ret->id, 'societa_id' => $societaId, 'idGamma' => $idGamma]);
+            foreach ($request->idGamma as $societaId => $idGamma)
+            {
+                ClienteSocieta::updateOrCreate(['cliente_id' => $ret->id, 'societa_id' => $societaId],
+                    ['cliente_id' => $ret->id, 'societa_id' => $societaId, 'idGamma' => $idGamma]);
+            }
         }
-
         return redirect()->action('ClienteController@show', $ret->id);
     }
 

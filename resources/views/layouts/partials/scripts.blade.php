@@ -58,7 +58,7 @@ $(document).ready(function() {
     moment.locale('it');
     $('.select2').select2();
     //Date picker
-    $('.datepicker').datepicker({
+    $('.datepicker').attr('autocomplete', 'off').datepicker({
         autoclose: true,
         format: 'dd/mm/yyyy',
         language: 'it',

@@ -25,10 +25,11 @@
             <div class="box box-primary">
                 {!! Form::open(['url' => 'clienti']) !!}
                 @include('clienti.partials.clienteForm')
-                {!! Form::close() !!}
             </div>
         </div>
     </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    {!! Form::close() !!}
 @endsection
 
 

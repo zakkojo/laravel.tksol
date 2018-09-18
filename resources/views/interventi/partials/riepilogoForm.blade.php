@@ -41,6 +41,14 @@
             <select id="listinoContratto" name="listinoContratto" style="width:100%" @if($intervento->inviato) disabled @endif
                     class="form-control select2 select2-hidden-accessible"></select>
         </div>
+        <div class="form-group">
+            <label>Sede</label>
+            <select id="sede" name="sede" style="width:100%" @if($intervento->inviato) disabled @endif class="form-control">
+                <option selected="selected">{{ $intervento->sede or ''}}</option>
+                <option>Sede Cliente</option>
+                <option>Back Office</option>
+            </select>
+        </div>
         <div class="form-group row">
             <div class="col-md-3">
                 <label>Data</label>
@@ -72,14 +80,6 @@
                        value="{{ $intervento->ore_lavorate or ''}}"
                        class="form-control @if( $intervento->ore_lavorate >0 ) modificato @endif">
             </div>
-        </div>
-        <div class="form-group">
-            <label>Sede</label>
-            <select id="sede" name="sede" style="width:100%" @if($intervento->inviato) disabled @endif class="form-control">
-                <option selected="selected">{{ $intervento->sede or ''}}</option>
-                <option>Sede Cliente</option>
-                <option>Back Office</option>
-            </select>
         </div>
         <div class="form-group">
             <label>

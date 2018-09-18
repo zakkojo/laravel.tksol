@@ -144,6 +144,7 @@ class InterventoController extends Controller {
             {
                 $prossimiInterventi = $intervento->contratto->prossimiInterventi;
                 //se non ci sono prossimiInterventi
+                //dd(count($prossimiInterventi));
                 if (count($prossimiInterventi) == 0)
                 {
                     //altrimenti chiedo l'inserimento del prossimo intervento
@@ -265,7 +266,9 @@ class InterventoController extends Controller {
     public function registraFattura()
     {
         //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
-        $daFatturare = Intervento::where('approvato', '1')->get();
+        if (!$paginate = Input::get('paginate')) $paginate = 100;
+
+        $daFatturare = Intervento::where('approvato', '1')->whereNull('fatturato')->paginate($paginate);
 
         return view('interventi.registraFattura', compact('daFatturare'));
     }
@@ -273,26 +276,26 @@ class InterventoController extends Controller {
     public function ajaxRegistraFattura()
     {
         $intervento_id = Input::get('id');
-        $data = Input::get('data');
-        $numero = Input::get('fatturato');
-        $note = Input::get('note');
+        $data = Input::has('dataFattura') ? Input::get('dataFattura') : null;
+        $numero = Input::has('fatturato') ? Input::get('fatturato') : null;
+        $note = Input::has('note') ? Input::get('note') : null;
 
-        if ($intervento_id AND $numero)
+        if ($intervento_id)
         {
             $intervento = Intervento::findOrFail($intervento_id);
-            if (!$intervento->fatturato)
+            if (!($intervento->fatturato AND $intervento->data_fattura))
             {
                 $intervento->data_fattura = $data;
                 $intervento->fatturato = $numero;
                 $intervento->note_fattura = $note;
+                $intervento->save();
+                if ($intervento_id AND $data AND $numero) //se ci sono data e numero fattura chiudo la fattura
+                    return json_encode(['status' => 'success', 'intervento' => $intervento]); //success = chiudo fattura
+                else
+                    return json_encode(['status' => 'update', 'intervento' => $intervento]); //aggiorno fattura
             }
-        } else
-        {
-            return ['status' => 'errore', 'input' => Input::all()];
         }
-        $intervento->save();
-
-        return json_encode(['status' => 'success', 'intervento' => $intervento]);
+        return ['status' => 'errore', 'input' => Input::all()];
     }
 
     public function ajaxGetCalendar()

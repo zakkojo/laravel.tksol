@@ -96,14 +96,12 @@
         <div>Filtro: <input size='30' type='text' id='filtro'></div>
         <div>Da: <input size='10' type='text' id='di' class="datepicker"></div>
         <div>A: <input size='10' type='text' id='df' class="datepicker"></div>
-        <div>Righe selezionate: <input id="selezione" readonly value='0'/></div>
-        <div>Valutazione:
-
-        </div>
+        <div>Righe selezionate: <input style="width:100px" id="selezione" readonly value='0'/></div>
     </div>
 
     <div id='dRDAlist'>
         @if($daFatturare)
+            {{ $daFatturare->links() }}
             <table id='tRDAlist'>
                 <thead>
                 <tr>
@@ -186,6 +184,7 @@
                     @endforeach
                 </tobody>
             </table>
+            {{ $daFatturare->links() }}
         @else
             <a>Nessun Fattura da emettere.</a>
         @endif
@@ -223,7 +222,7 @@
                 $.ajax({
                     url: "/ajax/interventi/registraFattura",
                     type: "GET",
-                    data: {id: id, fatturato: nFattura, data: dataFattura, note: noteFattura},
+                    data: {id: id, fatturato: nFattura, dataFattura: dataFattura, note: noteFattura},
                     dataType: "JSON",
                 }).done(function (data) {
                     if (data.status == 'success') {
@@ -311,7 +310,7 @@
             });
             //v = Math.round(v * 100) / 100;
             //$("#vTotale").val(number_format(v, 2, ",", ".", "\u20AC"));
-            $("#selezione").val(number_format(r, 0, ",", ".", "") + "/" + number_format(rT, 0, ",", ".", ""));
+            $("#selezione").val(number_format(r, 0, ",", ".", "") + "/{{$daFatturare->total()}}"); // /" + number_format(rT, 0, ",", ".", ""));
         }
 
 

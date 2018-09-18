@@ -72,7 +72,7 @@
 </div>
 @section('page_scripts')
     @parent
-    <script>
+    <script>Fì
         $(document).ready(function () {
             $('.wysihtml5').wysihtml5({
                 toolbar: {

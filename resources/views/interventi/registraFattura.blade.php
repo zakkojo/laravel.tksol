@@ -165,11 +165,11 @@
                             </td>
                             <td>
                                 <button type="button"
-                                        class="btn btn-default azione sblocca {{ $intervento->fatturato ? "" : "hidden" }}"
+                                        class="btn btn-default azione sblocca {{ ($intervento->fatturato and $intervento->data_fattura) ? "" : "hidden" }}"
                                         onClick="approvaRiga({{$intervento->id}},'reset')" title="Sblocca fattura">
                                     <i class="fa fa-lock"></i>
                                 </button>
-                                <div class="btn-group btn-group-sm group-azione {{ $intervento->fatturato ? "hidden" : "" }}"
+                                <div class="btn-group btn-group-sm group-azione {{ ($intervento->fatturato and $intervento->data_fattura) ? "hidden" : "" }}"
                                      role="group" aria-label="...">
                                     <button type="button" class="btn btn-success azione registra"
                                             onClick="approvaRiga({{$intervento->id}})" title="Registra Fattura">
@@ -228,6 +228,7 @@
                     if (data.status == 'success') {
                         $('tr[data-id_intervento=' + id + ']').find('.group-azione').addClass("hidden");
                         $('tr[data-id_intervento=' + id + ']').find('.sblocca').removeClass("hidden");
+                        console.log(data);
                     }
                     else {
                         $('tr[data-id_intervento=' + id + ']').find('.registra').prop('disabled', false);

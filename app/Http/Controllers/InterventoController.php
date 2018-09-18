@@ -268,7 +268,7 @@ class InterventoController extends Controller {
         //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
         if (!$paginate = Input::get('paginate')) $paginate = 100;
 
-        $daFatturare = Intervento::where('approvato', '1')->whereNull('fatturato')->paginate($paginate);
+        $daFatturare = Intervento::whereRaw('approvato = "1" AND ( fatturato is null OR data_fattura is null)')->paginate($paginate);
 
         return view('interventi.registraFattura', compact('daFatturare'));
     }
@@ -276,23 +276,26 @@ class InterventoController extends Controller {
     public function ajaxRegistraFattura()
     {
         $intervento_id = Input::get('id');
-        $data = Input::has('dataFattura') ? Input::get('dataFattura') : null;
+        //$data = Input::has('dataFattura') ? Input::get('dataFattura') : null;
+        if(Input::get('dataFattura') =='Invalid date') $data = null;
+        else $data=Input::get('dataFattura');
         $numero = Input::has('fatturato') ? Input::get('fatturato') : null;
         $note = Input::has('note') ? Input::get('note') : null;
-
+        $input = Input::all();
         if ($intervento_id)
         {
             $intervento = Intervento::findOrFail($intervento_id);
             if (!($intervento->fatturato AND $intervento->data_fattura))
             {
-                $intervento->data_fattura = $data;
+                if($data) $intervento->data_fattura = $data;
                 $intervento->fatturato = $numero;
                 $intervento->note_fattura = $note;
                 $intervento->save();
-                if ($intervento_id AND $data AND $numero) //se ci sono data e numero fattura chiudo la fattura
+                if ($intervento_id AND $intervento->data_fattura AND $intervento->fatturato)
+                    //se ci sono data e numero fattura chiudo la fattura
                     return json_encode(['status' => 'success', 'intervento' => $intervento]); //success = chiudo fattura
                 else
-                    return json_encode(['status' => 'update', 'intervento' => $intervento]); //aggiorno fattura
+                    return json_encode(['status' => 'update', 'intervento' => $intervento, 'input' => $input]); //aggiorno fattura
             }
         }
         return ['status' => 'errore', 'input' => Input::all()];

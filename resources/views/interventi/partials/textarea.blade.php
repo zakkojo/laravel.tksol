@@ -9,7 +9,7 @@
         </div>
         <div class="box-body">
                 <div class="form-group">
-                    <textarea class="wysihtml5" name="attivitaPianificate" @if($intervento->inviato) disabled @endif
+                    <textarea class="wysihtml5" id="textAreaAttivitaPianificate"name="attivitaPianificate" @if($intervento->inviato) disabled @endif
                               style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                               placeholder="">{!! htmlspecialchars_decode($intervento->attivitaPianificate) !!}</textarea>
                 </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="box-body">
                 <div class="form-group">
-                    <textarea class="wysihtml5" name="attivitaSvolte" @if($intervento->inviato) disabled @endif
+                    <textarea class="wysihtml5" id="textAreaAttivitaSvolte" name="attivitaSvolte" @if($intervento->inviato) disabled @endif
                               style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid rgb(221, 221, 221); padding: 10px; "
                               placeholder="">{!! htmlspecialchars_decode($intervento->attivitaSvolte) !!}</textarea>
                 </div>
@@ -72,7 +72,7 @@
 </div>
 @section('page_scripts')
     @parent
-    <script>Fì
+    <script>
         $(document).ready(function () {
             $('.wysihtml5').wysihtml5({
                 toolbar: {
@@ -87,5 +87,17 @@
                     "size": 'sm' //default: none, other options are xs, sm, lg
                 }
             });
+            if($($('#textAreaAttivitaSvolte').val()).text().length <= 1) {
+                $('#textAreaAttivitaSvolte').val($('#textAreaAttivitaPianificate').val());
+            }
         });
-    </script>@append
+        $(document).on('submit', 'form.riepilogoForm', function (e) {
+            if($($('#textAreaAttivitaSvolte').val()).text().length <= 100) {
+                if (confirm('Attività Svolte non sembra compilato correttamente vuoi inviare aggiornare comunque l\'intervento?'))
+                {}
+                else
+                    e.preventDefault();
+            }
+        });
+    </script>
+@append

@@ -39,8 +39,14 @@ class InterventoController extends Controller {
     {
 
         $consulenti = Consulente::all();
-        $clienti = Cliente::all();
-
+        //$clienti = Cliente::all();
+        $consulente_id = Auth::user()->consulente->id;
+        $clienti = Cliente::hydrateRaw("
+            SELECT cli.* FROM laravel_tksol.cliente cli
+            JOIN contratto con ON con.cliente_id = cli.id
+            JOIN consulente_contratto cc ON cc.contratto_id = con.id
+            WHERE cc.consulente_id = '{$consulente_id}'
+            ORDER BY cli.ragione_sociale");
         return view('interventi.planning', compact('consulenti', 'clienti'));
     }
 
@@ -266,8 +272,8 @@ class InterventoController extends Controller {
     public function registraFattura()
     {
         //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
-        $paginate = Input::get('paginate','100');
-        if(Input::has('debug')) dd(Input::all());
+        $paginate = Input::get('paginate', '100');
+        if (Input::has('debug')) dd(Input::all());
         $daFatturare = Intervento::whereRaw('approvato = "1" AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start')->paginate($paginate);
 
         return view('interventi.registraFattura', compact('daFatturare'));
@@ -277,8 +283,8 @@ class InterventoController extends Controller {
     {
         $intervento_id = Input::get('id');
         //$data = Input::has('dataFattura') ? Input::get('dataFattura') : null;
-        if(Input::get('dataFattura') =='Invalid date') $data = null;
-        else $data=Input::get('dataFattura');
+        if (Input::get('dataFattura') == 'Invalid date') $data = null;
+        else $data = Input::get('dataFattura');
         $numero = Input::has('fatturato') ? Input::get('fatturato') : null;
         $note = Input::has('note') ? Input::get('note') : null;
         $input = Input::all();
@@ -287,7 +293,7 @@ class InterventoController extends Controller {
             $intervento = Intervento::findOrFail($intervento_id);
             if (!($intervento->fatturato AND $intervento->data_fattura))
             {
-                if($data) $intervento->data_fattura = $data;
+                if ($data) $intervento->data_fattura = $data;
                 $intervento->fatturato = $numero;
                 $intervento->note_fattura = $note;
                 $intervento->save();
@@ -298,6 +304,7 @@ class InterventoController extends Controller {
                     return json_encode(['status' => 'update', 'intervento' => $intervento, 'input' => $input]); //aggiorno fattura
             }
         }
+
         return ['status' => 'errore', 'input' => Input::all()];
     }
 

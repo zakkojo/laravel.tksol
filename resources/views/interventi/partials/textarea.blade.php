@@ -87,12 +87,12 @@
                     "size": 'sm' //default: none, other options are xs, sm, lg
                 }
             });
-            if($($('#textAreaAttivitaSvolte').val()).text().length <= 1) {
-                $('#textAreaAttivitaSvolte').val($('#textAreaAttivitaPianificate').val());
-            }
+            //if($($('#textAreaAttivitaSvolte').val()).text().length <= 1) {
+            //    $('#textAreaAttivitaSvolte').val($('#textAreaAttivitaPianificate').val());
+            //}
         });
         $(document).on('submit', 'form.riepilogoForm', function (e) {
-            if($($('#textAreaAttivitaSvolte').val()).text().length <= 100) {
+            if($($('#textAreaAttivitaSvolte').val()).text().length <= 50) {
                 if (confirm('Attività Svolte non sembra compilato correttamente vuoi aggiornare comunque l\'intervento?'))
                 {}
                 else

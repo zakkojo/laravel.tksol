@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('htmlheader_title')
     Registrazione Fatture
 @endsection
@@ -91,14 +90,16 @@
             line-height: 12px;
         }
     </style>
-
     <div class='rdaHEAD'>
-        <div>Filtro: <input size='30' type='text' id='filtro'></div>
+        <div>Filtro: <input size='30' type='text' id='filtro'
+                            @if(Input::has('filtro')) value='{{ Input::get('filtro')}}'
+                    @endif
+            />
+        </div>
         <div>Da: <input size='10' type='text' id='di' class="datepicker"></div>
         <div>A: <input size='10' type='text' id='df' class="datepicker"></div>
         <div>Righe selezionate: <input style="width:100px" id="selezione" readonly value='0'/></div>
     </div>
-
     <div id='dRDAlist'>
         @if($daFatturare)
             {{ $daFatturare->links() }}
@@ -192,9 +193,18 @@
 @endsection
 @section('page_scripts')
     <script>
-        $(function () {
-            calcolaTotale();
+        $(document).ready(function(){
+            $(function () {
+                $("#filtro").keyup();
+                calcolaTotale();
+            });
         });
+
+        $('ul.pagination li a').click(function (e) {
+            var filtro = "&filtro=" + $('#filtro').val();
+            this.href = this.href + filtro;
+        });
+
 
         $("input[name='valoreRDA']").keyup(function () {
             var $prima = $(this).val();
@@ -217,7 +227,7 @@
                 $('tr[data-id_intervento=' + id + ']').find('.registra').prop('disabled', true);
                 nFattura = $('tr[data-id_intervento=' + id + ']').find('.nFattura').val();
                 dataFattura = $('tr[data-id_intervento=' + id + ']').find('.dataFattura').val();
-                dataFattura = moment(dataFattura,'DD/MM/YYYY').format();
+                dataFattura = moment(dataFattura, 'DD/MM/YYYY').format();
                 noteFattura = $('tr[data-id_intervento=' + id + ']').find('.noteFattura').val();
                 $.ajax({
                     url: "/ajax/interventi/registraFattura",

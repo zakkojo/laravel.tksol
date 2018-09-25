@@ -266,9 +266,9 @@ class InterventoController extends Controller {
     public function registraFattura()
     {
         //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
-        if (!$paginate = Input::get('paginate')) $paginate = 100;
-
-        $daFatturare = Intervento::whereRaw('approvato = "1" AND ( fatturato is null OR data_fattura is null)')->paginate($paginate);
+        $paginate = Input::get('paginate','100');
+        if(Input::has('debug')) dd(Input::all());
+        $daFatturare = Intervento::whereRaw('approvato = "1" AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start')->paginate($paginate);
 
         return view('interventi.registraFattura', compact('daFatturare'));
     }

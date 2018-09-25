@@ -93,7 +93,7 @@
         });
         $(document).on('submit', 'form.riepilogoForm', function (e) {
             if($($('#textAreaAttivitaSvolte').val()).text().length <= 100) {
-                if (confirm('Attività Svolte non sembra compilato correttamente vuoi inviare aggiornare comunque l\'intervento?'))
+                if (confirm('Attività Svolte non sembra compilato correttamente vuoi aggiornare comunque l\'intervento?'))
                 {}
                 else
                     e.preventDefault();

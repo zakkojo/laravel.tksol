@@ -136,6 +136,6 @@ class Contratto extends Model {
 
     public function interventiDaApprovare()
     {
-        return $this->hasMany(Intervento::class)->where('approvato','0');
+        return $this->hasMany(Intervento::class)->where('approvato','0')->where('fatturabile','1');
     }
 }

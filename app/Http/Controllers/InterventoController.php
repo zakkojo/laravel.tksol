@@ -568,7 +568,7 @@ class InterventoController extends Controller {
 
         foreach ($daFatturare as $k => $array)
         {
-            $daFatturare[$k]["attivitaSvolte"] = Html2Text::convert($daFatturare[$k]["attivitaSvolte"]);
+            $daFatturare[$k]["attivitaSvolte"] = Html2Text::convert($daFatturare[$k]["attivitaSvolte"],true);
         }
         ob_clean();
         $date = Carbon::now();

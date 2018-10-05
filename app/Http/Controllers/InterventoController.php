@@ -630,8 +630,8 @@ class InterventoController extends Controller {
             i.ore_fatturate ore_fatturare,
             i.sede,
             i.fatturabile,
-            att.descrizione,
-            ci.descrizione,
+            att.descrizione attivita,
+            ci.descrizione listino,
             GROUP_CONCAT(rim.tipo_spesa ORDER BY rim.id separator ', ') rimborso,
             SUM(rim.importo) rimborso_tot,
             SUM(IF(rim.um='Km', rim.quantita, null)) AS km

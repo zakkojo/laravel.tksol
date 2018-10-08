@@ -560,6 +560,9 @@ class InterventoController extends Controller {
                     join societa soc on(con.societa_id = soc.id)				
             join attivita att on (att.id = inter.attivita_id)
         where inter.approvato=1
+        and inter.ore_fatturate <> 0
+        and inter.fatturabile =1
+        and (inter.fatturato is null or inter.data_fattura is null)
         ");
         for ($i = 0, $c = count($daFatturare); $i < $c; ++$i)
         {

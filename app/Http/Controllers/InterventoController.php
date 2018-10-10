@@ -274,7 +274,7 @@ class InterventoController extends Controller {
         //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
         $paginate = Input::get('paginate', '100');
         if (Input::has('debug')) dd(Input::all());
-        $daFatturare = Intervento::whereRaw('approvato = "1" AND ore_fatturate <> 0 AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start','desc')->paginate($paginate);
+        $daFatturare = Intervento::whereRaw('approvato = "1"  AND fatturabile = \'1\' AND ore_fatturate <> 0 AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start','desc')->paginate($paginate);
 
         return view('interventi.registraFattura', compact('daFatturare'));
     }
@@ -544,7 +544,7 @@ class InterventoController extends Controller {
             inter.ore_fatturate ore_fatturare,
             inter.sede,
             inter.fatturabile " .
-//            ,
+//            '',
 //            '' as 'Numero Fattura',
 //            '' as 'Data Fattura',
 //            '' as 'Note Fattura'

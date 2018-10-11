@@ -32,9 +32,9 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/login','Auth\AuthController@showLoginForm');
     Route::post('/login','Auth\AuthController@login');
     Route::get('/logout','Auth\AuthController@logout');
+    Route::get('/registrazioneSegreta','Auth\AuthController@showRegistrationForm');
 // Password reset link request routes...
     Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
-
 // Password reset routes...
     Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
     Route::post('password/reset', 'Auth\PasswordController@reset');
@@ -49,6 +49,8 @@ Route::group(['middleware' => 'web'], function () {
     Route::resource('consulenti','ConsulenteController');
     Route::post('ajax/toggleUser', 'UserController@ajaxToggleUser');
     Route::get('ajax/consulenti/getConsulente', 'ConsulenteController@ajaxGetConsulente');
+    Route::get('ajax/consulenti/getContratti', 'ConsulenteController@ajaxGetContratti');
+    Route::get('ajax/consulenti/getInterventiDaApprovare', 'ConsulenteController@ajaxGetInterventiDaApprovare');
 
     Route::resource('contatti','ContattoController');
 
@@ -57,6 +59,7 @@ Route::group(['middleware' => 'web'], function () {
 
 	Route::resource('contratti/{contratto_id}/listino_interventi','ContrattoInterventoController');
 	Route::resource('contratti/{contratto_id}/listino_prodotti','ContrattoProdottoController');
+    Route::resource('contratti/{contratto_id}/consulenti','ConsulenteContrattoController');
 
     Route::resource('clienti','ClienteController');
     Route::get('clienti/{clienti}/contatto', 'ClienteController@associa');
@@ -76,14 +79,34 @@ Route::group(['middleware' => 'web'], function () {
 
 
 
+
+    //Route::get('interventi/export_xlsx_daFatturare', 'InterventoController@export_xlsx_daFatturare');
+    Route::get('export_xlsx_daFatturare', 'InterventoController@export_xlsx_daFatturare')->name('interventi.export_xlsx_daFatturare');
+    Route::get('interventi/estrazione', 'InterventoController@estrazioneConsulente');
+    Route::get('interventi/estrazioneXlsx', 'InterventoController@estrazioneConsulenteExportXlsx');
+    Route::get('interventi/approva', 'InterventoController@approvaIntervento');
+    Route::get('interventi/registraFattura', 'InterventoController@registraFattura');
     Route::resource('interventi', 'InterventoController');
+    Route::get('interventi/{intervento_id}', 'InterventoController@edit');
+    Route::get('interventi/{intervento_id}/stampa', 'InterventoController@stampa');
+    Route::get('interventi/{intervento_id}/invia', 'InterventoController@invia');
+    Route::get('ajax/interventi/registraFattura', 'InterventoController@ajaxRegistraFattura');
     Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
-    Route::get('ajax/interventi/getCalendar', 'InterventoController@ajaxGetCalendar');
-    Route::post('ajax/interventi/createIntervento', 'InterventoController@ajaxCreateIntervento');
-    Route::patch('ajax/interventi/updateIntervento', 'InterventoController@ajaxUpdateIntervento');
-    Route::delete('ajax/interventi/deleteIntervento', 'InterventoController@ajaxDeleteIntervento');
+    Route::get('ajax/interventi/getIntervento', 'InterventoController@ajaxGetIntervento');
+    Route::get('ajax/interventi/createIntervento', 'InterventoController@ajaxCreateIntervento');
+    Route::get('ajax/interventi/updateIntervento', 'InterventoController@ajaxUpdateIntervento');
+    Route::get('ajax/interventi/deleteIntervento', 'InterventoController@ajaxDeleteIntervento');
+    Route::get('ajax/interventi/getPermissionUpdatePianificazione', 'InterventoController@ajaxGetPermissionUpdatePianificazione');
+    Route::get('ajax/interventi/acceptIntervento', 'InterventoController@ajaxAcceptIntervento');
+    Route::get('ajax/interventi/approvaIntervento', 'InterventoController@ajaxApprovaIntervento');
+    Route::resource('interventi/{intervento_id}/rimborsi','RimborsoController');
 
 
-    Route::resource('rimborsi','RimborsoController');
+
     Route::resource('prodotti','ProdottoController');
+    Route::get('test','TestController@show');
+    Route::get('ajax/helper/setSession','HelperController@ajaxSetSession');
+    Route::get('ajax/helper/pushSession','HelperController@ajaxPushSession');
+    Route::get('ajax/helper/pullSession','HelperController@ajaxPullSession');
+
 });

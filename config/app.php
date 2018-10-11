@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Rome',
 
     /*
     |--------------------------------------------------------------------------
@@ -108,7 +108,19 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    'log'            => env('APP_LOG', 'single'),
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logging Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Abilita invio di email ai clienti
+    |
+     */
+    'customer_email' => env('APP_CUSTOMER_EMAIL', false),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -156,14 +168,21 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        App\Providers\ViewComposerServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
+
         //
         Collective\Html\HtmlServiceProvider::class,
 
         Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
 
         Orangehill\Iseed\IseedServiceProvider::class,
-        
+
         Barryvdh\Snappy\ServiceProvider::class,
+
+        PulkitJalan\Google\GoogleServiceProvider::class,
+
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -211,14 +230,17 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
+        'Input' => Illuminate\Support\Facades\Input::class,
+
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 
         'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
 
-        'PDF'      => Barryvdh\Snappy\Facades\SnappyPdf::class,
-        'Image'    => Barryvdh\Snappy\Facades\SnappyImage::class,
-
+        'PDF'    => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'Image'  => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'Google' => PulkitJalan\Google\Facades\Google::class,
+        'Excel'  => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

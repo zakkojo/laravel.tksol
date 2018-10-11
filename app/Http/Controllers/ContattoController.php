@@ -5,6 +5,8 @@ use App\Http\Requests\ContattiRequest;
 use App\Contatto;
 use App\User;
 use DB;
+use Illuminate\Support\Facades\Auth;
+
 
 use Request;
 class ContattoController extends Controller {
@@ -14,7 +16,10 @@ class ContattoController extends Controller {
    *
    * @return Response
    */
-
+    public function create($id)
+    {
+        return redirect()->action('ContattoController@create');
+    }
   /**
    * Store a newly created resource in storage.
    *
@@ -79,7 +84,9 @@ class ContattoController extends Controller {
    */
   public function destroy($id)
   {
-    
+      $cliente_id = Contatto::find($id)->cliente->id;
+      $resp = Contatto::destroy($id);
+      return redirect()->action('ClienteController@show', $cliente_id);
   }
   
 }

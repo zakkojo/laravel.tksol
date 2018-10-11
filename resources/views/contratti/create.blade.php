@@ -30,8 +30,5 @@
         </div>
     </div>
 @endsection
-@section('page_scripts')
-    <script></script>
-@endsection
 
 

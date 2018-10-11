@@ -43,7 +43,7 @@ class AttivitaTableSeeder extends Seeder
                 'sequenza' => '0',
                 'descrizione' => 'attivita 2',
             ),
-            2 => 
+            2 =>
             array (
                 'id' => '3',
                 'progetto_id' => '18',
@@ -56,7 +56,7 @@ class AttivitaTableSeeder extends Seeder
                 'sequenza' => '0',
                 'descrizione' => 'attivita 3',
             ),
-            3 => 
+            3 =>
             array (
                 'id' => '4',
                 'progetto_id' => '18',
@@ -69,7 +69,7 @@ class AttivitaTableSeeder extends Seeder
                 'sequenza' => '0',
                 'descrizione' => 'attivita 4',
             ),
-            4 => 
+            4 =>
             array (
                 'id' => '5',
                 'progetto_id' => '18',
@@ -82,7 +82,7 @@ class AttivitaTableSeeder extends Seeder
                 'sequenza' => '0',
                 'descrizione' => 'attivita 5',
             ),
-            5 => 
+            5 =>
             array (
                 'id' => '6',
                 'progetto_id' => '18',
@@ -95,7 +95,7 @@ class AttivitaTableSeeder extends Seeder
                 'sequenza' => '0',
                 'descrizione' => 'attivita 6',
             ),
-            6 => 
+            6 =>
             array (
                 'id' => '7',
                 'progetto_id' => '18',
@@ -108,7 +108,7 @@ class AttivitaTableSeeder extends Seeder
                 'sequenza' => '0',
                 'descrizione' => 'attivita 7',
             ),
-            7 => 
+            7 =>
             array (
                 'id' => '8',
                 'progetto_id' => '18',

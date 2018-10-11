@@ -30,7 +30,7 @@ class ContrattoIntervento extends Model {
 
 	public function interventi()
 	{
-		return $this->hasMany(Intervento::class);
+		return $this->hasMany(Intervento::class,'listino_id','id');
 	}
 
 }

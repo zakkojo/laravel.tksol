@@ -16,7 +16,7 @@ class Consulente extends Model {
     }
 
     protected $fillable = [
-        'codice_fiscale', 'cognome', 'nome', 'indirizzo', 'citta', 'provincia', 'cap', 'telefono', 'mobile', 'telefono2', 'mobile2', 'partita_iva', 'tipo',
+        'codice_fiscale', 'cognome', 'nome', 'indirizzo', 'citta', 'provincia', 'cap', 'telefono', 'mobile', 'telefono2', 'mobile2', 'partita_iva', 'tipo','rapportino','ripianifica',
     ];
 
     use SoftDeletes;
@@ -25,7 +25,7 @@ class Consulente extends Model {
 
     public function interventi()
     {
-        return $this->hasMany(Intervento::class);
+        return $this->user->interventi();
     }
 
     public function getNominativoAttribute()
@@ -33,4 +33,26 @@ class Consulente extends Model {
         return $this->nome . ' ' . $this->cognome;
     }
 
+    public function contratti()
+    {
+        return $this->belongsToMany(Contratto::class)->with('progetto')->withPivot('note', 'ruolo')->where('contratto.stato','<>','CLOSED');
+    }
+
+    public function capoProgetto()
+    {
+        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto')->where('contratto.stato','<>','CLOSED');
+    }
+
+    public function capoProgettoAlways()
+    {
+        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto');
+    }
+
+    public function canPianificare($contratto_id)
+    {
+        if ($this->contratti->where('id', $contratto_id)->count() > 0)
+            return true;
+        else
+            return false;
+    }
 }

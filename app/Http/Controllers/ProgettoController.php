@@ -5,13 +5,12 @@ use App\Http\Requests\ProgettiRequest;
 use App\Progetto;
 use App\Attivita;
 
+use Illuminate\Support\Facades\Auth;
 use Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 
-class ProgettoController extends Controller
-{
-
+class ProgettoController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -42,8 +41,12 @@ class ProgettoController extends Controller
      */
     public function store(ProgettiRequest $request)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         $data = $request->all();
         $progetto = Progetto::create($data);
+
         return redirect()->action('ProgettoController@edit', compact('progetto'));
     }
 
@@ -68,6 +71,7 @@ class ProgettoController extends Controller
     {
         $progetto = Progetto::findOrFail($id);
         $listAttivita = Attivita::getDataTree($id);
+
         return view('progetti.edit', compact('progetto', 'listAttivita'));
     }
 
@@ -90,12 +94,18 @@ class ProgettoController extends Controller
      */
     public function destroy($id)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
+        $resp = Progetto::destroy($id);
 
+        return redirect()->action('ProgettoController@index');
     }
 
     public function ajaxGetAttivita()
     {
         $progetto = Progetto::findOrFail(Input::get('progetto_id'));
+
         return $progetto->attivita;
     }
 

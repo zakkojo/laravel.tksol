@@ -8,7 +8,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Intervento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 /**
  * Class HomeController
@@ -29,6 +32,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return redirect('consulenti/'.Auth::User()->consulente->id);
     }
 }

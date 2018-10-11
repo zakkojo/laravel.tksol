@@ -55,7 +55,7 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-        <button id="btn-submit" type="submit" class="btn btn-primary">Submit</button>
+        <button id="btn-submit" type="submit" class="btn btn-primary">Invia</button>
     </div>
 
 </div>

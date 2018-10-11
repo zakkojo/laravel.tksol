@@ -27,6 +27,16 @@ class AjaxInterventiRequest extends Request {
         switch ($this->method())
         {
             case 'GET':
+            {
+                return [
+                    'listinoContratto' => 'required|numeric',
+                    'attivita'         => 'required|numeric',
+                    'user_id'       => 'required|numeric',
+                    'ora_start'        => 'required',
+                    'ora_end'          => 'required',
+                    'data'             => 'required',
+                ];
+            }
             case 'DELETE':
             {
                 return [];
@@ -36,7 +46,7 @@ class AjaxInterventiRequest extends Request {
                 return [
                     'listinoContratto' => 'required|numeric',
                     'attivita'         => 'required|numeric',
-                    'consulente'       => 'required|numeric',
+                    'user_id'       => 'required|numeric',
                     'ora_start'        => 'required',
                     'ora_end'          => 'required',
                     'data'             => 'required',
@@ -48,7 +58,7 @@ class AjaxInterventiRequest extends Request {
                 return [
                     'listinoContratto' => 'required|numeric',
                     'attivita'         => 'required|numeric',
-                    'consulente'       => 'required|numeric',
+                    'user_id'       => 'required|numeric',
                     'ora_start'        => 'required',
                     'ora_end'          => 'required',
                     'data'             => 'required',                    

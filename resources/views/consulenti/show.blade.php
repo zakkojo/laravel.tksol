@@ -2,11 +2,11 @@
 
 
 @section('htmlheader_title')
-    DASHBOARD {{{ $consulente->nome." ".$consulente->cognome }}}
+    DASHBOARD {{$consulente->nominativo}}
 @endsection
 @section('contentheader_title')
     @if($consulente->id)
-        {{{ $consulente->nome." ".$consulente->cognome}}}
+        {{$consulente->nominativo}}
     @else
         Nuovo Utente
     @endif
@@ -24,51 +24,78 @@
             </ul>
         </div>
     @endif
-
-<div class="col-md-8">
-    <div class="box ">
-        <div class="box-header">
-            <h3 class="box-title">Prossimi interventi / Interventi da pianificare</h3>
-
-            <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" id="consulenti_search" name="table_search" class="form-control pull-right" placeholder="Search">
-
-                    <div class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                    </div>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div id="infoApprovazione" class="info-box">
+                <!-- Apply any bg-* class to to the icon to color it -->
+                <span class="info-box-icon bg-red"><i class="fa fa-line-chart"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Interventi da approvare</span>
+                    <span class="info-box-number">--</span>
+                </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
         </div>
-
-        <!-- /.box-header -->
-        <div class="box-body table-responsive no-padding">
-            <table id="interventi" class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0" width="100%">
-                <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Attività</th>
-                    <th>Stato</th>
-                    <th>Data</th>
-               </tr>
-                </thead>
-                <tbody>
-                @foreach( $consulente->interventi as $intervento)
-                    <tr>
-                        <td>{{ $intervento->cliente}}</td>
-                        <td>{{ $intervento->descrizione }}</td>
-                        <td>{{ $intervento->stato }}</td>
-                        <td>{{ $intervento->data }}</td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+        <div class="col-md-3">
+            <div id="infoFatturazione" class="info-box">
+                <!-- Apply any bg-* class to to the icon to color it -->
+                <span class="info-box-icon bg-green"><i class="fa fa-table"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">
+                        <a href="{{action('InterventoController@registraFattura')}}">Registra Fatture</a>
+                    </span>
+                    <span class="info-box-text">
+                        <a href="{{action('InterventoController@export_xlsx_daFatturare')}}">Scarica report per Fatturazione</a>
+                    </span>
+                    <span class="info-box-text">
+                        <a href="{{action('InterventoController@estrazioneConsulente')}}">Estrazione Interventi</a>
+                    </span>
+                    <span class="info-box-number"></span>
+                </div><!-- /.info-box-content -->
+            </div><!-- /.info-box -->
         </div>
-        <!-- /.box-body -->
     </div>
-</div>
-
-    @include('consulenti.partials.consulenteWidget')
-
+    <div class="row">
+        <div class="col-md-6">
+            @include('consulenti.partials.prossimiInterventi')
+        </div>
+        <div class="col-md-6">
+            @include('consulenti.partials.contrattiSenzaInterventi')
+        </div>
+    </div>
+    <!--div class="row">
+        <div class="col-md-6">
+            @include('consulenti.partials.interventiDaApprovare')
+        </div>
+    </div-->
 @endsection
-
+@section('page_scripts')
+    @parent
+    <script>
+        function updateInterventiDaApprovare() {
+            $('#infoApprovazione').addClass('loading');
+            $.get('{{action('ConsulenteController@ajaxGetInterventiDaApprovare')}}')
+                .done(function (data) {
+                    $('#infoApprovazione').find('.info-box-number').text(data);
+                    console.log("OK: " + data);
+                    return data;
+                })
+                .fail(function (jqXHR, textStatus, data) {
+                    $('#infoApprovazione').find('.info-box-number').text('--');
+                    console.log("Request failed: " + data);
+                    return false;
+                })
+                .always(function (jqXHR, textStatus, data) {
+                    $('#infoApprovazione').toggleClass('loading');
+                });
+        }
+        $(document).ready(function () {
+            updateInterventiDaApprovare();
+            $('#infoApprovazione').on('click','.info-box-icon', function () {
+                updateInterventiDaApprovare();
+            });
+            $('#infoApprovazione').on('click','.info-box-content', function () {
+                window.location.href = "{{action('InterventoController@approvaIntervento')}}";
+            });
+        });
+    </script>
+@endsection

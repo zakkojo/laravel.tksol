@@ -20,5 +20,7 @@
 </div><!-- /.box-body -->
 
 <div class="box-footer">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+        <button type="submit" class="btn btn-primary">Submit</button>
+    @endif
 </div>

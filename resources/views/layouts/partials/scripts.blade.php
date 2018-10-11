@@ -18,17 +18,19 @@
 <!-- Datepicker3 -->
 <script src="{{asset('/plugins/datepicker/bootstrap-datepicker.js')}}" type="text/javascript" ></script>
 <script src="{{asset('/plugins/datepicker/locales/bootstrap-datepicker.it.js')}}" type="text/javascript" ></script>
+<!-- ClockPicker -->
+<script src="{{asset('/plugins/clockpicker/clockpicker.min.js')}}" type="text/javascript" ></script>
 <!-- wysightml5 -->
-<script src="{{asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}" type="text/javascript" ></script>
+<script src="{{asset('/plugins/bootstrap-wysihtml5/wysihtml5x-toolbar.min.js')}}" type="text/javascript" ></script>
+<script src="{{asset('/plugins/bootstrap-wysihtml5/handlebars.runtime.min.js')}}" type="text/javascript" ></script>
+<script src="{{asset('/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.js')}}" type="text/javascript" ></script>
 <!-- Tree-View -->
 <script src="{{asset('/plugins/bootstrap-treeview/bootstrap-treeview.min.js')}}" type="text/javascript" ></script>
 <!-- FullCalendar -->
-<script src="{{asset('/plugins/fullcalendar/moment-with-locales.min.js')}}" type="text/javascript" >
-    moment().locale('it');
-</script>
+<script src="{{asset('/plugins/moment/moment-with-locales.min.js')}}" type="text/javascript" ></script>
 <script src="{{asset('/plugins/fullcalendar/fullcalendar.min.js')}}" type="text/javascript" ></script>
-
-
+<!-- Laravel -->
+<script src="{{asset('/plugins/laravel/laravel.js')}}" type="text/javascript" ></script>
 
 
 <script>
@@ -53,9 +55,10 @@ $.ajaxSetup({
     }
 });
 $(document).ready(function() {
+    moment.locale('it');
     $('.select2').select2();
     //Date picker
-    $('.datepicker').datepicker({
+    $('.datepicker').attr('autocomplete', 'off').datepicker({
         autoclose: true,
         format: 'dd/mm/yyyy',
         language: 'it',

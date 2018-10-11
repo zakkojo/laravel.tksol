@@ -23,9 +23,10 @@ class CreateClienteTable extends Migration {
 			$table->string('cap', 10);
 			$table->string('provincia', 10);
 			$table->string('telefono', 50);
+			$table->string('email', 100);
 			$table->string('fax', 50);
 			$table->integer('softwarehouse_id');
-			$table->decimal('fatturato',10,2);
+			$table->integer('fatturato');
 			$table->text('note');
 		});
 	}

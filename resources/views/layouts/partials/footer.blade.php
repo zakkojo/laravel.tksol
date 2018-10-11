@@ -6,5 +6,5 @@
     </div>
     <!-- Default to the left -->
     <strong>Teikos CRM </strong>
-    Copyright &copy; 2016
+    Copyright &copy; 2017
 </footer>

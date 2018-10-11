@@ -6,6 +6,8 @@ use App\Contratto;
 use App\Prodotto;
 use App\Cliente;
 use App\Http\Requests\ContrattiProdottiRequest;
+use Illuminate\Support\Facades\Auth;
+
 
 class ContrattoProdottoController extends Controller {
 
@@ -40,9 +42,12 @@ class ContrattoProdottoController extends Controller {
      */
     public function store(ContrattiProdottiRequest $request)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         $data = $request->all();
         $ret = ContrattoProdotto::create($data);
-        return redirect()->action('ContrattoController@edit', $data->contratto_id);
+        return redirect()->action('ContrattoController@edit', $data['contratto_id']);
     }
 
     /**
@@ -79,6 +84,9 @@ class ContrattoProdottoController extends Controller {
      */
     public function update(ContrattiProdottiRequest $request, $contratto_id, $id)
     {
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
         $listinoIntertvento = ContrattoProdotto::findOrFail($id);
         $listinoIntertvento->update($request->all());
         return redirect()->action('ContrattoController@edit', $contratto_id);
@@ -90,9 +98,13 @@ class ContrattoProdottoController extends Controller {
      * @param  int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($contratto_id,$id)
     {
-
+        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+            abort(503, 'Unauthorized action.');
+        }
+        $resp = ContrattoProdotto::destroy($id);
+        return redirect()->action('ContrattoController@edit', $contratto_id);
     }
 
 }

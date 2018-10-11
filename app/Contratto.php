@@ -14,9 +14,9 @@ class Contratto extends Model {
     public $timestamps = true;
 
     protected $fillable = [
+        'societa_id',
         'cliente_id',
         'progetto_id',
-        'capo_progetto',
         'stato',
         'importo',
         'modalita_fattura',
@@ -26,6 +26,11 @@ class Contratto extends Model {
         'data_validita_contratto',
         'data_avvio_progetto',
         'data_chiusura_progetto',
+        'rimborsi',
+        'fatturazione_id',
+        'ripianifica',
+        'rapportino',
+        'fatturazione_default',
     ];
 
     protected $nullable = [
@@ -44,19 +49,19 @@ class Contratto extends Model {
 
     public function setDataValiditaContrattoAttribute($date)
     {
-        if($date != "") $this->attributes['data_validita_contratto'] = Carbon::createFromFormat('d/m/Y', $date);
+        if ($date != "") $this->attributes['data_validita_contratto'] = Carbon::createFromFormat('d/m/Y', $date);
         else $this->attributes['data_validita_contratto'] = NULL;
     }
 
     public function setDataAvvioProgettoAttribute($date)
     {
-        if($date != "") $this->attributes['data_avvio_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
+        if ($date != "") $this->attributes['data_avvio_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
         else $this->attributes['data_avvio_progetto'] = NULL;
     }
 
     public function setDataChiusuraProgettoAttribute($date)
     {
-        if($date != "") $this->attributes['data_chiusura_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
+        if ($date != "") $this->attributes['data_chiusura_progetto'] = Carbon::createFromFormat('d/m/Y', $date);
         else $this->attributes['data_chiusura_progetto'] = NULL;
     }
 
@@ -84,14 +89,29 @@ class Contratto extends Model {
         else return null;
     }
 
+    public function societa()
+    {
+        return $this->belongsTo(Societa::class);
+    }
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class);
     }
 
+    public function fatturazione()
+    {
+        return $this->belongsTo(Cliente::class)->where('softwarehouse', '1'); //where come controllo?!?
+    }
+
     public function progetto()
     {
         return $this->belongsTo(Progetto::class);
+    }
+
+    public function consulenti()
+    {
+        return $this->belongsToMany(Consulente::class)->withPivot('note', 'ruolo');
     }
 
     public function listinoProdotti()
@@ -104,4 +124,18 @@ class Contratto extends Model {
         return $this->hasMany(ContrattoIntervento::class);
     }
 
+    public function prossimiInterventi()
+    {
+        return $this->hasMany(Intervento::class)->whereDate('data_start', '>', date('Y-m-d'));
+    }
+
+    public function interventi()
+    {
+        return $this->hasMany(Intervento::class);
+    }
+
+    public function interventiDaApprovare()
+    {
+        return $this->hasMany(Intervento::class)->where('approvato','0')->where('fatturabile','1');
+    }
 }

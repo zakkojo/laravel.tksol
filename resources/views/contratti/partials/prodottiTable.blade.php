@@ -23,8 +23,8 @@
     </div>
     <div class="box-body" style="min-height: 300px;">
         <table id="listinoProdotti"
-               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap hide"
-               cellspacing="0" width="100%">
+               class="table table-striped table-bordered dataTables_wrapper form-inline dt-bootstrap" cellspacing="0"
+               width="100%">
             <thead>
             <tr>
                 <td>Opzioni</td>
@@ -43,8 +43,12 @@
                     <td>
                         <a href="{{ action('ContrattoProdottoController@edit',[$contratto->id,$listinoProdotto->id]) }}"
                            data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
-                        <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i
-                                    class="glyphicon glyphicon-trash"></i></a>
+                        @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+                            <a href="{{ action('ContrattoProdottoController@destroy',[$contratto->id,$listinoProdotto->id]) }}"
+                               data-method="DELETE" data-confirm="Eliminare il prodotto dal contratto?" data-token="{{csrf_token()}}"
+                               data-skin="skin-blue" class="btn btn-danger btn-xs"><i
+                                        class="glyphicon glyphicon-trash"></i></a>
+                        @endif
 
                     </td>
                     <td>{{ $listinoProdotto->prodotto->nome }}</td>
@@ -63,7 +67,6 @@
     </div>
 </div>
 @section('page_scripts')
-    @parent
     <script>
         $(document).ready(function () {
             var clientiTable = $('#listinoProdotti').DataTable({
@@ -88,4 +91,4 @@
             $('.dataTables_filter').hide();
         });
     </script>
-@endsection
+@append

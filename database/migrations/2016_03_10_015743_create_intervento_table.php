@@ -12,17 +12,18 @@ class CreateInterventoTable extends Migration {
 			$table->integer('listino_id')->unsigned();
 			$table->integer('attivita_id')->unsigned();
 			$table->integer('consulente_id')->unsigned();
-			$table->softDeletes();
-			$table->enum('stato', array('PIANIFICATO', 'CONSUNTIVO'));
+            $table->softDeletes();
+            $table->timestamps();
+			$table->string('stato',50)->default('Pianificato');
 			$table->timestamp('data_start');
 			$table->timestamp('data_end');
             $table->timestamp('data_start_reale');
             $table->timestamp('data_end_reale');
 			$table->boolean('fatturabile');
-			$table->text('attivitaSvolte');
+            $table->boolean('stampa')->default(0);
 			$table->text('note');
-
 			$table->text('attivitaPianificate');
+			$table->text('attivitaSvolte');
 			$table->text('attivitaCaricoCliente');
 			$table->text('problemiAperti');
 		});

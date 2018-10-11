@@ -3,10 +3,13 @@
         <h3 class="box-title">Rimborsi</h3>
         <div class="box-tools">
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                <button type="button" class="btn btn-default"
-                        onClick="location.href='{{action('RimborsoController@create')}}'" title="Aggiungi Nuovo ">
-                    <i class="fa fa-plus"></i>
-                </button>
+                @if(Auth::User()->id == $user->id OR $user->tipo == 'Partner')
+                    <button type="button" class="btn btn-default"
+                            onClick="location.href='{{ action('RimborsoController@create',$intervento->id) }}'"
+                            title="Aggiungi Nuovo ">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                @endif
             </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
                 <div class="input-group input-group-sm" style="width: 150px;">
@@ -28,35 +31,34 @@
                cellspacing="0" width="100%">
             <thead>
             <tr>
-                <td>Opzioni</td>
-                <td>Codice Fiscale<br/>Partita IVA</td>
-                <td>Ragione Sociale</td>
-                <td>Settore</td>
-                <td>Fatturato</td>
-                <td>Città</td>
-                <td>Rating</td>
+                <th>Opzioni</th>
+                <th>Tipo Spesa</th>
+                <th>qta</th>
+                <th>um</th>
+                <th>importo</th>
             </tr>
             </thead>
             <tbody>
-            @foreach(range(0, 12) as $cliente)
+            @foreach( $rimborsi as $rimborso)
                 <tr>
                     <td>
                         <div class="btn-group btn-group-xs" role="group" aria-label="...">
                             <button type="button" class="btn btn-default btn-xs"
-                                    onClick="location.href='{{action('RimborsoController@create')}}'" title="Modifica">
+                                    onClick="location.href='{{action('RimborsoController@edit',[$intervento->id,$rimborso->id])}}'"
+                                    title="Modifica">
                                 <i class="glyphicon glyphicon-edit"></i>
                             </button>
-                            <button type="button" class="btn btn-danger btn-xs" onClick="" title="Elimina">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </button>
+                            <a href="{{ action('RimborsoController@show',[$intervento->id,$rimborso->id]) }}"
+                               data-method="DELETE" data-confirm="Eliminare il rimborso?" data-token="{{csrf_token()}}"
+                               type="button" class="btn btn-danger btn-xs" })">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            </a>
                         </div>
                     </td>
-                    <td>Lorem <br/>Ipsum</td>
-                    <td>Lorem Ispum</td>
-                    <td>Lorem Ispum</td>
-                    <td>Lorem Ispum</td>
-                    <td>Lorem Ispum</td>
-                    <td>Lorem Ispum</td>
+                    <td>{{$rimborso->tipo_spesa}}</td>
+                    <td>{{$rimborso->quantita}}</td>
+                    <td>{{$rimborso->um}}</td>
+                    <td>{{$rimborso->importo}}</td>
                 </tr>
             @endforeach
             </tbody>
@@ -85,5 +87,4 @@
                 oTable.search($(this).val()).draw();
             })
         });
-    </script>
-@endsection
+    </script>@append

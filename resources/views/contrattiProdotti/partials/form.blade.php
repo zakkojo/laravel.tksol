@@ -11,7 +11,7 @@ if (isset($listinoProdotto))
 }
 ?>
 <div class="box-body">
-    <input type="hidden" name="contratto_id" value = {{$contratto->id}}>
+    <input type="hidden" name="contratto_id" value= {{$contratto->id}}>
     <div class="form-group">
         <label>Prodotto</label>
         {!! Form::select('prodotto_id',
@@ -48,11 +48,11 @@ if (isset($listinoProdotto))
     </div>
     <div class="form-group">
         <label>Softwarehouse</label>
-            {!! Form::select('softwarehouse_id',
-                $listClienti,
-                null,
-                ['id'=>'softwarehouse_id','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
-            !!}
+        {!! Form::select('softwarehouse_id',
+            $listClienti,
+            null,
+            ['id'=>'softwarehouse_id','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
+        !!}
     </div>
     <div class="form-group">
         <label>Fee</label>
@@ -83,5 +83,7 @@ if (isset($listinoProdotto))
 </div><!-- /.box-body -->
 
 <div class="box-footer">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+        <button type="submit" class="btn btn-primary">Submit</button>
+    @endif
 </div>

@@ -57,8 +57,12 @@
                             <td>
                                 <a href="{{ action('ProdottoController@edit',$prodotto->id) }}" data-skin="skin-blue"
                                    class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
-                                <a href="#" data-skin="skin-blue" class="btn btn-danger btn-xs"><i
-                                            class="glyphicon glyphicon-trash"></i></a>
+                                @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
+                                    <a href="{{ action('ProdottoController@destroy',$prodotto->id) }}"
+                                       data-method="DELETE" data-confirm="Eliminare il prodotto?"
+                                       data-token="{{csrf_token()}}" data-skin="skin-blue"
+                                       class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                                @endif
 
                             </td>
                             <td>{{ $prodotto->nome }}</td>

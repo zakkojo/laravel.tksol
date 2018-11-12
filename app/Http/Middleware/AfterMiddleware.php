@@ -37,7 +37,7 @@ class AfterMiddleware
 
             //remove all new lines
             $query = trim(preg_replace("/\r\n|\n/", "", $query));
-            $newArr = array(date('Y-m-d H:i:s'), $query);
+            $newArr = [date('Y-m-d H:i:s'), $query];
             $logData .= implode("\t", $newArr) . "\n";
         }
 

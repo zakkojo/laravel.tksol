@@ -20,7 +20,7 @@ class CreateContrattoInterventoTable extends Migration
             $table->string('descrizione', 40);
             $table->float('tariffa_ora');
             $table->float('iva');
-            $table->enum('tipo_iva', array('NORMALE', 'SPLIT'));
+            $table->enum('tipo_iva', ['NORMALE', 'SPLIT']);
             $table->integer('ore_previste');
         });
     }

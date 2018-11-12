@@ -54,19 +54,19 @@ class ContrattoController extends Controller
         }
 
         if ($request->ripianifica) {
-            $request->merge(array('ripianifica' => 1));
+            $request->merge(['ripianifica' => 1]);
         } else {
-            $request->merge(array('ripianifica' => 0));
+            $request->merge(['ripianifica' => 0]);
         }
         if ($request->rapportino) {
-            $request->merge(array('rapportino' => 1));
+            $request->merge(['rapportino' => 1]);
         } else {
-            $request->merge(array('rapportino' => 0));
+            $request->merge(['rapportino' => 0]);
         }
         if ($request->fatturazione_default) {
-            $request->merge(array('fatturazione_default' => 1));
+            $request->merge(['fatturazione_default' => 1]);
         } else {
-            $request->merge(array('fatturazione_default' => 0));
+            $request->merge(['fatturazione_default' => 0]);
         }
 
         $data = $request->all();
@@ -123,19 +123,19 @@ class ContrattoController extends Controller
         }
         //return $request->all();
         if ($request->ripianifica) {
-            $request->merge(array('ripianifica' => 1));
+            $request->merge(['ripianifica' => 1]);
         } else {
-            $request->merge(array('ripianifica' => 0));
+            $request->merge(['ripianifica' => 0]);
         }
         if ($request->rapportino) {
-            $request->merge(array('rapportino' => 1));
+            $request->merge(['rapportino' => 1]);
         } else {
-            $request->merge(array('rapportino' => 0));
+            $request->merge(['rapportino' => 0]);
         }
         if ($request->fatturazione_default) {
-            $request->merge(array('fatturazione_default' => 1));
+            $request->merge(['fatturazione_default' => 1]);
         } else {
-            $request->merge(array('fatturazione_default' => 0));
+            $request->merge(['fatturazione_default' => 0]);
         }
 
         $contratto = Contratto::findOrFail($id);

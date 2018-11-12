@@ -17,11 +17,11 @@ class CreateListinoProgettoTable extends Migration
             $table->integer('prodotto_id');
             $table->float('importo');
             $table->float('iva');
-            $table->enum('tipo_iva', array('NORMALE', 'SPLIT'));
+            $table->enum('tipo_iva', ['NORMALE', 'SPLIT']);
             $table->float('rimborsi');
             $table->float('fee');
             $table->integer('softwarehouse_id');
-            $table->enum('tipo_vendita', array('LICENZA', 'NOLEGGIO'));
+            $table->enum('tipo_vendita', ['LICENZA', 'NOLEGGIO']);
             $table->date('scadenza');
         });
     }

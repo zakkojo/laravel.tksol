@@ -113,10 +113,10 @@ class AttivitaController extends Controller
         } else {
             $msg = 'out of scope';
         }
-        $response = array(
+        $response = [
             'status' => 'success',
             'msg' => $msg,
-        );
+        ];
         return Response::json($response);
     }
     
@@ -128,10 +128,10 @@ class AttivitaController extends Controller
         } else {
             $msg = 'out of scope';
         }
-        $response = array(
+        $response = [
             'status' => 'success',
             'msg' => $msg,
-        );
+        ];
         return Response::json($response);
     }
 

@@ -25,7 +25,7 @@ class CreateConsulenteTable extends Migration
             $table->string('mobile', 30);
             $table->string('mobile2', 30);
             $table->string('partita_iva', 11);
-            $table->enum('tipo', array('Partner', 'Senior', 'Junior'));
+            $table->enum('tipo', ['Partner', 'Senior', 'Junior']);
         });
     }
 

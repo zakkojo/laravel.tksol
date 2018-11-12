@@ -22,9 +22,9 @@ class CreateContrattoProdottoTable extends Migration
             $table->softDeletes();
             $table->float('importo');
             $table->float('iva');
-            $table->enum('tipo_iva', array('NORMALE', 'SPLIT'));
+            $table->enum('tipo_iva', ['NORMALE', 'SPLIT']);
             $table->float('fee');
-            $table->enum('tipo_vendita', array('LICENZA', 'NOLEGGIO'));
+            $table->enum('tipo_vendita', ['LICENZA', 'NOLEGGIO']);
             $table->timestamp('scadenza');
         });
     }

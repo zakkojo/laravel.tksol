@@ -16,7 +16,7 @@ class CreateConsulenteInterventoTable extends Migration
             $table->integer('consulente_id')->unsigned();
             $table->boolean('fatturabile');
             $table->decimal('importo', 8, 2);
-            $table->enum('tipo_consulente', array('SENIOR','JUNIOR'));
+            $table->enum('tipo_consulente', ['SENIOR','JUNIOR']);
         });
     }
 

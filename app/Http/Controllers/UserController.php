@@ -102,10 +102,10 @@ class UserController extends Controller
             $msg = 'Accesso Abilitato per: ' . $user->email;
             Password::sendResetLink(['email' => $user->email]);
         }
-        $response = array(
+        $response = [
             'status' => 'success',
             'msg'    => $msg,
-        );
+        ];
 
         return Response::json($response);
     }

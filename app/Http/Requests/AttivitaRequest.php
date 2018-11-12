@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Requests;
-Use App\Attivita;
+
+use App\Attivita;
 
 class AttivitaRequest extends Request
 {
@@ -23,8 +24,7 @@ class AttivitaRequest extends Request
     public function rules()
     {
 
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {
@@ -55,5 +55,4 @@ class AttivitaRequest extends Request
                 break;
         }
     }
-
 }

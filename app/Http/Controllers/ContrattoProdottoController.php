@@ -8,8 +8,8 @@ use App\Cliente;
 use App\Http\Requests\ContrattiProdottiRequest;
 use Illuminate\Support\Facades\Auth;
 
-
-class ContrattoProdottoController extends Controller {
+class ContrattoProdottoController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -18,7 +18,6 @@ class ContrattoProdottoController extends Controller {
      */
     public function index()
     {
-
     }
 
     /**
@@ -32,7 +31,7 @@ class ContrattoProdottoController extends Controller {
         $softwarehouse = Cliente::getSoftwarehouse();
         $prodotti = Prodotto::all();
 
-        return view('contrattiProdotti.create', compact('contratto', 'softwarehouse','prodotti'));
+        return view('contrattiProdotti.create', compact('contratto', 'softwarehouse', 'prodotti'));
     }
 
     /**
@@ -42,7 +41,7 @@ class ContrattoProdottoController extends Controller {
      */
     public function store(ContrattiProdottiRequest $request)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
@@ -58,7 +57,6 @@ class ContrattoProdottoController extends Controller {
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -67,13 +65,13 @@ class ContrattoProdottoController extends Controller {
      * @param  int $id
      * @return Response
      */
-    public function edit($contratto_id,$id)
+    public function edit($contratto_id, $id)
     {
         $listinoProdotto = ContrattoProdotto::findOrFail($id);
         $softwarehouse = Cliente::getSoftwarehouse();
         $prodotti = Prodotto::all();
         $contratto = Contratto::findOrFail($contratto_id);
-        return view('contrattiProdotti.edit', compact('contratto', 'listinoProdotto','softwarehouse','prodotti'));
+        return view('contrattiProdotti.edit', compact('contratto', 'listinoProdotto', 'softwarehouse', 'prodotti'));
     }
 
     /**
@@ -84,7 +82,7 @@ class ContrattoProdottoController extends Controller {
      */
     public function update(ContrattiProdottiRequest $request, $contratto_id, $id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $listinoIntertvento = ContrattoProdotto::findOrFail($id);
@@ -98,15 +96,12 @@ class ContrattoProdottoController extends Controller {
      * @param  int $id
      * @return Response
      */
-    public function destroy($contratto_id,$id)
+    public function destroy($contratto_id, $id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $resp = ContrattoProdotto::destroy($id);
         return redirect()->action('ContrattoController@edit', $contratto_id);
     }
-
 }
-
-?>

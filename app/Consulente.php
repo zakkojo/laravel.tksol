@@ -5,7 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Consulente extends Model {
+class Consulente extends Model
+{
 
     protected $table = 'consulente';
     public $timestamps = true;
@@ -35,12 +36,12 @@ class Consulente extends Model {
 
     public function contratti()
     {
-        return $this->belongsToMany(Contratto::class)->with('progetto')->withPivot('note', 'ruolo')->where('contratto.stato','<>','CLOSED');
+        return $this->belongsToMany(Contratto::class)->with('progetto')->withPivot('note', 'ruolo')->where('contratto.stato', '<>', 'CLOSED');
     }
 
     public function capoProgetto()
     {
-        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto')->where('contratto.stato','<>','CLOSED');
+        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto')->where('contratto.stato', '<>', 'CLOSED');
     }
 
     public function capoProgettoAlways()
@@ -50,9 +51,10 @@ class Consulente extends Model {
 
     public function canPianificare($contratto_id)
     {
-        if ($this->contratti->where('id', $contratto_id)->count() > 0)
+        if ($this->contratti->where('id', $contratto_id)->count() > 0) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 }

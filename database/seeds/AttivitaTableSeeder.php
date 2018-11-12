@@ -17,7 +17,7 @@ class AttivitaTableSeeder extends Seeder
         \DB::table('attivita')->delete();
         
         \DB::table('attivita')->insert(array (
-            0 => 
+            0 =>
             array (
                 'id' => '1',
                 'progetto_id' => '18',
@@ -26,11 +26,11 @@ class AttivitaTableSeeder extends Seeder
                 '_rgt' => '10',
                 'created_at' => '2016-03-17 05:49:33',
                 'updated_at' => '2016-03-17 05:50:44',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'sequenza' => '0',
                 'descrizione' => 'attivita 1',
             ),
-            1 => 
+            1 =>
             array (
                 'id' => '2',
                 'progetto_id' => '18',
@@ -39,7 +39,7 @@ class AttivitaTableSeeder extends Seeder
                 '_rgt' => '12',
                 'created_at' => '2016-03-17 05:53:05',
                 'updated_at' => '2016-03-17 05:53:05',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'sequenza' => '0',
                 'descrizione' => 'attivita 2',
             ),
@@ -52,7 +52,7 @@ class AttivitaTableSeeder extends Seeder
                 '_rgt' => '14',
                 'created_at' => '2016-03-17 05:53:22',
                 'updated_at' => '2016-03-17 05:53:22',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'sequenza' => '0',
                 'descrizione' => 'attivita 3',
             ),
@@ -65,7 +65,7 @@ class AttivitaTableSeeder extends Seeder
                 '_rgt' => '3',
                 'created_at' => '2016-03-17 05:55:51',
                 'updated_at' => '2016-03-17 05:55:51',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'sequenza' => '0',
                 'descrizione' => 'attivita 4',
             ),
@@ -78,7 +78,7 @@ class AttivitaTableSeeder extends Seeder
                 '_rgt' => '5',
                 'created_at' => '2016-03-17 05:56:19',
                 'updated_at' => '2016-03-17 05:56:19',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'sequenza' => '0',
                 'descrizione' => 'attivita 5',
             ),
@@ -91,7 +91,7 @@ class AttivitaTableSeeder extends Seeder
                 '_rgt' => '9',
                 'created_at' => '2016-03-17 05:56:32',
                 'updated_at' => '2016-03-17 05:56:32',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'sequenza' => '0',
                 'descrizione' => 'attivita 6',
             ),
@@ -104,7 +104,7 @@ class AttivitaTableSeeder extends Seeder
                 '_rgt' => '8',
                 'created_at' => '2016-03-17 05:56:42',
                 'updated_at' => '2016-03-17 05:56:42',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'sequenza' => '0',
                 'descrizione' => 'attivita 7',
             ),
@@ -117,12 +117,10 @@ class AttivitaTableSeeder extends Seeder
                 '_rgt' => '16',
                 'created_at' => '2016-03-17 05:59:07',
                 'updated_at' => '2016-03-17 05:59:07',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'sequenza' => '0',
                 'descrizione' => 'attivita 1',
             ),
         ));
-        
-        
     }
 }

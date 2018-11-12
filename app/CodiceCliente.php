@@ -5,18 +5,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CodiceCliente extends Model {
+class CodiceCliente extends Model
+{
 
-	protected $table = 'codiceCliente';
-	public $timestamps = true;
+    protected $table = 'codiceCliente';
+    public $timestamps = true;
 
-	use SoftDeletes;
+    use SoftDeletes;
 
-	protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at'];
 
-	public function cliente()
-	{
-		return $this->belongsTo(Cliente::class);
-	}
-
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
 }

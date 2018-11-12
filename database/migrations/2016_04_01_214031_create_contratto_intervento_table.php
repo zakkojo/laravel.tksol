@@ -12,8 +12,7 @@ class CreateContrattoInterventoTable extends Migration
      */
     public function up()
     {
-        Schema::create('contratto_intervento', function(Blueprint $table)
-        {
+        Schema::create('contratto_intervento', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contratto_id');
             $table->timestamps();

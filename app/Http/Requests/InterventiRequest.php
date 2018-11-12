@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-Use App\Intervento;
+use App\Intervento;
 
-class InterventiRequest extends Request {
+class InterventiRequest extends Request
+{
 
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +25,7 @@ class InterventiRequest extends Request {
     public function rules()
     {
 
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {
@@ -53,8 +53,7 @@ class InterventiRequest extends Request {
                     "data" => 'required',
                     "sede" => 'required',
                 ];
-                if ($this->attributes->get('stampa') == '1')
-                {
+                if ($this->attributes->get('stampa') == '1') {
                     $rules->push(
                         ["ora_start_reale" => 'required',
                          "ora_end_reale"   => 'required',
@@ -77,5 +76,4 @@ class InterventiRequest extends Request {
                 break;
         }
     }
-
 }

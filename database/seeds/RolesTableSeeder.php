@@ -15,8 +15,5 @@ class RolesTableSeeder extends Seeder
         
 
         \DB::table('roles')->delete();
-        
-        
-        
     }
 }

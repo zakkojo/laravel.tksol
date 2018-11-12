@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-class ConsulentiContrattiRequest extends Request {
+class ConsulentiContrattiRequest extends Request
+{
 
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +23,7 @@ class ConsulentiContrattiRequest extends Request {
     public function rules()
     {
 
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {
@@ -50,5 +50,4 @@ class ConsulentiContrattiRequest extends Request {
                 break;
         }
     }
-
 }

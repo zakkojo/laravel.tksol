@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Requests;
-Use App\User;
+
+use App\User;
 
 class ContattiRequest extends Request
 {
@@ -12,7 +13,7 @@ class ContattiRequest extends Request
      */
     public function authorize()
     {
-       return true;
+        return true;
     }
 
     /**
@@ -23,8 +24,7 @@ class ContattiRequest extends Request
     public function rules()
     {
 
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {
@@ -46,7 +46,11 @@ class ContattiRequest extends Request
             case 'PUT':
             case 'PATCH':
             {
-                if($user = User::withTrashed()->where('email', '=', $this->user_email)->first()) $user = $user->id; else $user = '';
+                if ($user = User::withTrashed()->where('email', '=', $this->user_email)->first()) {
+                    $user = $user->id;
+                } else {
+                    $user = '';
+                }
                 return [
                     'descrizione'=> 'required',
                     //'indirizzo'=> 'required',
@@ -62,5 +66,4 @@ class ContattiRequest extends Request
                 break;
         }
     }
-
 }

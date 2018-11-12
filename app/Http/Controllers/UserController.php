@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 
-
-class UserController extends Controller {
+class UserController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -21,7 +21,6 @@ class UserController extends Controller {
      */
     public function index()
     {
-
     }
 
     /**
@@ -54,7 +53,6 @@ class UserController extends Controller {
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -65,7 +63,6 @@ class UserController extends Controller {
      */
     public function edit($id)
     {
-
     }
 
     /**
@@ -76,7 +73,6 @@ class UserController extends Controller {
      */
     public function update($id)
     {
-
     }
 
     /**
@@ -87,25 +83,20 @@ class UserController extends Controller {
      */
     public function destroy($id)
     {
-
     }
 
     public function ajaxToggleUser()
     {
-        if (Input::get('tipo_utente') == 1)
-        {
+        if (Input::get('tipo_utente') == 1) {
             $utente = Consulente::findOrFail(Input::get('id'));
-        } elseif (Input::get('tipo_utente') == 2)
-        {
+        } elseif (Input::get('tipo_utente') == 2) {
             $utente = Contatto::findOrFail(Input::get('id'));
         }
-        if (count($utente->user))
-        {
+        if (count($utente->user)) {
             $user = User::find($utente->user_id);
             $user->delete();
             $msg = 'Accesso Disabilitato per: ' . $user->email;
-        } else
-        {
+        } else {
             $utente->user()->withTrashed()->first()->restore();
             $user = User::find($utente->user_id);
             $msg = 'Accesso Abilitato per: ' . $user->email;
@@ -118,7 +109,4 @@ class UserController extends Controller {
 
         return Response::json($response);
     }
-
 }
-
-?>

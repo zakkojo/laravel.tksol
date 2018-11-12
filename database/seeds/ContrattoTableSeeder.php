@@ -17,27 +17,25 @@ class ContrattoTableSeeder extends Seeder
         \DB::table('contratto')->delete();
         
         \DB::table('contratto')->insert(array (
-            0 => 
+            0 =>
             array (
                 'id' => '1',
                 'created_at' => '2016-04-02 07:25:28',
                 'updated_at' => '2016-04-02 07:25:28',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'cliente_id' => '1',
                 'progetto_id' => '18',
                 'stato' => 'PROSPECT',
                 'note' => '',
                 'data_primo_contatto' => '2016-04-01 07:25:28',
-                'data_avvio_progetto' => NULL,
-                'data_chiusura_progetto' => NULL,
+                'data_avvio_progetto' => null,
+                'data_chiusura_progetto' => null,
                 'modalita_fattura' => 'CHIAVI_IN_MANO',
                 'importo' => '123000.00',
-                'data_validita_contratto' => NULL,
+                'data_validita_contratto' => null,
                 'periodicita_pagamenti' => '3',
                 'capo_progetto' => '1',
             ),
         ));
-        
-        
     }
 }

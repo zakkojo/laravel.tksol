@@ -18,7 +18,8 @@ use Excel;
 use DB;
 use Html2Text\Html2Text;
 
-class InterventoController extends Controller {
+class InterventoController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -60,13 +61,17 @@ class InterventoController extends Controller {
         $request->request->add(['data_modifica' => Carbon::now()]);
         $request->request->add(['creatore_id' => Auth::User()->id]);
         $request->request->add(['contratto_id' => ContrattoIntervento::findOrFail($request->listinoContratto)->contratto->id]);
-        if (ContrattoIntervento::findOrFail($request->listinoContratto)->contratto->fatturazione_default)
+        if (ContrattoIntervento::findOrFail($request->listinoContratto)->contratto->fatturazione_default) {
             $request->request->add(['fatturabile' => 1]);
-        else
+        } else {
             $request->request->add(['fatturabile' => 0]);
+        }
         $data = $request->all();
-        if (Intervento::create($data)) return true;
-        else return false;
+        if (Intervento::create($data)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -79,13 +84,15 @@ class InterventoController extends Controller {
     {
         $intervento = Intervento::findOrFail($id);
         //return $intervento;
-        if ($intervento->fatturato == 1 OR session()->get('stampaIntervento') == $intervento->id)
-        {
-            if (session()->get('stampaIntervento')) session()->forget('stampaIntervento');
+        if ($intervento->fatturato == 1 or session()->get('stampaIntervento') == $intervento->id) {
+            if (session()->get('stampaIntervento')) {
+                session()->forget('stampaIntervento');
+            }
 
             return view('interventi.inviaStampa', compact('intervento'));
-        } else
+        } else {
             return redirect('/interventi/' . $id . '/edit');
+        }
     }
 
     /**
@@ -129,11 +136,14 @@ class InterventoController extends Controller {
         $intervento->problemiAperti = Input::get('problemiAperti');
         $intervento->sede = Input::get('sede');
 
-        if (Input::get('fatturabile')) $fatturabile = 1; else $fatturabile = 0;
+        if (Input::get('fatturabile')) {
+            $fatturabile = 1;
+        } else {
+            $fatturabile = 0;
+        }
         $intervento->fatturabile = $fatturabile;
         //se l'intervento è iniziato secondo calendario posso aggioranre l'oraio di lavoro effettivo
-        if (Carbon::now()->gte(Carbon::parse($intervento->data_start)))
-        {
+        if (Carbon::now()->gte(Carbon::parse($intervento->data_start))) {
             $intervento->data_start_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start_reale'));
             $intervento->data_end_reale = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end_reale'));
             $intervento->ore_lavorate = Input::get('ore_lavorate');
@@ -143,16 +153,13 @@ class InterventoController extends Controller {
         $intervento->save();
 
         //se clicco sul pulsante stampa o chiudi
-        if (Input::get('stampa') == 1)
-        {
+        if (Input::get('stampa') == 1) {
             //se posso pianificare e è necessario
-            if (Auth::user()->consulente->canPianificare($intervento->contratto->id) AND $intervento->contratto->ripianifica == 1)
-            {
+            if (Auth::user()->consulente->canPianificare($intervento->contratto->id) and $intervento->contratto->ripianifica == 1) {
                 $prossimiInterventi = $intervento->contratto->prossimiInterventi;
                 //se non ci sono prossimiInterventi
                 //dd(count($prossimiInterventi));
-                if (count($prossimiInterventi) == 0)
-                {
+                if (count($prossimiInterventi) == 0) {
                     //altrimenti chiedo l'inserimento del prossimo intervento
                     //session()->flash('attivita', str_replace("\r\n","",Input::get('problemiAperti')));
                     session()->flash('stampaIntervento', $id);
@@ -166,10 +173,9 @@ class InterventoController extends Controller {
                 }
             }
             //se è necessario inviare il rapportino
-            if ($intervento->contratto->rapportino == 1)
+            if ($intervento->contratto->rapportino == 1) {
                 return view('interventi.inviaStampa', compact('intervento'));
-            else
-            {
+            } else {
                 $intervento->inviato = 1;
                 $intervento->save();
 
@@ -193,34 +199,34 @@ class InterventoController extends Controller {
     public function invia($id)
     {
         $intervento = Intervento::findOrFail($id);
-        if (Input::get('invia') != 1)
+        if (Input::get('invia') != 1) {
             return view('interventi.inviaStampa', compact('intervento'));
+        }
         $recipients = Input::get('recipients');
         $intervento->stampa = 1;
         $intervento->inviato = 1;
-        if (config('app.debug') == false)
-        {
+        if (config('app.debug') == false) {
             $user = Auth::user();
             $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'));
 
             $base_path = base_path();
             $pdf->save($base_path . '/resources/tmp/rapportino_' . $id . '.pdf', true);
             $societa = $intervento->contratto->societa;
-            Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $societa, $id, $base_path, $recipients)
-            {
+            Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $societa, $id, $base_path, $recipients) {
                 $m->from($societa->email, 'Rapportini ' . $societa->nome);
                 $m->replyTo($user->email, $user->consulente->nominativo);
-                if (config('app.customer_email'))
-                {
-                    if (is_array($recipients))
-                    {
-                        foreach ($recipients as $recipient)
-                        {
-                            if ($recipient) $m->to($recipient);
+                if (config('app.customer_email')) {
+                    if (is_array($recipients)) {
+                        foreach ($recipients as $recipient) {
+                            if ($recipient) {
+                                $m->to($recipient);
+                            }
                         }
                     }
                     $m->subject('Rapportino ' . $societa->nome);
-                } else $m->subject('***NON INVIATO AL CLIENTE*** Rapportino ' . $societa->nome);
+                } else {
+                    $m->subject('***NON INVIATO AL CLIENTE*** Rapportino ' . $societa->nome);
+                }
                 $m->bcc($user->email, $user->consulente->nominativo);
                 $m->attach($base_path . '/resources/tmp/rapportino_' . $id . '.pdf');
             });
@@ -238,7 +244,6 @@ class InterventoController extends Controller {
      */
     public function destroy($id)
     {
-
     }
 
     /*public function ajaxAcceptIntervento()
@@ -258,10 +263,8 @@ class InterventoController extends Controller {
     {
         $consulente = Auth::User()->consulente;
         $daApprovare = collect();
-        $consulente->capoProgettoAlways->each(function ($contratto, $key) use ($daApprovare)
-        {
-            $contratto->interventiDaApprovare->each(function ($intervento, $key) use ($daApprovare)
-            {
+        $consulente->capoProgettoAlways->each(function ($contratto, $key) use ($daApprovare) {
+            $contratto->interventiDaApprovare->each(function ($intervento, $key) use ($daApprovare) {
                 $daApprovare->push($intervento);
             });
         });
@@ -273,8 +276,10 @@ class InterventoController extends Controller {
     {
         //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
         $paginate = Input::get('paginate', '100');
-        if (Input::has('debug')) dd(Input::all());
-        $daFatturare = Intervento::whereRaw('approvato = "1" AND ore_fatturate <> 0 AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start','desc')->paginate($paginate);
+        if (Input::has('debug')) {
+            dd(Input::all());
+        }
+        $daFatturare = Intervento::whereRaw('approvato = "1" AND ore_fatturate <> 0 AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start', 'desc')->paginate($paginate);
 
         return view('interventi.registraFattura', compact('daFatturare'));
     }
@@ -283,25 +288,29 @@ class InterventoController extends Controller {
     {
         $intervento_id = Input::get('id');
         //$data = Input::has('dataFattura') ? Input::get('dataFattura') : null;
-        if (Input::get('dataFattura') == 'Invalid date') $data = null;
-        else $data = Input::get('dataFattura');
+        if (Input::get('dataFattura') == 'Invalid date') {
+            $data = null;
+        } else {
+            $data = Input::get('dataFattura');
+        }
         $numero = Input::has('fatturato') ? Input::get('fatturato') : null;
         $note = Input::has('note') ? Input::get('note') : null;
         $input = Input::all();
-        if ($intervento_id)
-        {
+        if ($intervento_id) {
             $intervento = Intervento::findOrFail($intervento_id);
-            if (!($intervento->fatturato AND $intervento->data_fattura))
-            {
-                if ($data) $intervento->data_fattura = $data;
+            if (!($intervento->fatturato and $intervento->data_fattura)) {
+                if ($data) {
+                    $intervento->data_fattura = $data;
+                }
                 $intervento->fatturato = $numero;
                 $intervento->note_fattura = $note;
                 $intervento->save();
-                if ($intervento_id AND $intervento->data_fattura AND $intervento->fatturato)
+                if ($intervento_id and $intervento->data_fattura and $intervento->fatturato) {
                     //se ci sono data e numero fattura chiudo la fattura
                     return json_encode(['status' => 'success', 'intervento' => $intervento]); //success = chiudo fattura
-                else
+                } else {
                     return json_encode(['status' => 'update', 'intervento' => $intervento, 'input' => $input]); //aggiorno fattura
+                }
             }
         }
 
@@ -312,34 +321,31 @@ class InterventoController extends Controller {
     {
         $data_start = Input::get('start');
         $data_end = Input::get('end');
-        if ($data_start AND $data_end)
-        {
+        if ($data_start and $data_end) {
             $user_id = Input::get('user_id');
             $cliente_id = Input::get('cliente_id');
-            if (Input::get('inviato')) $inviato = 1;
-            else $inviato = 0;
+            if (Input::get('inviato')) {
+                $inviato = 1;
+            } else {
+                $inviato = 0;
+            }
 
             $calendario = [];
 
-            if ($user_id AND !$cliente_id)
-            {
+            if ($user_id and !$cliente_id) {
                 $where[0][] = ['user_id' => $user_id];
                 $calendario = Intervento::where('data_start', '>=', $data_start)->where('data_start', '<=', $data_end)->where($where)->where('inviato', $inviato)->get();
             }
-            if ($cliente_id AND !$user_id)
-            {
+            if ($cliente_id and !$user_id) {
                 $calendario = Intervento::join('contratto_intervento', 'intervento.listino_id', '=', 'contratto_intervento.id')
                     ->join('contratto', 'contratto_intervento.contratto_id', '=', 'contratto.id')
                     ->where('cliente_id', $cliente_id)
                     ->where('data_start', '>=', $data_start)
                     ->where('data_start', '<=', $data_end)
                     ->where('inviato', $inviato)->get(['intervento.*']);
-
             }
-            if (!$calendario->isEmpty())
-            {
-                $calendario->each(function ($evento)
-                {
+            if (!$calendario->isEmpty()) {
+                $calendario->each(function ($evento) {
                     $intervento = Intervento::findOrFail($evento['id']);
                     $evento['contratto_id'] = '' . $intervento->listinoInterventi_wt->contratto->id;
                     $evento['user_id'] = '' . $intervento->user_id;
@@ -373,7 +379,9 @@ class InterventoController extends Controller {
         $intervento->cliente_id = $intervento->listinointerventi->contratto->cliente->id;
         $intervento->progetto_id = $intervento->listinointerventi->contratto->progetto->id;
 
-        if ($intervento) return ['status' => 'success', 'intervento' => $intervento];
+        if ($intervento) {
+            return ['status' => 'success', 'intervento' => $intervento];
+        }
 
         return ['status' => 'fail'];
     }
@@ -396,18 +404,19 @@ class InterventoController extends Controller {
         //-------------------------------------------
         $response = $intervento->save();
         //-------------------------------------------
-        if ($response)
-        {
-            if ($id_padre = Input::get('stampaIntervento'))
-            {
+        if ($response) {
+            if ($id_padre = Input::get('stampaIntervento')) {
                 $intervento = Intervento::findOrFail($id_padre);
                 session()->set('stampaIntervento', $id_padre);
                 $intervento->stampa = 1;
-                if ($intervento->save())
-                {
+                if ($intervento->save()) {
                     return ['status' => 'success', 'action' => 'stampa', 'id_padre' => $id_padre];
-                } else return ['status' => 'fail'];
-            } else return ['status' => 'success', 'msg' => Input::get('stampaIntervento')];
+                } else {
+                    return ['status' => 'fail'];
+                }
+            } else {
+                return ['status' => 'success', 'msg' => Input::get('stampaIntervento')];
+            }
 
             return ['status' => 'success'];
         }
@@ -430,7 +439,9 @@ class InterventoController extends Controller {
 
         $response = $intervento->update();
 
-        if ($response) return ['status' => 'success', 'input' => Input::all()];
+        if ($response) {
+            return ['status' => 'success', 'input' => Input::all()];
+        }
 
         return ['status' => 'fail'];
     }
@@ -441,35 +452,31 @@ class InterventoController extends Controller {
         $id = Input::get('id');
         $intervento = Intervento::findOrFail($id);
         //intervento non consuntivato
-        if ($intervento->inviato == 1)
-        {
+        if ($intervento->inviato == 1) {
             $error = 1;
             $msg[] = "Intervento già inviato al cliente";
         }
 
         //se è necessario ripianificare
-        if ($intervento->contratto->ripianifica == '1')
-        {
+        if ($intervento->contratto->ripianifica == '1') {
             //intervento futuro stesso contratto <=30gg
-            $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($key, $element) use ($id)
-            {
-                return ($element['id'] != $id AND Carbon::parse($element['data_start'])->gte(Carbon::today()));
+            $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($key, $element) use ($id) {
+                return ($element['id'] != $id and Carbon::parse($element['data_start'])->gte(Carbon::today()));
             });
-            if (is_null($nextIntervento))
-            {
+            if (is_null($nextIntervento)) {
                 $error = 1;
                 $msg[] = "Nessun intervento nei prossimi 30 giorni";
             }
         }
-        if ($error == 0)
-        {
+        if ($error == 0) {
             $response = $intervento->delete();
 
-            if ($response)
-            {
-                if (isset($nextIntervento))
+            if ($response) {
+                if (isset($nextIntervento)) {
                     return ['status' => 'success', $nextIntervento];
-                else return ['status' => 'success'];
+                } else {
+                    return ['status' => 'success'];
+                }
             }
         }
 
@@ -486,9 +493,11 @@ class InterventoController extends Controller {
         })->count();
         */
 
-        if ($res) return ['status' => 'success', 'result' => true];
-        else return ['status' => 'success', 'result' => false];
-
+        if ($res) {
+            return ['status' => 'success', 'result' => true];
+        } else {
+            return ['status' => 'success', 'result' => false];
+        }
     }
 
     public function ajaxApprovaIntervento()
@@ -497,11 +506,17 @@ class InterventoController extends Controller {
         $ore_fatturate = Input::get('ore_approvate');
         $intervento = Intervento::findOrFail($id);
         $intervento->ore_fatturate = $ore_fatturate;
-        if ($ore_fatturate != '') $intervento->approvato = 1;
-        else $intervento->approvato = 0;
+        if ($ore_fatturate != '') {
+            $intervento->approvato = 1;
+        } else {
+            $intervento->approvato = 0;
+        }
         $res = $intervento->save();
-        if ($res) return ['status' => 'success', 'id' => $id, 'ore' => $ore_fatturate];
-        else return ['status' => 'fail', 'id' => $id];
+        if ($res) {
+            return ['status' => 'success', 'id' => $id, 'ore' => $ore_fatturate];
+        } else {
+            return ['status' => 'fail', 'id' => $id];
+        }
     }
 
     private function excel_format_cell(&$item1, $key, $val)
@@ -509,7 +524,6 @@ class InterventoController extends Controller {
         $item1 = str_replace("<br>", "\n", $val);
         $item1 = str_replace("<br/>", "\n", $val);
         $item1 = strip_tags($val);
-
     }
 
     public function export_xlsx_daFatturare()
@@ -564,24 +578,20 @@ class InterventoController extends Controller {
         and inter.fatturabile =1
         and (inter.fatturato is null or inter.data_fattura is null)
         ");
-        for ($i = 0, $c = count($daFatturare); $i < $c; ++$i)
-        {
+        for ($i = 0, $c = count($daFatturare); $i < $c; ++$i) {
             $daFatturare[$i] = (array)$daFatturare[$i];
         }
 
-        foreach ($daFatturare as $k => $array)
-        {
-            $daFatturare[$k]["attivitaSvolte"] = Html2Text::convert($daFatturare[$k]["attivitaSvolte"],true);
+        foreach ($daFatturare as $k => $array) {
+            $daFatturare[$k]["attivitaSvolte"] = Html2Text::convert($daFatturare[$k]["attivitaSvolte"], true);
         }
         ob_clean();
         $date = Carbon::now();
-        $filename = 'crm_daFatturare_' . $date->format('Ymd');;
-        Excel::create($filename, function ($excel) use ($daFatturare)
-        {
-            $excel->sheet('Sheetname', function ($sheet) use ($daFatturare)
-            {
+        $filename = 'crm_daFatturare_' . $date->format('Ymd');
+        ;
+        Excel::create($filename, function ($excel) use ($daFatturare) {
+            $excel->sheet('Sheetname', function ($sheet) use ($daFatturare) {
                 $sheet->fromArray($daFatturare);
-
             });
         })->export('xlsx');
     }
@@ -601,19 +611,15 @@ class InterventoController extends Controller {
         //dd(session()->get('filtri_estrazioneConsulente'));
         $di = Carbon::createFromFormat('d/m/Y', $request->di);
         $df = Carbon::createFromFormat('d/m/Y', $request->df);
-        if ($consulenti = session()->get('filtri_estrazioneConsulente.consulenti'))
-        {
-            foreach ($consulenti as $k => $v)
-            {
+        if ($consulenti = session()->get('filtri_estrazioneConsulente.consulenti')) {
+            foreach ($consulenti as $k => $v) {
                 $k = User::findorFail($k)->consulente->id;
                 $filtro_consulenti .= $k . ',';
             }
             $filtro_consulenti = " AND cons.id IN (" . substr($filtro_consulenti, 0, -1) . ") ";
         }
-        if ($clienti = session()->get('filtri_estrazioneConsulente.clienti'))
-        {
-            foreach ($clienti as $k => $v)
-            {
+        if ($clienti = session()->get('filtri_estrazioneConsulente.clienti')) {
+            foreach ($clienti as $k => $v) {
                 $filtro_clienti .= $k . ',';
             }
             $filtro_clienti = " AND cli.id IN (" . substr($filtro_clienti, 0, -1) . ") ";
@@ -655,25 +661,17 @@ class InterventoController extends Controller {
             AND i.deleted_at is null
             GROUP BY i.id 
         ");
-        for ($i = 0, $c = count($dataset); $i < $c; ++$i)
-        {
+        for ($i = 0, $c = count($dataset); $i < $c; ++$i) {
             $dataset[$i] = (array)$dataset[$i];
         }
         ob_clean();
         $date = Carbon::now();
-        $filename = 'crm_interventi_' . $date->format('Ymd');;
-        Excel::create($filename, function ($excel) use ($dataset)
-        {
-            $excel->sheet('Interventi', function ($sheet) use ($dataset)
-            {
+        $filename = 'crm_interventi_' . $date->format('Ymd');
+        ;
+        Excel::create($filename, function ($excel) use ($dataset) {
+            $excel->sheet('Interventi', function ($sheet) use ($dataset) {
                 $sheet->fromArray($dataset);
-
             });
         })->export('xlsx');
     }
 }
-
-?>
-
-
-

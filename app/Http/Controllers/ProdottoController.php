@@ -4,7 +4,8 @@ use App\Http\Requests\ProdottiRequest;
 use App\Prodotto;
 use Illuminate\Support\Facades\Auth;
 
-class ProdottoController extends Controller {
+class ProdottoController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -35,7 +36,7 @@ class ProdottoController extends Controller {
      */
     public function store(ProdottiRequest $request)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
@@ -52,7 +53,6 @@ class ProdottoController extends Controller {
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -74,17 +74,17 @@ class ProdottoController extends Controller {
      * @param  int $id
      * @return Response
      */
-    public function update(ProdottiRequest $request,$id)
+    public function update(ProdottiRequest $request, $id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
-        if ($prodotto = Prodotto::findOrFail($id))
-        {
+        if ($prodotto = Prodotto::findOrFail($id)) {
             $prodotto->update($request->all());
             return redirect()->action('ProdottoController@index');
-        } else
+        } else {
             abort(404);
+        }
     }
 
     /**
@@ -95,13 +95,10 @@ class ProdottoController extends Controller {
      */
     public function destroy($id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $resp = Prodotto::destroy($id);
         return redirect()->action('ProdottoController@index');
     }
-
 }
-
-?>

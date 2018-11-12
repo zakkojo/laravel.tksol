@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 
-
-class ConsulenteController extends Controller {
+class ConsulenteController extends Controller
+{
 
 
     /**
@@ -54,7 +54,6 @@ class ConsulenteController extends Controller {
         $consulente->save();
 
         return redirect()->action('ConsulenteController@index');
-
     }
 
     /**
@@ -128,7 +127,6 @@ class ConsulenteController extends Controller {
      */
     public function destroy($id)
     {
-
     }
 
 
@@ -146,37 +144,28 @@ class ConsulenteController extends Controller {
         $consulente = User::findOrFail($user_id)->consulente;
 
 
-        if ($consulente->tipo == 'Partner')
-        {
+        if ($consulente->tipo == 'Partner') {
             return Contratto::with('progetto')->where('cliente_id', $cliente_id)->get();
-        } else
-        {
+        } else {
             //return Contratto::with('progetto','consulenti')->where('cliente_id', $cliente_id)->get();
             //$contratti = User::find($user)->consulente->contratti;
-            return $contratti = Contratto::with('progetto')->where('stato','<>','CLOSED')
-                ->whereHas('consulenti', function ($query) use ($consulente)
-                {
-                    $query->where('consulente_id',$consulente->id);
+            return $contratti = Contratto::with('progetto')->where('stato', '<>', 'CLOSED')
+                ->whereHas('consulenti', function ($query) use ($consulente) {
+                    $query->where('consulente_id', $consulente->id);
                 })
                 ->where('cliente_id', $cliente_id)->get();
         }
-
     }
 
     public function ajaxGetInterventiDaApprovare()
     {
         $consulente = Auth::User()->consulente;
         $daApprovare=0;
-        $consulente->capoProgettoAlways->each(function ($contratto, $key) use (&$daApprovare)
-        {
-            if($contratto->interventiDaApprovare)
-            $daApprovare = $daApprovare + $contratto->interventiDaApprovare->count();
+        $consulente->capoProgettoAlways->each(function ($contratto, $key) use (&$daApprovare) {
+            if ($contratto->interventiDaApprovare) {
+                $daApprovare = $daApprovare + $contratto->interventiDaApprovare->count();
+            }
         });
         return $daApprovare;
     }
-
 }
-
-
-
-?>

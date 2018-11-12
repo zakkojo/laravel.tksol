@@ -174,7 +174,6 @@ class AcachaAdminLTELaravelTest extends TestCase
             ->seePageIs('/home')
             ->seeInDatabase('users', ['email' => 'sergiturbadenas@gmail.com',
                                       'name'  => 'Sergi Tur Badenas']);
-
     }
 
     /**
@@ -217,6 +216,4 @@ class AcachaAdminLTELaravelTest extends TestCase
             ->press('Send Password Reset Link')
             ->see('There were some problems with your input');
     }
-
-
 }

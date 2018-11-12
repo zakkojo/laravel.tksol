@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
-class AttivitaController extends Controller {
+
+class AttivitaController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +18,6 @@ class AttivitaController extends Controller {
      */
     public function index()
     {
-
     }
 
     /**
@@ -26,7 +27,6 @@ class AttivitaController extends Controller {
      */
     public function create()
     {
-
     }
 
     /**
@@ -36,15 +36,17 @@ class AttivitaController extends Controller {
      */
     public function store(AttivitaRequest $request)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
         Attivita::create($data);
-        if ($request->parent_id != 0) $attivita = Attivita::findOrFail($request->parent_id);
+        if ($request->parent_id != 0) {
+            $attivita = Attivita::findOrFail($request->parent_id);
+        }
         $progetto = Progetto::findOrFail($request->progetto_id);
 
-        return redirect()->action('ProgettoController@edit', compact('progetto','attivita'));
+        return redirect()->action('ProgettoController@edit', compact('progetto', 'attivita'));
     }
 
     /**
@@ -55,7 +57,6 @@ class AttivitaController extends Controller {
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -66,7 +67,6 @@ class AttivitaController extends Controller {
      */
     public function edit($id)
     {
-
     }
 
     /**
@@ -77,7 +77,7 @@ class AttivitaController extends Controller {
      */
     public function update(AttivitaRequest $request)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $attivita = Attivita::findOrFail($request->selected);
@@ -85,7 +85,7 @@ class AttivitaController extends Controller {
         $attivita->descrizione = $request->descrizione;
         $attivita->save();
 
-        return redirect()->action('ProgettoController@edit', compact('progetto','attivita'));
+        return redirect()->action('ProgettoController@edit', compact('progetto', 'attivita'));
     }
 
     /**
@@ -96,7 +96,7 @@ class AttivitaController extends Controller {
      */
     public function destroy($id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $attivita = Attivita::findOrFail($id);
@@ -108,35 +108,36 @@ class AttivitaController extends Controller {
     public function ajaxMoveDown()
     {
         $attivita = Attivita::findOrFail(Input::get('id'));
-        if($attivita->getNextSibling()->progetto_id == Input::get('progetto_id'))
+        if ($attivita->getNextSibling()->progetto_id == Input::get('progetto_id')) {
             $msg = $attivita->down();
-        else $msg = 'out of scope';
+        } else {
+            $msg = 'out of scope';
+        }
         $response = array(
             'status' => 'success',
             'msg' => $msg,
         );
-        return Response::json( $response );
+        return Response::json($response);
     }
     
     public function ajaxMoveUp()
     {
         $attivita = Attivita::findOrFail(Input::get('id'));
-        if($attivita->getPrevSibling()->progetto_id == Input::get('progetto_id'))
+        if ($attivita->getPrevSibling()->progetto_id == Input::get('progetto_id')) {
             $msg = $attivita->up();
-        else $msg = 'out of scope';
+        } else {
+            $msg = 'out of scope';
+        }
         $response = array(
             'status' => 'success',
             'msg' => $msg,
         );
-        return Response::json( $response );
+        return Response::json($response);
     }
 
     public function ajaxGetDataTree()
     {
         $listaAttivita = Attivita::getDataTree(Input::get('progetto_id'));
-        return Response::json( $listaAttivita );
+        return Response::json($listaAttivita);
     }
-    
 }
-
-?>

@@ -17,17 +17,15 @@ class ProdottoTableSeeder extends Seeder
         \DB::table('prodotto')->delete();
         
         \DB::table('prodotto')->insert(array (
-            0 => 
+            0 =>
             array (
                 'id' => '1',
-                'created_at' => NULL,
-                'updated_at' => NULL,
-                'deleted_at' => NULL,
+                'created_at' => null,
+                'updated_at' => null,
+                'deleted_at' => null,
                 'codice' => 'tkcrm1',
                 'nome' => 'CRM Teikos',
             ),
         ));
-        
-        
     }
 }

@@ -17,12 +17,12 @@ class ContattoTableSeeder extends Seeder
         \DB::table('contatto')->delete();
         
         \DB::table('contatto')->insert(array (
-            0 => 
+            0 =>
             array (
                 'id' => '1',
                 'created_at' => '2016-04-02 00:24:56',
                 'updated_at' => '2016-04-02 00:24:56',
-                'deleted_at' => NULL,
+                'deleted_at' => null,
                 'user_id' => '5',
                 'cliente_id' => '1',
                 'descrizione' => 'Cippo Lippo',
@@ -40,7 +40,5 @@ class ContattoTableSeeder extends Seeder
                 'fatturazione' => '0',
             ),
         ));
-        
-        
     }
 }

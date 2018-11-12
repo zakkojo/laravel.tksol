@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Http\Controllers;
 
 use App\Intervento;
@@ -7,8 +7,8 @@ use App\Http\Requests;
 use App\Http\Requests\RimborsiRequest;
 use Illuminate\Support\Facades\Auth;
 
-
-class RimborsoController extends Controller {
+class RimborsoController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -52,7 +52,7 @@ class RimborsoController extends Controller {
      */
     public function show($id)
     {
-echo "show";
+        echo "show";
     }
 
     /**
@@ -61,11 +61,11 @@ echo "show";
      * @param  int $id
      * @return Response
      */
-    public function edit($intervento_id,$id)
+    public function edit($intervento_id, $id)
     {
         $rimborso = Rimborso::findOrFail($id);
         $intervento = Intervento::findOrFail($intervento_id);
-        return view('rimborsi.edit',compact('intervento','rimborso'));
+        return view('rimborsi.edit', compact('intervento', 'rimborso'));
     }
 
     /**
@@ -74,7 +74,7 @@ echo "show";
      * @param  int $id
      * @return Response
      */
-    public function update(RimborsiRequest $request,$intervento_id,$id)
+    public function update(RimborsiRequest $request, $intervento_id, $id)
     {
         $rimborso = Rimborso::findOrFail($id);
         $rimborso->update($request->all());
@@ -92,7 +92,4 @@ echo "show";
         Rimborso::destroy($id);
         return redirect()->action('InterventoController@edit', $intervento_id);
     }
-
 }
-
-?>

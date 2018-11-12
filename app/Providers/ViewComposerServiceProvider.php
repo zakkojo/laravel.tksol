@@ -13,7 +13,7 @@ class ViewComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer('*','App\Http\Composers\HeaderComposer');
+        view()->composer('*', 'App\Http\Composers\HeaderComposer');
     }
 
     /**

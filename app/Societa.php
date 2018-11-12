@@ -21,7 +21,8 @@ class Societa extends Model
         'deleted_at',
     ];
 
-    public function contratti(){
+    public function contratti()
+    {
         return $this->hasMany(Contratto::class);
     }
 }

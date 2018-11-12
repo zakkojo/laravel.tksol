@@ -5,24 +5,25 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Progetto extends Model {
+class Progetto extends Model
+{
 
-	protected $table = 'progetto';
-	public $timestamps = true;
+    protected $table = 'progetto';
+    public $timestamps = true;
 
-	use SoftDeletes;
+    use SoftDeletes;
 
-	protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'area','nome', 'codice',
     ];
 
     
-	public function attivita()
-	{
-		return $this->hasMany(Attivita::class);
-	}
+    public function attivita()
+    {
+        return $this->hasMany(Attivita::class);
+    }
 
     public function contratti()
     {
@@ -32,7 +33,5 @@ class Progetto extends Model {
     public function getDescrizioneAttribute()
     {
         return $this->area.' / '.$this->nome;
-	}
-
+    }
 }
-

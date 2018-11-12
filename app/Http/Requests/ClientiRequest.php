@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-Use App\Cliente;
+use App\Cliente;
 
-class ClientiRequest extends Request {
+class ClientiRequest extends Request
+{
 
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +24,7 @@ class ClientiRequest extends Request {
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {

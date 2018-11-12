@@ -3,11 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateContrattoTable extends Migration {
+class CreateContrattoTable extends Migration
+{
 
     public function up()
     {
-        Schema::create('contratto', function(Blueprint $table) {
+        Schema::create('contratto', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
@@ -19,7 +20,7 @@ class CreateContrattoTable extends Migration {
             $table->timestamp('data_avvio_progetto')->nullable();
             $table->timestamp('data_chiusura_progetto')->nullable();
             $table->enum('modalita_fattura', array('CHIAVI_IN_MANO','TIME_CONSUMING'));
-            $table->decimal('importo',10,2);
+            $table->decimal('importo', 10, 2);
             $table->timestamp('data_validita_contratto')->nullable();
             $table->integer('periodicita_pagamenti');
             $table->integer('capo_progetto');

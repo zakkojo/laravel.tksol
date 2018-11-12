@@ -12,15 +12,15 @@ class CreateAllegati extends Migration
      */
     public function up()
     {
-        Schema::create('allegati', function(Blueprint $table) {
+        Schema::create('allegati', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
-            $table->string('nome',100);
+            $table->string('nome', 100);
             $table->text('descrizione')->nullable();
             $table->integer('allega_id')->unsigned();
-            $table->string('allega_type',100);
+            $table->string('allega_type', 100);
         });
     }
 

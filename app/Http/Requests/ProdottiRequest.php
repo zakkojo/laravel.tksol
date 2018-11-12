@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Requests;
-Use App\Cliente;
+
+use App\Cliente;
 
 class ProdottiRequest extends Request
 {
@@ -12,7 +13,7 @@ class ProdottiRequest extends Request
      */
     public function authorize()
     {
-       return true;
+        return true;
     }
 
     /**
@@ -22,8 +23,7 @@ class ProdottiRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {

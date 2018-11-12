@@ -6,8 +6,8 @@ use App\Contratto;
 use App\Http\Requests\ConsulentiContrattiRequest;
 use Illuminate\Support\Facades\Auth;
 
-
-class ConsulenteContrattoController extends Controller {
+class ConsulenteContrattoController extends Controller
+{
 
 
     /**
@@ -17,7 +17,6 @@ class ConsulenteContrattoController extends Controller {
      */
     public function index()
     {
-
     }
 
     /**
@@ -40,8 +39,7 @@ class ConsulenteContrattoController extends Controller {
      */
     public function store(ConsulentiContrattiRequest $request)
     {
-        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($request->contratto_id)))
-        {
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin' or Auth::User()->consulente->capoProgetto->contains($request->contratto_id))) {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
@@ -58,7 +56,6 @@ class ConsulenteContrattoController extends Controller {
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -83,19 +80,16 @@ class ConsulenteContrattoController extends Controller {
      */
     public function update(ConsulentiContrattiRequest $request, $contratto_id, $id)
     {
-        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($contratto_id)))
-        {
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin' or Auth::User()->consulente->capoProgetto->contains($contratto_id))) {
             return back()->withErrors(['ERRORE' => 'Non autorizzato']);
-        } else
-        {
+        } else {
             $consulenteContratto = ConsulenteContratto::findOrFail($id);
             $originale['ruolo'] = $consulenteContratto->ruolo;
             $originale['consulente_id'] = $consulenteContratto->consulente_id;
             $consulenteContratto->update($request->all());
             $consulenteContratto->save();
             $capoProgetto = ConsulenteContratto::where('contratto_id', $contratto_id)->where('ruolo', 'Capo Progetto')->count();
-            if ($capoProgetto == 0)
-            {
+            if ($capoProgetto == 0) {
                 $consulenteContratto->update($originale);
                 $consulenteContratto->save();
 
@@ -114,17 +108,14 @@ class ConsulenteContrattoController extends Controller {
      */
     public function destroy($contratto_id, $id)
     {
-        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->capoProgetto->contains($contratto_id)))
-        {
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin' or Auth::User()->consulente->capoProgetto->contains($contratto_id))) {
             abort(503, 'Unauthorized action.');
         }
         $capoProgetto = ConsulenteContratto::where('contratto_id', $contratto_id)->where('id', '<>', $id)->where('ruolo', 'Capo Progetto')->count();
-        if ($capoProgetto)
+        if ($capoProgetto) {
             $resp = ConsulenteContratto::destroy($id);
+        }
 
         return redirect()->action('ContrattoController@edit', $contratto_id);
     }
-
 }
-
-?>

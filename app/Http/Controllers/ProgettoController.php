@@ -10,7 +10,8 @@ use Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 
-class ProgettoController extends Controller {
+class ProgettoController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -41,7 +42,7 @@ class ProgettoController extends Controller {
      */
     public function store(ProgettiRequest $request)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $data = $request->all();
@@ -58,7 +59,6 @@ class ProgettoController extends Controller {
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -83,7 +83,6 @@ class ProgettoController extends Controller {
      */
     public function update($id)
     {
-
     }
 
     /**
@@ -94,7 +93,7 @@ class ProgettoController extends Controller {
      */
     public function destroy($id)
     {
-        if(!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')){
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $resp = Progetto::destroy($id);
@@ -108,7 +107,4 @@ class ProgettoController extends Controller {
 
         return $progetto->attivita;
     }
-
 }
-
-?>

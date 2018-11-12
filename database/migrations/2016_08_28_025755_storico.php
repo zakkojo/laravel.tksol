@@ -12,13 +12,13 @@ class Storico extends Migration
      */
     public function up()
     {
-        Schema::create('storico', function(Blueprint $table) {
+        Schema::create('storico', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->timestamps();
             $table->text('record');
             $table->integer('storicizza_id')->unsigned();
-            $table->string('storicizza_type',100);
+            $table->string('storicizza_type', 100);
         });
     }
 

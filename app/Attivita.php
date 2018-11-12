@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 
-class Attivita extends Model {
+class Attivita extends Model
+{
 
     protected $table = 'attivita';
     public $timestamps = true;
@@ -33,10 +34,11 @@ class Attivita extends Model {
 
         function traverse($collection)
         {
-            foreach ($collection as $attivita)
-            {
+            foreach ($collection as $attivita) {
                 $attivita['text'] = $attivita['descrizione'];
-                if (count($attivita['children'])) $attivita['nodes'] = traverse($attivita['children']);
+                if (count($attivita['children'])) {
+                    $attivita['nodes'] = traverse($attivita['children']);
+                }
             }
 
             return $collection;
@@ -44,6 +46,4 @@ class Attivita extends Model {
         $listAttivita = traverse($attivitas);
         return $listAttivita;
     }
-
-
 }

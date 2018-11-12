@@ -5,7 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use \Illuminate\Support\Facades\DB;
 
-class AfterMiddleware {
+class AfterMiddleware
+{
 
     /**
      * Handle an incoming request.
@@ -23,14 +24,12 @@ class AfterMiddleware {
 
         //code to save query logs in a file
         $logData = '';
-        for ($i = 0; $i < count($queries); $i++)
-        {
+        for ($i = 0; $i < count($queries); $i++) {
             $query = $queries[$i]['query'] . '';
 
             $time = date('Y-m-d H:i:s', time());
             //loop through all bindings
-            for ($j = 0; $j < sizeof($queries[$i]['bindings']); $j++)
-            {
+            for ($j = 0; $j < sizeof($queries[$i]['bindings']); $j++) {
                 $queries[$i]['bindings'][$j] = $queries[$i]['bindings'][$j] == '' ? "''" : $queries[$i]['bindings'][$j];
                 //replace ? with actual value
                 $query = str_replace_first($query, '?', $queries[$i]['bindings'][$j]);
@@ -43,8 +42,7 @@ class AfterMiddleware {
         }
 
         //write if any new data
-        if ($logData != '')
-        {
+        if ($logData != '') {
             //open logs file if exists or create a new one
             $logFile = fopen(storage_path('logs/query_logs/' . date('Y-m-d') . '_query.log'), 'a+');
             //write log to file
@@ -54,6 +52,5 @@ class AfterMiddleware {
 
         //return response
         return $response;
-
     }
 }

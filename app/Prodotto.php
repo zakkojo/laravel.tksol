@@ -5,7 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Prodotto extends Model {
+class Prodotto extends Model
+{
 
     protected $table = 'prodotto';
     public $timestamps = true;
@@ -23,5 +24,4 @@ class Prodotto extends Model {
     {
         return $this->hasMany('ContrattoProdotto');
     }
-
 }

@@ -12,7 +12,6 @@ use App\Intervento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 /**
  * Class HomeController
  * @package App\Http\Controllers

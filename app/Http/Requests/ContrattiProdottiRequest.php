@@ -11,7 +11,7 @@ class ContrattiProdottiRequest extends Request
      */
     public function authorize()
     {
-       return true;
+        return true;
     }
 
     /**
@@ -22,8 +22,7 @@ class ContrattiProdottiRequest extends Request
     public function rules()
     {
 
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {
@@ -60,5 +59,4 @@ class ContrattiProdottiRequest extends Request
                 break;
         }
     }
-
 }

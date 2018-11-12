@@ -12,14 +12,14 @@ class CreateNote extends Migration
      */
     public function up()
     {
-        Schema::create('note', function(Blueprint $table) {
+        Schema::create('note', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
             $table->text('nota');
             $table->integer('annotazione_id')->unsigned();
-            $table->string('annotazione_type',100);
+            $table->string('annotazione_type', 100);
         });
     }
 

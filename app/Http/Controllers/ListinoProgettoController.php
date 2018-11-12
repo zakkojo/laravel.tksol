@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
-class ListinoProgettoController extends Controller {
+class ListinoProgettoController extends Controller
+{
 
   
   /**
@@ -8,30 +9,27 @@ class ListinoProgettoController extends Controller {
    *
    * @return Response
    */
-  public function index()
-  {
-    
-  }
+    public function index()
+    {
+    }
 
   /**
    * Show the form for creating a new resource.
    *
    * @return Response
    */
-  public function create()
-  {
-    
-  }
+    public function create()
+    {
+    }
 
   /**
    * Store a newly created resource in storage.
    *
    * @return Response
    */
-  public function store()
-  {
-    
-  }
+    public function store()
+    {
+    }
 
   /**
    * Display the specified resource.
@@ -39,10 +37,9 @@ class ListinoProgettoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id)
-  {
-    
-  }
+    public function show($id)
+    {
+    }
 
   /**
    * Show the form for editing the specified resource.
@@ -50,10 +47,9 @@ class ListinoProgettoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function edit($id)
-  {
-    
-  }
+    public function edit($id)
+    {
+    }
 
   /**
    * Update the specified resource in storage.
@@ -61,10 +57,9 @@ class ListinoProgettoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id)
-  {
-    
-  }
+    public function update($id)
+    {
+    }
 
   /**
    * Remove the specified resource from storage.
@@ -72,11 +67,7 @@ class ListinoProgettoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function destroy($id)
-  {
-    
-  }
-  
+    public function destroy($id)
+    {
+    }
 }
-
-?>

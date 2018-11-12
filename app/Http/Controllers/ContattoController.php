@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 
 use Request;
-class ContattoController extends Controller {
+
+class ContattoController extends Controller
+{
     
   /**
    * Display a listing of the resource.
@@ -33,8 +35,7 @@ class ContattoController extends Controller {
         $contatto->user()->associate($user->id);
         $contatto->save();
         $user->delete();
-        return redirect()->action('ClienteController@show',$contatto->cliente_id);
-
+        return redirect()->action('ClienteController@show', $contatto->cliente_id);
     }
   /**
    * Display the specified resource.
@@ -42,10 +43,10 @@ class ContattoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function show($id)
-  {
-      return redirect()->action('ContattoController@edit', $id);
-  }
+    public function show($id)
+    {
+        return redirect()->action('ContattoController@edit', $id);
+    }
 
   /**
    * Show the form for editing the specified resource.
@@ -53,12 +54,12 @@ class ContattoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function edit($id)
-  {
-      $contatto = Contatto::findOrFail($id);
-      $cliente = $contatto->cliente;
-      return view('contatti.edit', compact('contatto','cliente'));
-  }
+    public function edit($id)
+    {
+        $contatto = Contatto::findOrFail($id);
+        $cliente = $contatto->cliente;
+        return view('contatti.edit', compact('contatto', 'cliente'));
+    }
 
   /**
    * Update the specified resource in storage.
@@ -66,15 +67,15 @@ class ContattoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function update($id,ContattiRequest $request)
-  {
-      $contatto = Contatto::findOrFail($id);
-      $contatto->update($request->all());
-      $user = User::withTrashed()->where('email','=',$request->user_email)->firstOrFail();
-      $user->email = $request->email;
-      $user->save();
-      return redirect()->action('ClienteController@show', $contatto->cliente->id);
-  }
+    public function update($id, ContattiRequest $request)
+    {
+        $contatto = Contatto::findOrFail($id);
+        $contatto->update($request->all());
+        $user = User::withTrashed()->where('email', '=', $request->user_email)->firstOrFail();
+        $user->email = $request->email;
+        $user->save();
+        return redirect()->action('ClienteController@show', $contatto->cliente->id);
+    }
 
   /**
    * Remove the specified resource from storage.
@@ -82,13 +83,10 @@ class ContattoController extends Controller {
    * @param  int  $id
    * @return Response
    */
-  public function destroy($id)
-  {
-      $cliente_id = Contatto::find($id)->cliente->id;
-      $resp = Contatto::destroy($id);
-      return redirect()->action('ClienteController@show', $cliente_id);
-  }
-  
+    public function destroy($id)
+    {
+        $cliente_id = Contatto::find($id)->cliente->id;
+        $resp = Contatto::destroy($id);
+        return redirect()->action('ClienteController@show', $cliente_id);
+    }
 }
-
-?>

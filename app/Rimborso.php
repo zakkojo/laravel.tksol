@@ -5,14 +5,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Rimborso extends Model {
+class Rimborso extends Model
+{
 
-	protected $table = 'rimborsoIntervento';
-	public $timestamps = true;
+    protected $table = 'rimborsoIntervento';
+    public $timestamps = true;
 
-	use SoftDeletes;
+    use SoftDeletes;
 
-	protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at'];
     protected $fillable = [
         'tipo_spesa',
         'um',
@@ -21,9 +22,8 @@ class Rimborso extends Model {
         'intervento_id',
     ];
 
-	public function intervento()
-	{
-		return $this->belongsTo('Intervento');
-	}
-
+    public function intervento()
+    {
+        return $this->belongsTo('Intervento');
+    }
 }

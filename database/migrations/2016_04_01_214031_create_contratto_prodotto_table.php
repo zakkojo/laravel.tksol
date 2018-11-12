@@ -3,7 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContrattoProdottoTable extends Migration {
+class CreateContrattoProdottoTable extends Migration
+{
 
     /**
      * Run the migrations.
@@ -12,8 +13,7 @@ class CreateContrattoProdottoTable extends Migration {
      */
     public function up()
     {
-        Schema::create('contratto_prodotto', function (Blueprint $table)
-        {
+        Schema::create('contratto_prodotto', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('contratto_id')->unsigned();
             $table->integer('prodotto_id')->unsigned();

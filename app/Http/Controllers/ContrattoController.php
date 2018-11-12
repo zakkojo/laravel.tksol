@@ -13,8 +13,8 @@ use App\Http\Requests\ContrattiRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
-
-class ContrattoController extends Controller {
+class ContrattoController extends Controller
+{
 
 
     /**
@@ -24,7 +24,6 @@ class ContrattoController extends Controller {
      */
     public function index()
     {
-
     }
 
     /**
@@ -50,20 +49,30 @@ class ContrattoController extends Controller {
      */
     public function store(ContrattiRequest $request)
     {
-        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin'))
-        {
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
 
-        if ($request->ripianifica) $request->merge(array('ripianifica' => 1));
-        else $request->merge(array('ripianifica' => 0));
-        if ($request->rapportino) $request->merge(array('rapportino' => 1));
-        else $request->merge(array('rapportino' => 0));
-        if ($request->fatturazione_default) $request->merge(array('fatturazione_default' => 1));
-        else $request->merge(array('fatturazione_default' => 0));
+        if ($request->ripianifica) {
+            $request->merge(array('ripianifica' => 1));
+        } else {
+            $request->merge(array('ripianifica' => 0));
+        }
+        if ($request->rapportino) {
+            $request->merge(array('rapportino' => 1));
+        } else {
+            $request->merge(array('rapportino' => 0));
+        }
+        if ($request->fatturazione_default) {
+            $request->merge(array('fatturazione_default' => 1));
+        } else {
+            $request->merge(array('fatturazione_default' => 0));
+        }
 
         $data = $request->all();
-        if ($data['fatturazione_id'] == 0) $data['fatturazione_id'] = $data['cliente_id'];
+        if ($data['fatturazione_id'] == 0) {
+            $data['fatturazione_id'] = $data['cliente_id'];
+        }
         $ret = Contratto::create($data);
 
         $consulenteContratto_data = ['contratto_id' => $ret->id, 'consulente_id' => Auth::User()->consulente->id, 'ruolo' => 'Capo Progetto'];
@@ -81,7 +90,6 @@ class ContrattoController extends Controller {
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -110,17 +118,25 @@ class ContrattoController extends Controller {
      */
     public function update($id, ContrattiRequest $request)
     {
-        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin'))
-        {
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         //return $request->all();
-        if ($request->ripianifica) $request->merge(array('ripianifica' => 1));
-        else $request->merge(array('ripianifica' => 0));
-        if ($request->rapportino) $request->merge(array('rapportino' => 1));
-        else $request->merge(array('rapportino' => 0));
-        if ($request->fatturazione_default) $request->merge(array('fatturazione_default' => 1));
-        else $request->merge(array('fatturazione_default' => 0));
+        if ($request->ripianifica) {
+            $request->merge(array('ripianifica' => 1));
+        } else {
+            $request->merge(array('ripianifica' => 0));
+        }
+        if ($request->rapportino) {
+            $request->merge(array('rapportino' => 1));
+        } else {
+            $request->merge(array('rapportino' => 0));
+        }
+        if ($request->fatturazione_default) {
+            $request->merge(array('fatturazione_default' => 1));
+        } else {
+            $request->merge(array('fatturazione_default' => 0));
+        }
 
         $contratto = Contratto::findOrFail($id);
         $contratto->update($request->all());
@@ -135,19 +151,16 @@ class ContrattoController extends Controller {
      */
     public function destroy($id)
     {
-        if (!(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin'))
-        {
+        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
             abort(503, 'Unauthorized action.');
         }
         $contratto = Contratto::find($id);
         $cliente_id = $contratto->cliente->id;
-        if (count($contratto->interventi) > 0)
-        {
+        if (count($contratto->interventi) > 0) {
             $errors = ['Impossibile eliminare il contratto perchè sono presenti interventi'];
 
             return redirect()->action('ClienteController@show', $cliente_id)->withErrors($errors);
-        } else
-        {
+        } else {
             $resp = Contratto::destroy($id);
 
             return redirect()->action('ClienteController@show', $cliente_id);

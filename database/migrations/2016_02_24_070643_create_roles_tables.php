@@ -61,9 +61,7 @@ class CreateRolesTables extends Migration
                 ->onDelete('cascade');
             */
             $table->primary(['role_id', 'user_id']);
-    });
-
-
+        });
     }
 
     /**

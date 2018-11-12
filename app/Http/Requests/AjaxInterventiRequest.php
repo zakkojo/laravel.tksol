@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-Use App\Intervento;
+use App\Intervento;
 
-class AjaxInterventiRequest extends Request {
+class AjaxInterventiRequest extends Request
+{
 
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +25,7 @@ class AjaxInterventiRequest extends Request {
     public function rules()
     {
 
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             {
                 return [
@@ -61,12 +61,11 @@ class AjaxInterventiRequest extends Request {
                     'user_id'       => 'required|numeric',
                     'ora_start'        => 'required',
                     'ora_end'          => 'required',
-                    'data'             => 'required',                    
+                    'data'             => 'required',
                 ];
             }
             default:
                 break;
         }
     }
-
 }

@@ -12,8 +12,7 @@ class CreateClienteSocietaTable extends Migration
      */
     public function up()
     {
-        Schema::create('cliente_societa', function(Blueprint $table)
-        {
+        Schema::create('cliente_societa', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('cliente_id')->unsigned();
             $table->integer('societa_id')->unsigned();

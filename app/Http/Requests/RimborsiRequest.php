@@ -11,7 +11,7 @@ class RimborsiRequest extends Request
      */
     public function authorize()
     {
-       return true;
+        return true;
     }
 
     /**
@@ -22,8 +22,7 @@ class RimborsiRequest extends Request
     public function rules()
     {
 
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {
@@ -57,5 +56,4 @@ class RimborsiRequest extends Request
                 break;
         }
     }
-
 }

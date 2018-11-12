@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Requests;
-Use App\User;
+
+use App\User;
 
 class ConsulentiRequest extends Request
 {
@@ -12,7 +13,7 @@ class ConsulentiRequest extends Request
      */
     public function authorize()
     {
-       return true;
+        return true;
     }
 
     /**
@@ -23,8 +24,7 @@ class ConsulentiRequest extends Request
     public function rules()
     {
 
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {
@@ -68,5 +68,4 @@ class ConsulentiRequest extends Request
                 break;
         }
     }
-
 }

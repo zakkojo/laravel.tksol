@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class Intervento extends Model {
+class Intervento extends Model
+{
 
     protected $table = 'intervento';
     public $timestamps = true;
@@ -68,10 +69,11 @@ class Intervento extends Model {
     }
     public function getDatafAttribute()
     {
-        if($this->data_fattura)
+        if ($this->data_fattura) {
             return Carbon::parse($this->data_fattura)->format('d/m/Y');
-        else
+        } else {
             return null;
+        }
     }
 
     public function attivita()
@@ -108,5 +110,4 @@ class Intervento extends Model {
     {
         return $this->hasMany(Rimborso::class);
     }
-
 }

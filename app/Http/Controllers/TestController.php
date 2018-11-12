@@ -21,12 +21,11 @@ class TestController extends Controller
         $authUser = Auth::User()->id;
         $consulente = User::findOrFail($authUser)->consulente;
         $daApprovare = collect();
-        $consulente->capoProgetto->each(function ($contratto, $key) use($daApprovare){
-            $contratto->interventiDaApprovare->each(function ($intervento, $key) use($daApprovare){
+        $consulente->capoProgetto->each(function ($contratto, $key) use ($daApprovare) {
+            $contratto->interventiDaApprovare->each(function ($intervento, $key) use ($daApprovare) {
                 $daApprovare->push($intervento);
             });
         });
         dd($daApprovare->toArray());
-
     }
 }

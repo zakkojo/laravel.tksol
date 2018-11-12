@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
 use App\User;
 
-class ConsulentiRequest extends Request
+class ConsulentiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

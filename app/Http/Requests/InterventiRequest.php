@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
 use App\Intervento;
 
-class InterventiRequest extends Request
+class InterventiRequest extends FormRequest
 {
 
     /**

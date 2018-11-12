@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
 use App\Intervento;
 
-class AjaxInterventiRequest extends Request
+class AjaxInterventiRequest extends FormRequest
 {
 
     /**

@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Requests;
+use Illuminate\Foundation\Http\FormRequest;
 
-class ContrattiInterventiRequest extends Request
+class ContrattiInterventiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

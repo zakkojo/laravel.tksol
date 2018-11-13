@@ -185,6 +185,7 @@ return [
         App\Providers\ViewComposerServiceProvider::class,
         App\Providers\HelperServiceProvider::class,
 
+        Laravel\Tinker\TinkerServiceProvider::class,
         //
         Collective\Html\HtmlServiceProvider::class,
 

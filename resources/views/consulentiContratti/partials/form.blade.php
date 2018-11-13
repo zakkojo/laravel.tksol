@@ -1,5 +1,5 @@
 <?php
-$listConsulenti = $consulenti->lists('nominativo', 'id');
+$listConsulenti = $consulenti->pluck('nominativo', 'id');
 $contratto_id = (isset($consulenteContratto)) ? $consulenteContratto->contratto_id : $contratto->id;
 ?>
 <div class="box-body">

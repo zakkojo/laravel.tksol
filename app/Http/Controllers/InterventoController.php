@@ -460,7 +460,7 @@ class InterventoController extends Controller
         //se è necessario ripianificare
         if ($intervento->contratto->ripianifica == '1') {
             //intervento futuro stesso contratto <=30gg
-            $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($key, $element) use ($id) {
+            $nextIntervento = $intervento->contratto->prossimiInterventi->first(function ($element,$key) use ($id) {
                 return ($element['id'] != $id and Carbon::parse($element['data_start'])->gte(Carbon::today()));
             });
             if (is_null($nextIntervento)) {

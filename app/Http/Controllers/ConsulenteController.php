@@ -68,7 +68,8 @@ class ConsulenteController extends Controller
         $prossimiInterventi = Intervento::where('consulente_id', '=', $consulente->id)->where('data_start', '>=', date('Y-m-d'));
         //$rapportiniDaInviare = Intervento::where('consulente_id', '=', $consulente->id)->where('stampa', '<', '2');
         $contrattiSenzaInterventi = DB::select("
-            SELECT c.id contratto_id, ragione_sociale, pro.nome, min(data_start) data_primo_intervento FROM contratto c
+            SELECT c.id contratto_id, ragione_sociale, pro.nome, min(data_start) data_primo_intervento 
+            FROM contratto c
             JOIN cliente cli ON (c.cliente_id = cli.id)
             JOIN progetto pro ON (c.progetto_id = pro.id)
             LEFT JOIN contratto_intervento ci on (c.id = ci.contratto_id) 

@@ -26,10 +26,10 @@
 | kernel and includes session state, CSRF protection, and more.
 |
 */
-
 Route::group(['middleware' => 'web'], function () {
-// Login routes
-    Route::get('/login', 'Auth\AuthController@showLoginForm');
+/*
+ * // Login routes
+    Route::get('/login', 'Auth\LoginController@AuthenticatesUsers');
     Route::post('/login', 'Auth\AuthController@login');
     Route::get('/logout', 'Auth\AuthController@logout');
     Route::get('/registrazioneSegreta', 'Auth\AuthController@showRegistrationForm');
@@ -38,8 +38,10 @@ Route::group(['middleware' => 'web'], function () {
 // Password reset routes...
     Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
     Route::post('password/reset', 'Auth\PasswordController@reset');
+*/
 
-
+    Auth::routes();
+    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('/home', 'HomeController@index');
 
     Route::get('/', 'HomeController@index');

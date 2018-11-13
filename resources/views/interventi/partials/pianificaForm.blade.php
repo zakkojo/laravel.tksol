@@ -8,7 +8,7 @@ $listConsulenti = $consulenti->each(function ($consulente)
     $consulente['user_id'] = $consulente->user->id;
 
     return $consulente;
-})->lists('nominativo', 'user_id');
+})->pluck('nominativo', 'user_id');
 $listConsulenti->prepend('', 0);
 $consulente = $consulenti->find($cons);
 
@@ -17,7 +17,7 @@ elseif (isset($_GET['cli'])) $cli = $_GET['cli'];
 else $cli = 0;
 if ($cli) $cliDisabled = 'disabled';
 else $cliDisabled = 'enabled';
-$listClienti = $clienti->lists('ragione_sociale', 'id');
+$listClienti = $clienti->pluck('ragione_sociale', 'id');
 $listClienti->prepend('', 0);
 
 if (isset($contratto)) $prog = $contratto->progetto_id;

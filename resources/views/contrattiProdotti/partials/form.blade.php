@@ -1,6 +1,6 @@
 <?php
-$listClienti = $softwarehouse->lists('ragione_sociale', 'id');
-$listProdotti = $prodotti->lists('nome', 'id');
+$listClienti = $softwarehouse->pluck('ragione_sociale', 'id');
+$listProdotti = $prodotti->pluck('nome', 'id');
 
 if (isset($listinoProdotto))
 {

@@ -42,7 +42,7 @@ class InterventoController extends Controller
         $consulenti = Consulente::all();
         //$clienti = Cliente::all();
         $consulente_id = Auth::user()->consulente->id;
-        $clienti = Cliente::hydrateRaw("
+        $clienti = Cliente::fromQuery("
             SELECT cli.* FROM laravel_tksol.cliente cli
             JOIN contratto con ON con.cliente_id = cli.id
             JOIN consulente_contratto cc ON cc.contratto_id = con.id

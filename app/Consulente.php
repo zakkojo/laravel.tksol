@@ -44,9 +44,10 @@ class Consulente extends Model
         return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto')->where('contratto.stato', '<>', 'CLOSED');
     }
 
-    public function capoProgettoAlways()
+    public function contrattiDaFatturare()
     {
-        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto');
+        //return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto');
+        return $this->belongsToMany(Contratto::class)->withPivot('note', 'ruolo')->where('ruolo', 'Capo Progetto')->where('contratto.fatturazione_default','1');
     }
 
     public function canPianificare($contratto_id)

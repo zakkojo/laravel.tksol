@@ -288,7 +288,7 @@ class InterventoController extends Controller {
     {
         $consulente = Auth::User()->consulente;
         $daApprovare = collect();
-        $consulente->capoProgettoAlways->each(function ($contratto, $key) use ($daApprovare)
+        $consulente->contrattiDaFatturare->each(function ($contratto, $key) use ($daApprovare)
         {
             $contratto->interventiDaApprovare->each(function ($intervento, $key) use ($daApprovare)
             {
@@ -563,8 +563,12 @@ class InterventoController extends Controller {
     {
         $id = Input::get('id');
         $ore_fatturate = Input::get('ore_approvate');
+        $fatturabile = Input::get('fatturabile');
+
         $intervento = Intervento::findOrFail($id);
         $intervento->ore_fatturate = $ore_fatturate;
+        $intervento->fatturabile = $fatturabile;
+
         if ($ore_fatturate != '')
         {
             $intervento->approvato = 1;

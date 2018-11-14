@@ -59,7 +59,7 @@
             display: inline;
         }
 
-        #selezione{
+        #selezione {
             text-align: left;
             border: 0pt;
             font-size: 12pt;
@@ -103,12 +103,17 @@
                     <th>Cliente</th>
                     <th>Link</th>
                     <th>Progetto</th>
+                    <th>Attività</th>
+                    <th>Listino</th>
                     <th>Ore Lavorate</th>
+                    <th>Fatturabile</th>
                     <th style="width:180px">Approvate</th>
                 </tr>
                 </thead>
                 <tobody>
+                    <?php $tabindex= 10 ?>
                     @foreach($daApprovare as $intervento)
+                        <?php $tabindex++ ?>
                         <tr class='intervento' data-id_intervento='{{$intervento->id}}'>
                             <td style='padding:1pt'><input name='selettoreRDA' type='checkbox'></td>
                             <td class="date">{{$intervento->data}}</td>
@@ -129,10 +134,21 @@
                                 </div>
                             </td>
                             <td>{{$intervento->contratto->progetto->nome}}</td>
+                            <td>{{$intervento->attivita->descrizione}}</td>
+                            <td>{{$intervento->listinoInterventi_wt->descrizione}}</td>
                             <td class="ore_lavorate">{{$intervento->ore_lavorate}}</td>
+                            <td class="fatturabile">
+                                @if($intervento->fatturabile == 1)
+                                    <span class="fa fa-check fa-lg" data-id_intervento='{{$intervento->id}}'
+                                          style="color: green; text-align:center; width:100%;"></span>
+                                @else
+                                    <span class="fa fa-times fa-lg" data-id_intervento='{{$intervento->id}}'
+                                          style="color: darkred;text-align:center; width:100%;"></span>
+                                @endif
+                            </td>
                             <td>
-                                <input name='valoreRDA' type='text'
-                                       value='@if($intervento->approvato == 1){{$intervento->ore_fatturate}}@endif'
+                                <input name='valoreRDA' type='text' tabindex="{{$tabindex}}"
+                                       value='@if($intervento->approvato == 1){{$intervento->ore_fatturate}}@endif @if($intervento->fatturabile == 0) 0 @endif'
                                        data-id_intervento='{{$intervento->id}}'>
                                 <span class="invioOK label label-success" style="display:none"><i
                                             class="fa fa-check"></i> </span>
@@ -150,29 +166,38 @@
 @endsection
 @section('page_scripts')
     <script>
-        $(function() {
+        $(function () {
             calcolaTotale();
         });
-        $("input[name='valoreRDA']").keyup(function () {
-            var $prima = $(this).val();
-            $(this).val($prima.replace(/[^\d.]/g, ''));
-            clearTimeout($.data(this, 'timer'));
-            var wait = setTimeout(approvaRiga, 1500, $(this).attr('data-id_intervento'));
-            $(this).data('timer', wait);
+        $("input[name='valoreRDA']").keyup(function (e) {
+            if(e.keyCode != 9) {
+                var $prima = $(this).val();
+                $(this).val($prima.replace(/[^\d.]/g, ''));
+                clearTimeout($.data(this, 'timer'));
+                var wait = setTimeout(approvaRiga, 1500, $(this).attr('data-id_intervento'));
+                $(this).data('timer', wait);
+            }
         });
 
         function approvaRiga(id, reset) {
             //SALVA RIGA
             reset = reset || 0;
-            if (reset == 0)
+            if (reset == 0) {
                 var ore_approvate = $(".intervento[data-id_intervento='" + id + "']").find("input[name='valoreRDA']").val();
+                var fatturabile;
+                if ($(".intervento[data-id_intervento='" + id + "']").find('.fatturabile').find('span').hasClass('fa-check'))
+                    fatturabile = 1;
+                else
+                    fatturabile = 0;
+            }
             else
                 var ore_approvate = '';
+
             //alert('id:' + id + ' ore:' + ore_approvate);
             $.ajax({
                 url: "/ajax/interventi/approvaIntervento",
                 type: "GET",
-                data: {id: id, ore_approvate: ore_approvate},
+                data: {id: id, ore_approvate: ore_approvate, fatturabile: fatturabile},
                 dataType: "JSON",
             }).done(function (data) {
                 if (data.status == 'success') {
@@ -190,6 +215,21 @@
 
         $('.datepicker').on('changeDate', function () {
             $("#filtro").keyup();
+        });
+
+        $('.fatturabile').on('click', 'span', function () {
+            var $ore_input = $(this).parent().parent().find("td > input[name='valoreRDA']");
+            var ore_lavorate = $(this).parent().parent().find("td.ore_lavorate").text();
+            if ($(this).hasClass('fa-check')) {
+                $(this).removeClass('fa-check').addClass('fa-times').attr('style', 'color: darkred; text-align:center; width:100%;');
+                console.log(ore_lavorate)
+                $ore_input.val(0);
+            }
+            else if ($(this).hasClass('fa-times')) {
+                $(this).removeClass('fa-times').addClass('fa-check').attr('style', 'color: green; text-align:center; width:100%;');
+                $ore_input.val(ore_lavorate);
+            }
+            //approvaRiga($(this).attr('data-id_intervento'));
         });
 
         $("#filtro").keyup(function () {

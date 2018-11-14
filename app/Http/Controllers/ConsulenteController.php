@@ -162,7 +162,7 @@ class ConsulenteController extends Controller
     {
         $consulente = Auth::User()->consulente;
         $daApprovare=0;
-        $consulente->capoProgettoAlways->each(function ($contratto, $key) use (&$daApprovare) {
+        $consulente->contrattiDaFatturare->each(function ($contratto, $key) use (&$daApprovare) {
             if ($contratto->interventiDaApprovare) {
                 $daApprovare = $daApprovare + $contratto->interventiDaApprovare->count();
             }

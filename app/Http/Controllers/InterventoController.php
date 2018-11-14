@@ -459,7 +459,8 @@ class InterventoController extends Controller {
             if ($id_padre = Input::get('stampaIntervento'))
             {
                 $intervento = Intervento::findOrFail($id_padre);
-                session()->set('stampaIntervento', $id_padre);
+                session(['stampaIntervento' => $id_padre]);
+                //session()->set('stampaIntervento', $id_padre); //5.5 fix
                 $intervento->stampa = 1;
                 if ($intervento->save())
                 {

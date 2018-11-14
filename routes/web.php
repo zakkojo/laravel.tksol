@@ -88,6 +88,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('interventi/estrazioneXlsx', 'InterventoController@estrazioneConsulenteExportXlsx');
     Route::get('interventi/approva', 'InterventoController@approvaIntervento');
     Route::get('interventi/registraFattura', 'InterventoController@registraFattura');
+    Route::post('interventi/uploadFattureGamma', 'InterventoController@uploadFattureGamma')->name('interventi.uploadFattureGamma');
     Route::resource('interventi', 'InterventoController');
     Route::get('interventi/{intervento_id}', 'InterventoController@edit');
     Route::get('interventi/{intervento_id}/stampa', 'InterventoController@stampa');

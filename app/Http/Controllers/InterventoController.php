@@ -7,10 +7,10 @@ use App\ContrattoIntervento;
 use App\Http\Requests\AjaxInterventiRequest;
 use App\Http\Requests\InterventiEstrazioneXlsxRequest;
 use App\Http\Requests\InterventiRequest;
-use App\Http\Requests\Request;
 use App\Intervento;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
@@ -19,6 +19,7 @@ use DB;
 use Html2Text\Html2Text;
 use App\Exports\DaFatturareExport;
 use App\Exports\InterventiExport;
+use App\Imports\FattureGammaImport;
 
 class InterventoController extends Controller {
 
@@ -311,7 +312,13 @@ class InterventoController extends Controller {
 
         return view('interventi.registraFattura', compact('daFatturare'));
     }
+    public function uploadFattureGamma(Request $request)
+    {
+        $request->fattureGamma->storeAs('fattureGamma', 'uploadGamma'.Carbon::now()->format('Ymdhis').'.csv');
+        Excel::import(new FattureGammaImport, $request->fattureGamma);
 
+        return redirect()->action('InterventoController@registraFattura');
+    }
     public function ajaxRegistraFattura()
     {
         $intervento_id = Input::get('id');

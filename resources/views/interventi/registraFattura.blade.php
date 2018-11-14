@@ -90,15 +90,30 @@
             line-height: 12px;
         }
     </style>
-    <div class='rdaHEAD'>
-        <div>Filtro: <input size='30' type='text' id='filtro'
-                            @if(Input::has('filtro')) value='{{ Input::get('filtro')}}'
-                    @endif
-            />
+    <div class="row">
+        <div class="col-md-8">
+            <div class='rdaHEAD'>
+                <div>Filtro: <input size='30' type='text' id='filtro'
+                                    @if(Input::has('filtro')) value='{{ Input::get('filtro')}}'
+                            @endif
+                    />
+                </div>
+                <div>Da: <input size='10' type='text' id='di' class="datepicker"></div>
+                <div>A: <input size='10' type='text' id='df' class="datepicker"></div>
+                <div>Righe selezionate: <input style="width:100px" id="selezione" readonly value='0'/></div>
+            </div>
         </div>
-        <div>Da: <input size='10' type='text' id='di' class="datepicker"></div>
-        <div>A: <input size='10' type='text' id='df' class="datepicker"></div>
-        <div>Righe selezionate: <input style="width:100px" id="selezione" readonly value='0'/></div>
+        <div class="col-md-3">
+            <form id="uploadFattureGamma" action="{{ route('interventi.uploadFattureGamma') }}" method="POST"
+                  enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <label class="btn btn-primary">
+                    Importa CSV <input id="uploadFile" type="file" style="display: none;" accept=".csv"
+                                       name="fattureGamma"/>
+                </label>
+
+            </form>
+        </div>
     </div>
     <div id='dRDAlist'>
         @if($daFatturare)
@@ -128,7 +143,7 @@
                             <td style='padding:1pt'><input name='selettoreRDA' type='checkbox'></td>
                             <td class="date">{{$intervento->data}}</td>
                             <td>{{$intervento->user->consulente->nominativo}}</td>
-                            <td>
+                            <td style="width: 80px">
                                 <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                     <button type="button" class="btn btn-default"
                                             onClick="location.href='{{ action('InterventoController@show',$intervento->id) }}'"
@@ -164,7 +179,7 @@
                                 <textarea class="noteFattura textarea" name='noteFattura'
                                           data-id_intervento='{{$intervento->id}}'>{{$intervento->note_fattura}}</textarea>
                             </td>
-                            <td>
+                            <td style="width: 80px">
                                 <button type="button"
                                         class="btn btn-default azione sblocca {{ ($intervento->fatturato and $intervento->data_fattura) ? "" : "hidden" }}"
                                         onClick="approvaRiga({{$intervento->id}},'reset')" title="Sblocca fattura">
@@ -193,12 +208,17 @@
 @endsection
 @section('page_scripts')
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $(function () {
                 $("#filtro").keyup();
                 calcolaTotale();
             });
         });
+
+        $("#uploadFile").change(function () {
+            $('#uploadFattureGamma').submit();
+        });
+
 
         $('ul.pagination li a').click(function (e) {
             var filtro = "&filtro=" + $('#filtro').val();

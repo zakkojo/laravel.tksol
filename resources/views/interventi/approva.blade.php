@@ -79,6 +79,17 @@
             height: 90%;
             overflow-Y: auto;
         }
+
+        td.textarea {
+            padding: 3px 1px 0 1px !important;
+        }
+
+        textarea.textarea {
+            height: 100%;
+            width: 200px;
+            font-size: 12px;
+            line-height: 12px;
+        }
     </style>
 
     <div class='rdaHEAD'>
@@ -88,7 +99,7 @@
         <div>Righe selezionate: <input id="selezione" readonly value=''/></div>
         <div>Valutazione:
             <input type='button' class="btn btn-success" onclick='autorizza();' value='Si autorizza'/>
-            <input type='button' class="btn btn-danger" onclick='rifiuta();' value='Si rifiuta'/>
+            <!--input type='button' class="btn btn-danger" onclick='rifiuta();' value='Si rifiuta'/-->
         </div>
     </div>
 
@@ -107,11 +118,12 @@
                     <th>Listino</th>
                     <th>Ore Lavorate</th>
                     <th>Fatturabile</th>
-                    <th style="width:180px">Approvate</th>
+                    <th style="width:70px">Approvate</th>
+                    <th>Note</th>
                 </tr>
                 </thead>
                 <tobody>
-                    <?php $tabindex= 10 ?>
+                    <?php $tabindex = 10 ?>
                     @foreach($daApprovare as $intervento)
                         <?php $tabindex++ ?>
                         <tr class='intervento' data-id_intervento='{{$intervento->id}}'>
@@ -147,13 +159,17 @@
                                 @endif
                             </td>
                             <td>
-                                <input name='valoreRDA' type='text' tabindex="{{$tabindex}}"
-                                       value='@if($intervento->approvato == 1){{$intervento->ore_fatturate}}@endif @if($intervento->fatturabile == 0) 0 @endif'
+                                <input name='valoreRDA' type='text' tabindex="{{$tabindex}}" style="width:55px"
+                                       {{--value='@if($intervento->approvato == 1){{$intervento->ore_fatturate}}@endif @if($intervento->fatturabile == 0) 0 @endif'--}}value="{{$intervento->ore_fatturate}}"
                                        data-id_intervento='{{$intervento->id}}'>
                                 <span class="invioOK label label-success" style="display:none"><i
                                             class="fa fa-check"></i> </span>
                                 <span class="invioKO label label-danger" style="display:none"><i
                                             class="fa fa-remove"></i> </span>
+                            </td>
+                            <td class="textarea">
+                                <textarea class="noteFattura textarea" name='noteFattura' tabindex="{{$tabindex+10000}}"
+                                          data-id_intervento='{{$intervento->id}}'>{{$intervento->note_fattura}}</textarea>
                             </td>
                         </tr>
                     @endforeach
@@ -169,21 +185,30 @@
         $(function () {
             calcolaTotale();
         });
-        $("input[name='valoreRDA']").keyup(function (e) {
-            if(e.keyCode != 9) {
-                var $prima = $(this).val();
-                $(this).val($prima.replace(/[^\d.]/g, ''));
-                clearTimeout($.data(this, 'timer'));
-                var wait = setTimeout(approvaRiga, 1500, $(this).attr('data-id_intervento'));
-                $(this).data('timer', wait);
+        $("input[name='valoreRDA']").on('keyup',function (e) {
+            var $prima = $(this).val();
+            $(this).val($prima.replace(/[^\d.]/g, ''));
+            if (e.keyCode != 9) {
+                autoSave($(this).attr('data-id_intervento'));
             }
         });
+        $("textarea[name='noteFattura']").on('keyup',function (e) {
+            if (e.keyCode != 9) {
+                autoSave($(this).attr('data-id_intervento'));
+            }
+        });
+        function autoSave(id_intervento) {
+            clearTimeout($.data(this, 'timer'));
+            var wait = setTimeout(approvaRiga, 5000, id_intervento, 0);
+            $(this).data('timer', wait);
+        }
 
-        function approvaRiga(id, reset) {
+        function approvaRiga(id, approva, reset) {
             //SALVA RIGA
             reset = reset || 0;
             if (reset == 0) {
                 var ore_approvate = $(".intervento[data-id_intervento='" + id + "']").find("input[name='valoreRDA']").val();
+                var noteFattura = $(".intervento[data-id_intervento='" + id + "']").find(".noteFattura").val();
                 var fatturabile;
                 if ($(".intervento[data-id_intervento='" + id + "']").find('.fatturabile').find('span').hasClass('fa-check'))
                     fatturabile = 1;
@@ -197,16 +222,24 @@
             $.ajax({
                 url: "/ajax/interventi/approvaIntervento",
                 type: "GET",
-                data: {id: id, ore_approvate: ore_approvate, fatturabile: fatturabile},
+                data: {
+                    id: id,
+                    approva: approva,
+                    ore_approvate: ore_approvate,
+                    fatturabile: fatturabile,
+                    noteFattura: noteFattura
+                },
                 dataType: "JSON",
             }).done(function (data) {
                 if (data.status == 'success') {
                     console.log(data.ore + ' ore approvate per intervento id:' + data.id);
-                    $("input[data-id_intervento='" + data.id + "']").siblings(".invioOK").fadeIn().delay(5000).fadeOut();
+                    //$("input[data-id_intervento='" + data.id + "']").siblings(".invioOK").fadeIn().delay(5000).fadeOut();
+                    $('tr[data-id_intervento="' + data.id + '"]').effect('highlight',{'color':'#7beba3'},1000);
                 }
                 else {
                     console.log('ERRORE: salvataggio ore approvate intervento ' + data.id);
-                    $("input[data-id_intervento='" + data.id + "']").siblings(".invioKO").fadeIn().delay(5000).fadeOut();
+                    //$("input[data-id_intervento='" + data.id + "']").siblings(".invioKO").fadeIn().delay(5000).fadeOut();
+                    $('tr[data-id_intervento="' + data.id + '"]').effect('highlight',{'color':'#ff8080'},1000);
                 }
             }).fail(function (jqXHR, textStatus, data) {
                 console.log("Request failed: " + data);
@@ -222,14 +255,13 @@
             var ore_lavorate = $(this).parent().parent().find("td.ore_lavorate").text();
             if ($(this).hasClass('fa-check')) {
                 $(this).removeClass('fa-check').addClass('fa-times').attr('style', 'color: darkred; text-align:center; width:100%;');
-                console.log(ore_lavorate)
                 $ore_input.val(0);
             }
             else if ($(this).hasClass('fa-times')) {
                 $(this).removeClass('fa-times').addClass('fa-check').attr('style', 'color: green; text-align:center; width:100%;');
                 $ore_input.val(ore_lavorate);
             }
-            //approvaRiga($(this).attr('data-id_intervento'));
+            autoSave($(this).attr('data-id_intervento'));
         });
 
         $("#filtro").keyup(function () {
@@ -328,14 +360,14 @@
             $("input[name='selettoreRDA']:checkbox:checked").each(function () {
                 if ($(this).closest('.intervento').find("input[name='valoreRDA']").val() == '')
                     $(this).closest('.intervento').find("input[name='valoreRDA']").val($(this).closest('.intervento').find(".ore_lavorate").text());
-                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'));
+                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'), 1);
             });
         }
 
         function rifiuta() {
             $("input[name='selettoreRDA']:checkbox:checked").each(function () {
                 $(this).closest('.intervento').find("input[name='valoreRDA']").val('');
-                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'), 1);
+                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'));
             });
         }
     </script>

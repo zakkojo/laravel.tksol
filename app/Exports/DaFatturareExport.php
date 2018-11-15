@@ -34,7 +34,8 @@ class DaFatturareExport implements FromCollection, WithHeadings, WithTitle {
             'ore_lavorate',
             'ore_fatturare',
             'sede',
-            'fatturabile'
+            'fatturabile',
+            'note'
         ];
     }
 
@@ -58,7 +59,8 @@ class DaFatturareExport implements FromCollection, WithHeadings, WithTitle {
             inter.ore_lavorate ore_lavorate,
             inter.ore_fatturate ore_fatturare,
             inter.sede,
-            inter.fatturabile " .
+            inter.fatturabile,
+            inter.note_fattura " .
 //            '',
 //            '' as 'Numero Fattura',
 //            '' as 'Data Fattura',

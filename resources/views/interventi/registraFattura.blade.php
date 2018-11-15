@@ -164,7 +164,7 @@
                                 @else {{$intervento->contratto->societa->nome}}
                                 @endif
                             </td>
-                            <td class="ore_lavorate">{{$intervento->ore_lavorate}}</td>
+                            <td class="ore_fatturate">{{$intervento->ore_fatturate}}</td>
                             <td>{{$intervento->sede}}</td>
                             <td>
                                 <input class='nFattura' name='nFattura' size="12" type='text'

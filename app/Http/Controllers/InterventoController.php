@@ -576,14 +576,15 @@ class InterventoController extends Controller {
         $intervento = Intervento::findOrFail($id);
         $intervento->ore_fatturate = $ore_fatturate;
         $intervento->fatturabile = $fatturabile;
-
-        if ($ore_fatturate != '')
-        {
-            $intervento->approvato = 1;
-        } else
-        {
-            $intervento->approvato = 0;
-        }
+        $intervento->note_fattura = Input::get('noteFattura');
+        $intervento->approvato = Input::get('approva');
+//        if ($ore_fatturate != '')
+//        {
+//            $intervento->approvato = 1;
+//        } else
+//        {
+//            $intervento->approvato = 0;
+//        }
         $res = $intervento->save();
         if ($res)
         {

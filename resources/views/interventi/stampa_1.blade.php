@@ -279,10 +279,10 @@
                 {!! htmlspecialchars_decode($intervento->problemiAperti) !!}
             </div>
         @endif
-        <div id='attivitaInCaricoCliente'>
+        <!--div id='attivitaInCaricoCliente'>
             <div id='titolo'>NOTE</div>
-            {!! htmlspecialchars_decode($intervento->attivitaCaricoCliente) !!}
-        </div>
+            {{!! htmlspecialchars_decode($intervento->attivitaCaricoCliente) !!}}
+        </div-->
     </div>
     <div id='firmaCliente'>
         <span>Referente cliente</span>

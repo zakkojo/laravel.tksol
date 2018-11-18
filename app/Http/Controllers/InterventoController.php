@@ -629,7 +629,7 @@ class InterventoController extends Controller {
         {
             foreach ($consulenti as $k => $v)
             {
-                $k = User::findorFail($k)->consulente->id;
+                $k = User::withTrashed()->findorFail($k)->consulente->id;
                 $filtro_consulenti .= $k . ',';
             }
             $filtro['consulenti'] = " AND cons.id IN (" . substr($filtro_consulenti, 0, -1) . ") ";

@@ -10,6 +10,7 @@ $listConsulenti->prepend('', 0);
 $listClienti = $clienti->pluck('ragione_sociale', 'id');
 $listClienti->prepend('', 0);
 ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 <div class="box box-primary">
     <div id="searcheader" class="boxsearch box-header with-border">
         <h3 id="search_title" class="box-title">Filtro Calendari</h3>
@@ -27,8 +28,7 @@ $listClienti->prepend('', 0);
             ['id'=>'search_consulente','style'=>'width:100%', 'class'=>'form-control select2 select2-hidden-accessible'])
             !!}
 
-            <ul class="customsearch consulente">
-            </ul>
+            <ul class="customsearch consulente"></ul>
         </div>
 
         <input type="hidden" id="intervento_id" name="intervento_id">
@@ -85,7 +85,7 @@ $listClienti->prepend('', 0);
         }
 
         $('.btn-filtri').on('click', '.btn-box-tool', function () {
-            if($(this).has('.boxsearch.fa.fa-plus').length >0){
+            if ($(this).has('.boxsearch.fa.fa-plus').length > 0) {
                 $('.customsearch.consulente').appendTo('#formconsulente');
                 $('.customsearch.cliente').appendTo('#formcliente');
             }
@@ -96,14 +96,20 @@ $listClienti->prepend('', 0);
         });
 
         function addFiltroCliente(id) {
-            var descrizione = $('#search_cliente option[value="'+id+'"]').text();
+            $k = 'filtri_calendar.clienti.' + id;
+            $v = null;
+            $.get('/ajax/helper/setSession', {key: $k, val: $v});
+            var descrizione = $('#search_cliente option[value="' + id + '"]').text();
             if ($('li[data-cliente_id="' + (parseInt(id)) + '"]').length == 0 && id != 0) {
                 $('.customsearch.cliente').append('<li data-cliente_id="' + (parseInt(id)) + '" title="' + descrizione + '" ><span>×</span>' + descrizione + '</li>');
                 colorcliente();
             }
         }
         function addFiltroConsulente(id) {
-            var descrizione = $('#search_consulente option[value="'+id+'"]').text();
+            $k = 'filtri_calendar.consulenti.' + id;
+            $v = null;
+            $.get('/ajax/helper/setSession', {key: $k, val: $v});
+            var descrizione = $('#search_consulente option[value="' + id + '"]').text();
             if ($("li[data-consulente_id='" + (parseInt(id)) + "']").length == 0 && id != 0) {
                 $('.customsearch.consulente').append('<li data-consulente_id="' + (parseInt(id)) + '" title="' + descrizione + '" ><span>×</span>' + descrizione + '</li>');
                 colorconsulente();
@@ -113,14 +119,20 @@ $listClienti->prepend('', 0);
 
         $('document').ready(function () {
             $('.customsearch.consulente').on('click', 'span', function () {
+                $k = 'filtri_calendar.consulenti.' + $($(this).closest('li')[0]).data().consulente_id;
+                $v = null;
+                $.get('/ajax/helper/pullSession', {key: $k, val: $v});
                 $('#calendar').fullCalendar('removeEventSource', "consulente_" + $(this).closest('li').attr('data-consulente_id'));
                 $('#calendar').fullCalendar('removeEventSource', "consulente_inviato_" + $(this).closest('li').attr('data-consulente_id'));
                 $(this).closest('li').remove();
                 colorconsulente();
             });
             $('.customsearch.cliente').on('click', 'span', function () {
-                $('#calendar').fullCalendar('removeEventSource', "cliente_" + $(this).closest('li').attr('data-cliente_id'));
+                $k = 'filtri_calendar.clienti.' + $($(this).closest('li')[0]).data().cliente_id;
+                $v = null;
+                $.get('/ajax/helper/pullSession', {key: $k, val: $v});
                 $('#calendar').fullCalendar('removeEventSource', "cliente_inviato_" + $(this).closest('li').attr('data-cliente_id'));
+                $('#calendar').fullCalendar('removeEventSource', "cliente_" + $(this).closest('li').attr('data-cliente_id'));
                 $(this).closest('li').remove();
                 colorcliente();
             });
@@ -133,10 +145,9 @@ $listClienti->prepend('', 0);
                 $('#search_cliente').select2("val", "");
             });
 
-            //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
-            var filtri_calendar = {!! session()->get('filtri_calendar', '{"clienti":[], "consulenti":['.Auth::user()->id.']}') !!};
+            var filtri_calendar =  {!! json_encode(session()->get('filtri_calendar')) !!} ;
 
-            if (searchParams.has('consulente') || searchParams.has('cliente') ){
+            if (searchParams.has('consulente') || searchParams.has('cliente')) {
                 searchParams.getAll('consulente').forEach(function (id) {
                     addFiltroConsulente(id)
                 });
@@ -145,12 +156,44 @@ $listClienti->prepend('', 0);
                 });
             }
             else {
-                filtri_calendar.clienti.forEach(function (id) {
-                    addFiltroCliente(id)
-                });
-                filtri_calendar.consulenti.forEach(function (id) {
-                    addFiltroConsulente(id)
-                });
+                if (filtri_calendar) {
+                    if (typeof filtri_calendar.clienti !== "undefined") {
+                        $.each(filtri_calendar.clienti, function (id, val) {
+                            addFiltroCliente(id);
+                        });
+                    }
+                    if (typeof filtri_calendar.consulenti !== "undefined") {
+                        $.each(filtri_calendar.consulenti, function (id, val) {
+                            addFiltroConsulente(id)
+                        });
+                    }
+                }
+            }
+
+
+            //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
+            var filtri_calendar =  {!! json_encode(session()->get('filtri_calendar')) !!};
+
+            if (filtri_calendar) {
+                if (typeof filtri_calendar.clienti !== "undefined") {
+                    $.each(filtri_calendar.clienti, function (id, val) {
+                        addFiltroCliente(id);
+                    });
+                }
+                if (typeof filtri_calendar.consulenti !== "undefined") {
+                    if (filtri_calendar.consulenti.length == 0 && filtri_calendar.clienti.length == 0){
+                        addFiltroConsulente({!! Auth::user()->id !!});
+                    }
+                    else {
+                        $.each(filtri_calendar.consulenti, function (id, val) {
+                            addFiltroConsulente(id)
+                        });
+                    }
+                }
+            }
+            else {
+                addFiltroConsulente({!! Auth::user()->id !!});
             }
         });
-    </script>@append
+    </script>
+@append

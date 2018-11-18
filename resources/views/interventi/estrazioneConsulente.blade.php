@@ -206,11 +206,17 @@ $listClienti->prepend('', 0);
                         });
                     }
                     if (typeof filtri_estrazioneConsulente.consulenti !== "undefined") {
-                        $.each(filtri_estrazioneConsulente.consulenti, function (id, val) {
-                            addFiltroConsulente(id)
-                        });
+                        if (filtri_estrazioneConsulente.consulenti.length == 0){}
+                     //       addFiltroConsulente({!! Auth::user()->id !!});
+                        else {
+                            $.each(filtri_estrazioneConsulente.consulenti, function (id, val) {
+                                addFiltroConsulente(id)
+                            });
+                        }
                     }
                 }
+                else{}
+                   // addFiltroConsulente({!! Auth::user()->id !!});
             }
         });
     </script>

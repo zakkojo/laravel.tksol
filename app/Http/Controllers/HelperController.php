@@ -3,23 +3,24 @@
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 
-class HelperController extends Controller
-{
+class HelperController extends Controller {
 
     public function ajaxSetSession()
     {
         $key = Input::get('key');
         $val = Input::get('val');
-        if ($key) {
+        if ($key)
+        {
             session()->put($key, $val);
         }
         session()->save();
-        dd(session()->all());
+
+        return true;
     }
 
     public function ajaxPushSession()
     {
-       //
+        //
     }
 
     public function ajaxPullSession()
@@ -28,6 +29,7 @@ class HelperController extends Controller
         $val = Input::get('val');
         session()->pull($key, $val);
         session()->save();
-        dd(session()->all());
+
+        return true;
     }
 }

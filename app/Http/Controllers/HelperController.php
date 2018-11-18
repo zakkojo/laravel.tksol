@@ -15,7 +15,7 @@ class HelperController extends Controller {
         }
         session()->save();
 
-        return true;
+        return ['status'=>'success'];
     }
 
     public function ajaxPushSession()
@@ -30,6 +30,6 @@ class HelperController extends Controller {
         session()->pull($key, $val);
         session()->save();
 
-        return true;
+        return ['status'=>'success'];
     }
 }

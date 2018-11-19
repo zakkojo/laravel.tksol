@@ -181,9 +181,9 @@ class InterventoController extends Controller {
                     session()->flash('stampaIntervento', $id);
                     //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
                     $filtroCalendar = new \stdClass();
-                    $filtroCalendar->clienti = [$intervento->contratto->cliente->id];
-                    $filtroCalendar->consulenti = [];
-                    session()->flash('filtri_calendar', json_encode($filtroCalendar));
+                    $filtroCalendar->clienti = [$intervento->contratto->cliente->id => ''];
+                    //$filtroCalendar->consulenti = [];
+                    session()->flash('ripianifica', json_encode($filtroCalendar,true));
 
                     return redirect()->action('InterventoController@create', ['data' => Carbon::parse($intervento->data_start)->format('Y-m-d'), 'eventId' => $id]);
                 }

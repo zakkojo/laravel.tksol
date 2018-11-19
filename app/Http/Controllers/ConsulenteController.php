@@ -65,7 +65,7 @@ class ConsulenteController extends Controller
     public function show($id)
     {
         $consulente = Consulente::findOrFail($id);
-        $prossimiInterventi = Intervento::where('consulente_id', '=', $consulente->id)->where('data_start', '>=', date('Y-m-d'));
+        $prossimiInterventi = Intervento::whereRaw("user_id = '".$consulente->user->id."' AND data_start >= now() AND data_start <= (CURDATE() + INTERVAL 30 DAY) AND inviato = 0 AND approvato = 0")->orderBy('data_start')->get();
         //$rapportiniDaInviare = Intervento::where('consulente_id', '=', $consulente->id)->where('stampa', '<', '2');
         $contrattiSenzaInterventi = DB::select("
             SELECT c.id contratto_id, ragione_sociale, pro.nome, min(data_start) data_primo_intervento 

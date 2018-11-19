@@ -156,6 +156,9 @@ $listClienti->prepend('', 0);
                 });
             }
             else {
+                @if(Session::has('ripianifica'))
+                    filtri_calendar = {!! session()->get('ripianifica') !!};
+                @endif
                 if (filtri_calendar) {
                     if (typeof filtri_calendar.clienti !== "undefined") {
                         $.each(filtri_calendar.clienti, function (id, val) {
@@ -163,36 +166,19 @@ $listClienti->prepend('', 0);
                         });
                     }
                     if (typeof filtri_calendar.consulenti !== "undefined") {
-                        $.each(filtri_calendar.consulenti, function (id, val) {
-                            addFiltroConsulente(id)
-                        });
+                        if (filtri_calendar.consulenti.length == 0 && filtri_calendar.clienti.length == 0) {
+                            addFiltroConsulente({!! Auth::user()->id !!});
+                        }
+                        else {
+                            $.each(filtri_calendar.consulenti, function (id, val) {
+                                addFiltroConsulente(id)
+                            });
+                        }
                     }
                 }
-            }
-
-
-            //{"filtro_calendar":{"clienti":[1,2,3,4], "consulenti":[1,2,3,4]}}
-            var filtri_calendar =  {!! json_encode(session()->get('filtri_calendar')) !!};
-
-            if (filtri_calendar) {
-                if (typeof filtri_calendar.clienti !== "undefined") {
-                    $.each(filtri_calendar.clienti, function (id, val) {
-                        addFiltroCliente(id);
-                    });
+                else {
+                    addFiltroConsulente({!! Auth::user()->id !!});
                 }
-                if (typeof filtri_calendar.consulenti !== "undefined") {
-                    if (filtri_calendar.consulenti.length == 0 && filtri_calendar.clienti.length == 0){
-                        addFiltroConsulente({!! Auth::user()->id !!});
-                    }
-                    else {
-                        $.each(filtri_calendar.consulenti, function (id, val) {
-                            addFiltroConsulente(id)
-                        });
-                    }
-                }
-            }
-            else {
-                addFiltroConsulente({!! Auth::user()->id !!});
             }
         });
     </script>

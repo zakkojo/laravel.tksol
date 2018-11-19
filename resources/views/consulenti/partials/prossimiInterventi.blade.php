@@ -28,7 +28,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach( $consulente->interventi as $intervento)
+            @foreach( $prossimiInterventi as $intervento)
                 <tr>
                     <td>
                         <a href="{{ action('InterventoController@create',['data' =>$intervento->dataC]) }}"

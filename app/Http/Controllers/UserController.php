@@ -93,7 +93,7 @@ class UserController extends Controller
             $utente = Contatto::findOrFail(Input::get('id'));
         }
         if (count($utente->user)) {
-            $user = User::find($utente->user_id);
+            $user = $utente->user;
             $user->delete();
             $msg = 'Accesso Disabilitato per: ' . $user->email;
         } else {

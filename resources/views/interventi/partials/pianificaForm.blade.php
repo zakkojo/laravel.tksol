@@ -5,7 +5,8 @@ elseif (Auth::user()->id) $cons = Auth::user()->consulente->id;
 else $cons = 0;
 $listConsulenti = $consulenti->each(function ($consulente)
 {
-    $consulente['user_id'] = $consulente->user->id;
+    if($consulente->user)
+        $consulente['user_id'] = $consulente->user->id;
 
     return $consulente;
 })->pluck('nominativo', 'user_id');

@@ -23,6 +23,12 @@ class InterventiExport implements FromCollection, WithHeadings, WithTitle {
     public function headings(): array
     {
         return [
+            'intervento_id',
+            'cliente_id',
+            'contratto_id',
+            'consulente_id',
+            'data_intervento',
+            'consulente_login',
             'progetto',
             'cliente',
             'origineFattura',

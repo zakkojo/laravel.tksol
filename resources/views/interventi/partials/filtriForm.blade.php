@@ -1,7 +1,8 @@
 <?php
 $listConsulenti = $consulenti->each(function ($consulente)
 {
-    $consulente['user_id'] = $consulente->user->id;
+    if ($consulente->user)
+        $consulente['user_id'] = $consulente->user->id;
 
     return $consulente;
 })->pluck('nominativo', 'user_id');

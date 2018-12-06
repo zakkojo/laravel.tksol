@@ -40,7 +40,10 @@ class InterventiExport implements FromCollection, WithHeadings, WithTitle {
             'descrizione',
             'rimborso',
             'rimborso_tot',
-            'km'
+            'km',
+            'attivitaSvolte',
+            'note',
+            'approvato'
         ];
     }
 
@@ -66,7 +69,10 @@ class InterventiExport implements FromCollection, WithHeadings, WithTitle {
             ci.descrizione listino,
             GROUP_CONCAT(rim.tipo_spesa ORDER BY rim.id separator ', ') rimborso,
             SUM(rim.importo) rimborso_tot,
-            SUM(IF(rim.um='Km', rim.quantita, null)) AS km
+            SUM(IF(rim.um='Km', rim.quantita, null)) AS km,
+            i.attivitaSvolte,
+            i.note_fattura,
+            i.approvato
             FROM laravel_tksol.intervento i 				
                         join users on(users.id = i.user_id)						
                             join consulente cons on(cons.user_id = users.id)			

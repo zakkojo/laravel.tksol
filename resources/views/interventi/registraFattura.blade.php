@@ -98,9 +98,17 @@
                             @endif
                     />
                 </div>
-                <div>Da: <input size='10' type='text' id='di' class="datepicker"></div>
-                <div>A: <input size='10' type='text' id='df' class="datepicker"></div>
-                <div>Righe selezionate: <input style="width:100px" id="selezione" readonly value='0'/></div>
+                <div>Da: <input size='10' type='text' id='di' class="datepicker"
+                                @if(Input::has('di')) value='{{ Input::get('di')}}'
+                            @endif
+                    /></div>
+                <div>A: <input size='10' type='text' id='df' class="datepicker"
+                               @if(Input::has('df')) value='{{ Input::get('df')}}'
+                            @endif
+                    /></div>
+                <!--div>Righe selezionate: <input style="width:100px" id="selezione" readonly value='0'/></div-->
+                <button class="btn btnFiltro"><i class="fa fa-search"></i></button>
+                <button class="btn  btnFiltroReset"><i class="fa fa-refresh"></i></button>
             </div>
         </div>
         <div class="col-md-3">
@@ -108,8 +116,9 @@
                   enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <label class="btn btn-primary">
-                    Importa CSV <input id="uploadFile" type="file" style="display: none;" accept=".csv"
-                                       name="fattureGamma"/>
+                    <span class="fa fa-upload"></span>&nbsp; Importa CSV <input id="uploadFile" type="file"
+                                                                                style="display: none;" accept=".csv"
+                                                                                name="fattureGamma"/>
                 </label>
 
             </form>
@@ -208,21 +217,53 @@
 @endsection
 @section('page_scripts')
     <script>
-        $(document).ready(function () {
-            $(function () {
-                $("#filtro").keyup();
-                calcolaTotale();
-            });
+        function getUrlVars(url_to_load) {
+            var vars = [], hash;
+            var hashes = url_to_load.slice(url_to_load.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                //vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        $('.btnFiltro').click(function (e) {
+            var url = window.location.href;
+            vars = getUrlVars(url);
+            var params = {};
+            if (vars['page'])
+                params.page = vars['page'];
+
+            if ($('#filtro').val())
+                params.filtro = $('#filtro').val();
+            else if (vars['filtro'])
+                params.filtro = vars['filtro'];
+
+            if ($('#di').val())
+                params.di = $('#di').val();
+            else if (vars['di'])
+                params.di = vars['di'];
+
+            if ($('#df').val())
+                params.df = $('#df').val();
+            else if (vars['df'])
+                params.df = vars['df'];
+            if (url.indexOf('?') != -1)
+                window.location.href = url.slice(0, url.indexOf('?')) + '?' + $.param(params);
+            else
+                window.location.href = url + '?' + $.param(params);
+
+        });
+
+        $('.btnFiltroReset').click(function (e) {
+            var url = window.location.href;
+            if (url.indexOf('?') != -1)
+                window.location.href = url.slice(0, url.indexOf('?'));
         });
 
         $("#uploadFile").change(function () {
             $('#uploadFattureGamma').submit();
-        });
-
-
-        $('ul.pagination li a').click(function (e) {
-            var filtro = "&filtro=" + $('#filtro').val();
-            this.href = this.href + filtro;
         });
 
 
@@ -313,74 +354,16 @@
 
         $('#selezionaTutti').on('ifChecked', function () {
             $("input[name='selettoreRDA']:visible").not(this).iCheck('check');//.prop('checked', this.checked);
-            calcolaTotale();
+            //calcolaTotale();
         });
         $('#selezionaTutti').on('ifUnchecked', function () {
             $("input[name='selettoreRDA']:visible").not(this).iCheck('uncheck');//.prop('checked', this.checked);
-            calcolaTotale();
+            //calcolaTotale();
         });
 
         $("input[name='selettoreRDA']").on('ifChanged', function () {
-            calcolaTotale();
+            //calcolaTotale();
         });
-
-        function calcolaTotale() {
-            var v = 0;
-            var r = 0;
-            var rT = 0;
-
-            $("input[name='selettoreRDA']").each(function () {
-                //$(this).parent().parent().removeClass('sel');
-                rT++;
-            });
-
-            $("input[name='selettoreRDA']:checkbox:checked").each(function () {
-                //v = v + parseFloat($(this).attr('valore'));
-                r++;
-                //$(this).parent().parent().addClass('sel');
-            });
-            //v = Math.round(v * 100) / 100;
-            //$("#vTotale").val(number_format(v, 2, ",", ".", "\u20AC"));
-            $("#selezione").val(number_format(r, 0, ",", ".", "") + "/{{$daFatturare->total()}}"); // /" + number_format(rT, 0, ",", ".", ""));
-        }
-
-
-        function number_format(number, decimals, dec_point, thousands_sep, prefix) {
-            var n = !isFinite(+number) ? 0 : +number,
-                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-                sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-                dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-                toFixedFix = function (n, prec) {
-                    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
-                    var k = Math.pow(10, prec);
-                    return Math.round(n * k) / k;
-                },
-                s = (prec ? toFixedFix(n, prec) : Math.round(n)).toString().split('.');
-            if (s[0].length > 3) {
-                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-            }
-            if ((s[1] || '').length < prec) {
-                s[1] = s[1] || '';
-                s[1] += new Array(prec - s[1].length + 1).join('0');
-            }
-            if (prefix) prefix = prefix + " "; else prefix = "";
-            return prefix + s.join(dec);
-        }
-        function autorizza(fattura_id) {
-            approvaRiga(fattura_id);
-//            $("input[name='selettoreRDA']:checkbox:checked").each(function () {
-//                if ($(this).closest('.intervento').find("input[name='valoreRDA']").val() == '')
-//                    $(this).closest('.intervento').find("input[name='valoreRDA']").val($(this).closest('.intervento').find(".ore_lavorate").text());
-//
-//            });
-        }
-
-        function rifiuta() {
-//            $("input[name='selettoreRDA']:checkbox:checked").each(function () {
-//                $(this).closest('.intervento').find("input[name='valoreRDA']").val('');
-//                approvaRiga($(this).closest('.intervento').attr('data-id_intervento'), 1);
-//            });
-        }
     </script>
 @endsection
 

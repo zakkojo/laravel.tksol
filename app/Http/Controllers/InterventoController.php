@@ -20,6 +20,7 @@ use Html2Text\Html2Text;
 use App\Exports\DaFatturareExport;
 use App\Exports\InterventiExport;
 use App\Imports\FattureGammaImport;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class InterventoController extends Controller {
 
@@ -183,7 +184,7 @@ class InterventoController extends Controller {
                     $filtroCalendar = new \stdClass();
                     $filtroCalendar->clienti = [$intervento->contratto->cliente->id => ''];
                     //$filtroCalendar->consulenti = [];
-                    session()->flash('ripianifica', json_encode($filtroCalendar,true));
+                    session()->flash('ripianifica', json_encode($filtroCalendar, true));
 
                     return redirect()->action('InterventoController@create', ['data' => Carbon::parse($intervento->data_start)->format('Y-m-d'), 'eventId' => $id]);
                 }
@@ -302,23 +303,61 @@ class InterventoController extends Controller {
 
     public function registraFattura()
     {
+        $page = Input::get('page', '1');
         //$daFatturare = Intervento::whereNull('fatturato')->where('approvato', '1')->get();
         $paginate = Input::get('paginate', '100');
-        if (Input::has('debug'))
-        {
-            dd(Input::all());
-        }
-        $daFatturare = Intervento::whereRaw('approvato = "1" AND ore_fatturate <> 0 AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start', 'desc')->paginate($paginate);
+        //$daFatturare = Intervento::whereRaw('approvato = "1" AND ore_fatturate <> 0 AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start', 'desc')->paginate($paginate);
 
+
+        if (Input::get('di'))
+            $wdi = ' AND i.data_start >= STR_TO_DATE("' . Input::get('di') . '", "%d/%m/%Y") ';
+        else $wdi='';
+        if (Input::get('df'))
+            $wdf = ' AND i.data_end >= STR_TO_DATE("' . Input::get('df') . '", "%d/%m/%Y") ';
+        else $wdf='';
+        if (Input::get('filtro'))
+            $wfiltro = ' AND  CONCAT_WS(" ", cons.nome, cons.cognome, cli.ragione_sociale, pro.nome, soc.nome, ci.descrizione) like "%' . Input::get('filtro') . '%" ';
+        else $wfiltro='';
+
+
+        $query = DB::select('
+        SELECT i.* 
+        FROM laravel_tksol.intervento i 				
+        JOIN users ON(users.id = i.user_id)						
+            JOIN consulente cons ON(cons.user_id = users.id)			
+        JOIN contratto_intervento conint ON (i.listino_id = conint.id) 				
+            JOIN contratto con ON (conint.contratto_id = con.id) 			
+                JOIN cliente cli ON (con.cliente_id = cli.id)		
+                JOIN cliente fat ON (con.fatturazione_id = fat.id)				
+                JOIN progetto pro ON (con.progetto_id = pro.id)				
+                JOIN societa soc ON(con.societa_id = soc.id)				
+        JOIN attivita att ON (att.id = i.attivita_id)
+        JOIN contratto_intervento ci ON (ci.id = i.listino_id)
+        LEFT JOIN rimborsoIntervento rim ON (i.id = rim.intervento_id)
+        WHERE 
+        i.approvato = "1" AND i.ore_fatturate <> 0 AND ( i.fatturato IS NULL OR i.data_fattura IS NULL) ' . $wdi . $wdf . $wfiltro . ' order BY i.data_start DESC');
+
+        $interventi = Intervento::hydrate($query);
+
+
+        //$currentPage = LengthAwarePaginator::resolveCurrentPage();
+
+        $currentItems = $interventi->slice($paginate * ($page - 1), $paginate);
+
+        $paginator = new LengthAwarePaginator($currentItems, $interventi->count(), $paginate, $page);
+        $paginator->withPath('registraFattura');
+        $daFatturare = $paginator->appends(request()->except('page'));
         return view('interventi.registraFattura', compact('daFatturare'));
     }
+
     public function uploadFattureGamma(Request $request)
     {
-        $request->fattureGamma->storeAs('fattureGamma', 'uploadGamma'.Carbon::now()->format('Ymdhis').'.csv');
+        $request->fattureGamma->storeAs('fattureGamma', 'uploadGamma' . Carbon::now()->format('Ymdhis') . '.csv');
         Excel::import(new FattureGammaImport, $request->fattureGamma);
 
         return redirect()->action('InterventoController@registraFattura');
     }
+
     public function ajaxRegistraFattura()
     {
         $intervento_id = Input::get('id');

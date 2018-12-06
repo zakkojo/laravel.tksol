@@ -17,6 +17,7 @@ class TestController extends Controller
 {
     public function show()
     {
+
         echo Carbon::now();
         $authUser = Auth::User()->id;
         $consulente = User::findOrFail($authUser)->consulente;

@@ -87,6 +87,9 @@ class InterventiExport implements FromCollection, WithHeadings, WithTitle {
         for ($i = 0, $c = count($dataset); $i < $c; ++$i) {
             $dataset[$i] = (array)$dataset[$i];
         }
+        foreach ($dataset as $k => $array) {
+            $dataset[$k]["attivitaSvolte"] = Html2Text::convert($dataset[$k]["attivitaSvolte"], true);
+        }
         return collect($dataset);
     }
 }

@@ -198,7 +198,10 @@ return [
         PulkitJalan\Google\GoogleServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
+        /*
+        * Package Service Providers...
+        */
+        Laravel\Socialite\SocialiteServiceProvider::class,
     ],
 
     /*
@@ -258,6 +261,7 @@ return [
         'Image'  => Barryvdh\Snappy\Facades\SnappyImage::class,
         'Google' => PulkitJalan\Google\Facades\Google::class,
         'Excel'  => Maatwebsite\Excel\Facades\Excel::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

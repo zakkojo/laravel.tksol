@@ -47,16 +47,13 @@
                     </div><!-- /.col -->
                 </div>
             </form>
-
-            <!--
             <div class="social-auth-links text-center">
-                <p>- OR -</p>
-                <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a>
-                <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using Google+</a>
+                <!--a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a-->
+                <a href="{{ url('/loginGoogle') }}" class="btn btn-block btn-social btn-primary btn-flat" style="background-color: #4285F4"><i class="fab fa-google"></i> Accedi con il tuo account Google</a>
             </div><!-- /.social-auth-links -->
             </br>
             <a href="{{ url('/password/reset') }}">Hai dimenticato la password?</a><br>
-            <!--a href="{{ url('/register') }}" class="text-center">Register a new membership</a-->
+        <!--a href="{{ url('/register') }}" class="text-center">Register a new membership</a-->
 
         </div><!-- /.login-box-body -->
 

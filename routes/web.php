@@ -107,8 +107,12 @@ Route::group(['middleware' => 'web'], function () {
 
 
     Route::resource('prodotti', 'ProdottoController');
-    Route::get('test', 'TestController@show');
+    //Route::get('test', 'TestController@show');
     Route::get('ajax/helper/setSession', 'HelperController@ajaxSetSession');
     Route::get('ajax/helper/pushSession', 'HelperController@ajaxPushSession');
     Route::get('ajax/helper/pullSession', 'HelperController@ajaxPullSession');
+
+    //route for socialite auth
+    Route::get('/loginGoogle', 'Auth\LoginController@redirectToProvider');
+    Route::get('/test', 'Auth\LoginController@handleProviderCallback');
 });

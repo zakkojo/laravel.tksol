@@ -25,12 +25,19 @@ class FattureGammaImport implements ToCollection, WithCustomCsvSettings, WithSta
                 if ($row[0] == 'HTK-C-PREFAT')
                 {
                     $errore = 1;
-                    //campo esito = Riga Scartata
+                    //campo esito = Riga Scartata HTC-K-PREFAT
+                }
+                try
+                {
+                    $data_fattura = Carbon::createFromFormat('d/m/Y', $row[2])->setTime(0, 0, 0);
+                } catch (\Exception $err)
+                {
+                    $errore = 1;
+                    //campo esito = Riga Scartata data_fattura errata
                 }
 
                 if ($errore == 0)
                 {
-                    $data_fattura = Carbon::createFromFormat('d/m/Y', $row[2])->setTime(0, 0, 0);
                     $intervento->data_fattura = $data_fattura;
                     $intervento->fatturato = $row[1];
                     $intervento->save();

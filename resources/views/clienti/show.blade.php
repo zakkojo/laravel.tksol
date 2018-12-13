@@ -68,9 +68,9 @@
                             <tr>
                                 <td>
                                     <?php if (count($contatto->user)) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
-                                    <a onclick="toggleUser({{$contatto->id}})" id="consulente_{{$contatto->id}}"
+                                    <!--a onclick="toggleUser({{$contatto->id}})" id="consulente_{{$contatto->id}}"
                                        data-skin="skin-blue" class="btn btn-xs {{$btnclass}}"><i
-                                                class="glyphicon glyphicon-user"></i></a>
+                                                class="glyphicon glyphicon-user"></i></a-->
                                     <a href="{{ action('ContattoController@edit',$contatto->id) }}"
                                        data-skin="skin-blue" class="btn btn-default btn-xs"><i
                                                 class="glyphicon glyphicon-edit"></i></a>

@@ -150,7 +150,7 @@ class ConsulenteController extends Controller
         } else {
             //return Contratto::with('progetto','consulenti')->where('cliente_id', $cliente_id)->get();
             //$contratti = User::find($user)->consulente->contratti;
-            $contratti = Contratto::with('progetto')->where('stato', '<>', 'CLOSED')->where('data_chiusura_progetto','>=',Carbon::today())
+            $contratti = Contratto::with('progetto')->whereRaw("stato <> 'CLOSED' AND (DATE(data_chiusura_progetto) >= '".Carbon::today()->format('Y-m-d')."' OR data_chiusura_progetto IS NULL)")
                 ->whereHas('consulenti', function ($query) use ($consulente) {
                     $query->where('consulente_id', $consulente->id);
                 })

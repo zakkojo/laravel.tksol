@@ -50,6 +50,7 @@ class InterventoController extends Controller {
             JOIN contratto con ON con.cliente_id = cli.id
             JOIN consulente_contratto cc ON cc.contratto_id = con.id
             WHERE cc.consulente_id = '{$consulente_id}'
+            AND con.stato <> 'CLOSED' AND (DATE(con.data_chiusura_progetto) >= '".Carbon::today()->format('Y-m-d')."' OR con.data_chiusura_progetto IS NULL)
             ORDER BY cli.ragione_sociale");
 
         return view('interventi.planning', compact('consulenti', 'clienti'));

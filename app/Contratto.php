@@ -101,7 +101,7 @@ class Contratto extends Model
         }
     }
 
-    public function getDataChiusuraContrattoAttribute($date)
+    public function getDataChiusuraProgettoAttribute($date)
     {
         if ($date) {
             return Carbon::parse($date)->format('d/m/Y');

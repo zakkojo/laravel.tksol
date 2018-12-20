@@ -1,7 +1,6 @@
 <div class="box-body">
     <div class="form-group">
         <label>Contatto</label>
-        {!! Form::hidden('cliente_id', $cliente->id) !!}
         {!! Form::text('descrizione', null,['class'=>'form-control', 'id'=>'descrizione', 'placeholder'=>'Nome Cognome']) !!}
         {!! Form::text('ruolo', null,['class'=>'form-control', 'id'=>'ruolo', 'placeholder'=>'Note o Ruolo']) !!}
     </div>

@@ -38,7 +38,7 @@ class Cliente extends Model
 
     public function rubrica()
     {
-        return $this->hasMany(Contatto::class);
+        return $this->belongsToMany(Contatto::class,'cliente_contatto','cliente_id','contatto_id');
     }
 
     public function contratti()

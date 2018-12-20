@@ -19,9 +19,9 @@ class Contatto extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function cliente()
+    public function clienti()
     {
-        return $this->belongsTo(Cliente::class);
+        return $this->belongsToMany(Cliente::class,'cliente_contatto','contatto_id','cliente_id');
     }
     public function user()
     {

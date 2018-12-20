@@ -68,6 +68,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('ajax/clienti/getCliente', 'ClienteController@ajaxGetCliente');
     Route::get('ajax/clienti/getContratti', 'ClienteController@ajaxGetContratti');
 
+    Route::delete('clienteContatto/{id}','ClienteContattoController@destroy' );
 
     Route::resource('progetti', 'ProgettoController');
     Route::get('ajax/progetti/getAttivita', 'ProgettoController@ajaxGetAttivita');

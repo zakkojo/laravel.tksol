@@ -41,7 +41,7 @@ class ContattiRequest extends FormRequest
                     //'cap'=> 'required',
                     'telefono' => 'required_without:telefono2',
                     'telefono2' => 'required_without:telefono',
-                    'email'=> 'required|email|unique:users,email',
+                    'email'=> 'required|email',  // |unique:users,email',
                 ];
             }
             case 'PUT':
@@ -60,7 +60,7 @@ class ContattiRequest extends FormRequest
                     //'cap'=> 'required',
                     'telefono' => 'required_without:telefono2',
                     'telefono2' => 'required_without:telefono',
-                    'email'=> 'required|email|unique:users,email,'.$user,
+                    'email'=> 'required|email', // |unique:users,email,'.$user,
                 ];
             }
             default:

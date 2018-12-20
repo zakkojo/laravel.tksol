@@ -2,7 +2,7 @@
 
 
 @section('htmlheader_title')
-   Nuovo Contatto
+    Nuovo Contatto
 @endsection
 @section('contentheader_title')
     Nuovo Contatto @if(isset($cliente)) per {{$cliente->ragione_sociale}} @endif
@@ -13,19 +13,21 @@
 @section('main-content')
     @if (count($errors) > 0)
         <div class="alert alert-danger">
-           <ul>
+            <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
-           </ul>
+            </ul>
         </div>
     @endif
-
-    <div class="col-md-8">
-        <div class="box box-primary">
-            {!! Form::open(['url' => 'contatti']) !!}
-            @include('contatti.partials.contattoForm')
-            {!! Form::close() !!}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-primary">
+                {!! Form::open(['url' => 'contatti']) !!}
+                {!! Form::hidden('cliente_id', $cliente->id) !!}
+                @include('contatti.partials.contattoForm')
+                {!! Form::close() !!}
+            </div>
         </div>
     </div>
 

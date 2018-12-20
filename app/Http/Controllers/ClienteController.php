@@ -143,13 +143,9 @@ class ClienteController extends Controller {
 
     public function associa($id_cliente)
     {
-        if ($cliente = Cliente::findOrFail($id_cliente))
-        {
-            return view('contatti.create')->with(compact('cliente'));
-        } else
-        {
-            abort(404);
-        }
+        $cliente = Cliente::findOrFail($id_cliente);
+
+        return view('contatti.create')->with(compact('cliente'));
     }
 
     /**

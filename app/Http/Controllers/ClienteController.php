@@ -13,8 +13,7 @@ use Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 
-class ClienteController extends Controller
-{
+class ClienteController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -45,28 +44,35 @@ class ClienteController extends Controller
      */
     public function store(ClientiRequest $request)
     {
-        if ($request->cliente) {
+        if ($request->cliente)
+        {
             $request->merge(['cliente' => 1]);
-        } else {
+        } else
+        {
             $request->merge(['cliente' => 0]);
         }
-        if ($request->softwarehouse) {
+        if ($request->softwarehouse)
+        {
             $request->merge(['softwarehouse' => 1]);
-        } else {
+        } else
+        {
             $request->merge(['softwarehouse' => 0]);
         }
 
         $data = $request->all();
         $ret = Cliente::create($data);
 
-        if (is_array($request->idGamma)) {
-            foreach ($request->idGamma as $societaId => $idGamma) {
+        if (is_array($request->idGamma))
+        {
+            foreach ($request->idGamma as $societaId => $idGamma)
+            {
                 ClienteSocieta::updateOrCreate(
                     ['cliente_id' => $ret->id, 'societa_id' => $societaId],
                     ['cliente_id' => $ret->id, 'societa_id' => $societaId, 'idGamma' => $idGamma]
                 );
             }
         }
+
         return redirect()->action('ClienteController@show', $ret->id);
     }
 
@@ -106,19 +112,24 @@ class ClienteController extends Controller
      */
     public function update($id, ClientiRequest $request)
     {
-        if ($request->cliente) {
+        if ($request->cliente)
+        {
             $request->merge(['cliente' => 1]);
-        } else {
+        } else
+        {
             $request->merge(['cliente' => 0]);
         }
-        if ($request->softwarehouse) {
+        if ($request->softwarehouse)
+        {
             $request->merge(['softwarehouse' => 1]);
-        } else {
+        } else
+        {
             $request->merge(['softwarehouse' => 0]);
         }
 
         $cliente = Cliente::findOrFail($id);
-        foreach ($request->idGamma as $societaId => $idGamma) {
+        foreach ($request->idGamma as $societaId => $idGamma)
+        {
             ClienteSocieta::updateOrCreate(
                 ['cliente_id' => $cliente->id, 'societa_id' => $societaId],
                 ['cliente_id' => $cliente->id, 'societa_id' => $societaId, 'idGamma' => $idGamma]
@@ -132,9 +143,11 @@ class ClienteController extends Controller
 
     public function associa($id_cliente)
     {
-        if ($cliente = Cliente::findOrFail($id_cliente)) {
+        if ($cliente = Cliente::findOrFail($id_cliente))
+        {
             return view('contatti.create')->with(compact('cliente'));
-        } else {
+        } else
+        {
             abort(404);
         }
     }
@@ -147,9 +160,14 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        if (!(Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')) {
-            abort(503, 'Unauthorized action.');
+        if (Auth::User()->consulente->tipo == 'Partner' or Auth::User()->consulente->tipo == 'Admin')
+        {
+            $cliente = Cliente::findOrFail($id);
+            $cliente->delete();
+
+            return redirect()->action('ClienteController@index');
         }
+        abort(503, 'Unauthorized action.');
     }
 
     public function ajaxGetContratti()
@@ -159,7 +177,8 @@ class ClienteController extends Controller
 
         $user = Input::get('user');
 
-        return Contratto::with('progetto')->where('cliente_id', Input::get('cliente_id'))->whereHas('consulenti', function ($query) use ($user) {
+        return Contratto::with('progetto')->where('cliente_id', Input::get('cliente_id'))->whereHas('consulenti', function ($query) use ($user)
+        {
             $query->where('consulente_id', $user);
         })->get();
     }

@@ -63,9 +63,11 @@
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </button>
                                 @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
-                                    <button type="button" class="btn btn-danger btn-xs" onClick="" title="Elimina">
-                                        <i class="glyphicon glyphicon-trash"></i>
-                                    </button>
+                                    <a href="{{ action('ClienteController@destroy',$cliente->id) }}"
+                                       data-method="DELETE" data-confirm="Eliminare il Cliente?"
+                                       data-token="{{csrf_token()}}" data-skin="skin-blue"
+                                       class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i>
+                                    </a>
                                 @endif
                             </div>
                         </td>

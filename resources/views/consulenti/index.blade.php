@@ -110,10 +110,16 @@
                     data: {'tipo_utente': 1, 'id': id},
                     dataType: "JSON"
                 }).done(function (data) {
-                    if (data['status'] == 'success') {
+                    if (data['status'] == 'success'){
                         if ($('#consulente_' + id).hasClass('btn-primary')) $('#consulente_' + id).removeClass('btn-primary').addClass('btn-default');
                         else $('#consulente_' + id).removeClass('btn-default').addClass('btn-primary');
                         console.log(data['msg']);
+                    }
+                    else if(data['status'] == 'warning') {
+
+                        if ($('#consulente_' + id).hasClass('btn-primary')) $('#consulente_' + id).removeClass('btn-primary').addClass('btn-default');
+                        else $('#consulente_' + id).removeClass('btn-default').addClass('btn-primary');
+                        console.log(['Warning!', data]);
                     }
                     else console.log(['Errore!!', data]);
                 }).fail(function (jqXHR, textStatus) {

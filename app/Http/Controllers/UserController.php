@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -87,20 +86,40 @@ class UserController extends Controller
 
     public function ajaxToggleUser()
     {
-        if (Input::get('tipo_utente') == 1) {
+        if (Input::get('tipo_utente') == 1)
+        {
             $utente = Consulente::findOrFail(Input::get('id'));
-        } elseif (Input::get('tipo_utente') == 2) {
+        } elseif (Input::get('tipo_utente') == 2)
+        {
             $utente = Contatto::findOrFail(Input::get('id'));
         }
-        if (count($utente->user)) {
+        if (count($utente->user))
+        {
             $user = $utente->user;
             $user->delete();
             $msg = 'Accesso Disabilitato per: ' . $user->email;
-        } else {
+        } else
+        {
             $utente->user()->withTrashed()->first()->restore();
             $user = User::find($utente->user_id);
             $msg = 'Accesso Abilitato per: ' . $user->email;
-            Password::sendResetLink(['email' => $user->email]);
+
+
+            try
+            {
+                Password::sendResetLink(['email' => $user->email]);
+            } catch (\Exception $ex)
+            {
+                $response = [
+                    'status'    => 'warning',
+                    'msg'       => 'WARNING!\nUtente riattivato correttamente\nImpossibile inviare email reset password',
+                    'exception' => $ex->getMessage(),
+                ];
+
+                return Response::json($response);
+            }
+
+
         }
         $response = [
             'status' => 'success',

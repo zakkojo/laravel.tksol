@@ -45,8 +45,8 @@
                            data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                         @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin')
                             <a href="{{ action('ContrattoProdottoController@destroy',[$contratto->id,$listinoProdotto->id]) }}"
-                               data-method="DELETE" data-confirm="Eliminare il prodotto dal contratto?" data-token="{{csrf_token()}}"
-                               data-skin="skin-blue" class="btn btn-danger btn-xs"><i
+                               data-method="DELETE" data-confirm="Eliminare il prodotto dal contratto?"
+                               data-token="{{csrf_token()}}" data-skin="skin-blue" class="btn btn-danger btn-xs"><i
                                         class="glyphicon glyphicon-trash"></i></a>
                         @endif
 

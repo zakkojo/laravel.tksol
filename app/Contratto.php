@@ -122,7 +122,7 @@ class Contratto extends Model
 
     public function fatturazione()
     {
-        return $this->belongsTo(Cliente::class)->where('softwarehouse', '1'); //where come controllo?!?
+        return $this->belongsTo(Cliente::class,'fatturazione_id');
     }
 
     public function progetto()

@@ -19,6 +19,8 @@ if (isset($contratto))
     $swh = $contratto->fatturazione_id;
     if ($swh == $contratto->cliente_id)
         $softwarehouse->push(['id' => $swh, 'ragione_sociale' => 'Cliente']);
+    elseif($contratto->cliente->softwarehouse == 0) //se il cliente fatturazione non è più una softwarehosue
+        $softwarehouse->push(['id' => $swh, 'ragione_sociale' => $contratto->fatturazione->ragione_sociale]);
 } else
 {
     $swhDisabled = 'enabled';

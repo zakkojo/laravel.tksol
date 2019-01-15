@@ -137,7 +137,7 @@ class InterventoController extends Controller {
         //if (Carbon::now()->gte(Carbon::parse($intervento->data_start))) //update orari solo dopo inizio evento
         //{
         $intervento->user_id_modifica = Auth::User()->id;
-
+        $intervento->contratto_id = $intervento->listinoInterventi_wt->contratto->id;
         $intervento->listino_id = Input::get('listinoContratto');
         $intervento->user_id = Input::get('user_id');
         $intervento->attivita_id = Input::get('attivita');
@@ -219,6 +219,7 @@ class InterventoController extends Controller {
     public function invia($id)
     {
         $intervento = Intervento::findOrFail($id);
+        $intervento->contratto_id = $intervento->listinoInterventi_wt->contratto->id;
         if (Input::get('invia') != 1)
         {
             return view('interventi.inviaStampa', compact('intervento'));
@@ -532,7 +533,7 @@ class InterventoController extends Controller {
         $intervento->attivitaPianificate = Input::get('attivitaPianificate');
         $intervento->data_start = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_start'))->format('Y-m-d H:i:s');
         $intervento->data_end = Carbon::createFromFormat('d/m/Y H:i', Input::get('data') . ' ' . Input::get('ora_end'))->format('Y-m-d H:i:s');
-
+        $intervento->contratto_id = $intervento->listinoInterventi_wt->contratto->id;
         $response = $intervento->update();
 
         if ($response)

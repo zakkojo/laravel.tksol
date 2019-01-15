@@ -2,14 +2,14 @@
 <project version="4">
   <component name="PhpInterpreters">
     <interpreters>
-      <interpreter home="ssh://root@192.168.1.106:22/usr/bin/php" id="f7c7d311-812d-45b8-b715-19a51d27c53e" name="Remote PHP 7" debugger_id="php.debugger.XDebug">
+      <interpreter home="ssh://root@192.168.1.106:22/usr/bin/php" id="f7c7d311-812d-45b8-b715-19a51d27c53e" name="Remote PHP 7 (project level)" debugger_id="php.debugger.XDebug">
         <remote_data HOST="192.168.1.106" PORT="22" ANONYMOUS="false" USERNAME="root" PASSWORD="dfc7dfccdfc4df9edf9edf9b" PRIVATE_KEY_FILE="" MY_KNOWN_HOSTS_FILE="" PASSPHRASE="" USE_KEY_PAIR="false" INTERPRETER_PATH="/usr/bin/php" HELPERS_PATH="/var/www/tksol/.phpstorm_helpers" INITIALIZED="false" VALID="true" />
       </interpreter>
     </interpreters>
   </component>
   <component name="PhpInterpretersPhpInfoCache">
     <phpInfoCache>
-      <interpreter name="Remote PHP 7">
+      <interpreter name="Remote PHP 7 (project level)">
         <phpinfo binary_type="PHP" php_cgi="/usr/bin/php-cgi" php_cli="/usr/bin/php" path_separator=":" remote_host="192.168.1.113 51692 22" version="7.0.32" warning="Redirecting to /bin/systemctl restart  ntpd.service&#10;">
           <additional_php_ini>/etc/php.d/bz2.ini, /etc/php.d/calendar.ini, /etc/php.d/ctype.ini, /etc/php.d/curl.ini, /etc/php.d/dom.ini, /etc/php.d/exif.ini, /etc/php.d/fileinfo.ini, /etc/php.d/ftp.ini, /etc/php.d/gd.ini, /etc/php.d/gettext.ini, /etc/php.d/gmp.ini, /etc/php.d/iconv.ini, /etc/php.d/json.ini, /etc/php.d/mbstring.ini, /etc/php.d/mcrypt.ini, /etc/php.d/mysqli.ini, /etc/php.d/opcache.ini, /etc/php.d/pdo.ini, /etc/php.d/pdo_mysql.ini, /etc/php.d/pdo_sqlite.ini, /etc/php.d/phar.ini, /etc/php.d/posix.ini, /etc/php.d/shmop.ini, /etc/php.d/simplexml.ini, /etc/php.d/sockets.ini, /etc/php.d/sqlite3.ini, /etc/php.d/sysvmsg.ini, /etc/php.d/sysvsem.ini, /etc/php.d/sysvshm.ini, /etc/php.d/tokenizer.ini, /etc/php.d/xdebug.ini, /etc/php.d/xml.ini, /etc/php.d/xml_wddx.ini, /etc/php.d/xmlreader.ini, /etc/php.d/xmlwriter.ini, /etc/php.d/xsl.ini, /etc/php.d/zip.ini</additional_php_ini>
           <configuration_file>/etc/php.ini</configuration_file>

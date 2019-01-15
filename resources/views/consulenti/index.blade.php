@@ -119,6 +119,7 @@
 
                         if ($('#consulente_' + id).hasClass('btn-primary')) $('#consulente_' + id).removeClass('btn-primary').addClass('btn-default');
                         else $('#consulente_' + id).removeClass('btn-default').addClass('btn-primary');
+                        alert(data.msg.replace(/(?:\\r\\n|\\r|\\n)/g, '\n'));
                         console.log(['Warning!', data]);
                     }
                     else console.log(['Errore!!', data]);

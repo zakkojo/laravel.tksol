@@ -71,6 +71,7 @@
         font-weight: bold;
         line-height: 0.8cm;
     }
+
     div#infoCliente {
         position: absolute;
         top: 4.5cm;
@@ -122,9 +123,6 @@
 
     div#infoRapportino div {
     }
-
-
-
 
     div#testo {
         position: absolute;
@@ -208,15 +206,17 @@
         </div>
         <div id="intestazione">
             <span class='main'>TEIKOS SOLUTIONS s.r.l </span><br/>
-            <span class='sub'>Sede legale e uffici: Via A. Gordini n. 3 | 47122 Forl&igrave; | www.tksol.net | PIVA CF 03349380406 - C.C.I.A.A. 296802<br/>+39 0543.796018 | solutions@teikos
-                .it<br/></span>
+            <span class='sub'>Sede legale e uffici: Via A. Gordini n. 3 | 47122 Forl&igrave; | www.tksol.net
+                <br/> PIVA CF 03349380406 - C.C.I.A.A. 296802
+                <br/>+39 0543.796018 | {{$intervento->contratto->societa->email}}<br/>
+            </span>
         </div>
         <div id="intestazione2">
             <span class='main'>Relazione d'Intervento</span>
         </div>
     </div>
     <div id="dettagli">
-        @if($intervento->inviato!='1')<!--img class="draft" src="<?=public_path()?>/img/draft.png"-->@endif
+    @if($intervento->inviato!='1')<!--img class="draft" src="<?=public_path()?>/img/draft.png"-->@endif
         <table style="border-collapse: collapse; height: 96px;" cellspacing="0">
             <tbody>
             <tr>
@@ -253,13 +253,15 @@
             </tr>
             <tr>
                 <td>Oggetto intervento:</td>
-                <td style="border: 1px solid black;">{{$intervento->attivita->descrizione}}</td>
+                <td style="border: 1px solid black;">{{$intervento->attivita->descrizione}}
+                    ({{$intervento->sede}})
+                </td>
                 <td style="padding-left:5px">Ore viaggio a/r:</td>
                 <td style="border: 1px solid black;">&nbsp;</td>
             </tr>
             <tr>
-                <td>Prodotto:</td>
-                <td style="border: 1px solid black;"></td>
+                <td>Progetto:</td>
+                <td style="border: 1px solid black;">{{$intervento->contratto->progetto->nome}}</td>
             </tr>
             </tbody>
         </table>
@@ -278,11 +280,11 @@
                 <div id='titolo'>PROSSIME ATTIVIT&Agrave;</div>
                 {!! htmlspecialchars_decode($intervento->problemiAperti) !!}
             </div>
-        @endif
-        <!--div id='attivitaInCaricoCliente'>
+    @endif
+    <!--div id='attivitaInCaricoCliente'>
             <div id='titolo'>NOTE</div>
             {{!! htmlspecialchars_decode($intervento->attivitaCaricoCliente) !!}}
-        </div-->
+            </div-->
     </div>
     <div id='firmaCliente'>
         <span>Referente cliente</span>

@@ -211,7 +211,7 @@ class InterventoController extends Controller {
     public function stampa($id)
     {
         $intervento = Intervento::findOrFail($id);
-        $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'));
+        $pdf = SnappyPdf::loadView('interventi.' . $intervento->contratto->societa->file_stampa, compact('intervento'))->setOption('encoding', 'utf-8');
 
         return $pdf->setPaper('a5')->setOption('margin-bottom', 0)->setOption('margin-top', 0)->setOption('margin-left', 0)->setOption('margin-right', 0)->inline();
     }

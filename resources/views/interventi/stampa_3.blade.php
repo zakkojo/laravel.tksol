@@ -208,7 +208,7 @@
         </div>
         <div id="intestazione">
             <span class='main'>TKS s.r.l </span><br/>
-            <span class='sub'>Sede legale e uffici: via Camillo Rosalba 47/z | 70124 Bari | www.tksol.net | PIVA CF 08132810725 <br/>+39 0543.796018 | info@tksconsulting.it<br/></span>
+            <span class='sub'>Sede legale e uffici: via Camillo Rosalba 47/z | 70124 Bari | www.tksol.net | PIVA CF 08132810725 <br/>+39 0543.796018 | {{$intervento->contratto->societa->email}}<br/></span>
         </div>
         <div id="intestazione2">
             <span class='main'>Relazione d'Intervento</span>
@@ -216,52 +216,56 @@
     </div>
     <div id="dettagli">
         @if($intervento->inviato!='1')<!--img class="draft" src="<?=public_path()?>/img/draft.png"-->@endif
-        <table style="border-collapse: collapse; height: 96px;" cellspacing="0">
-            <tbody>
-            <tr>
-                <td width="119">Cliente:</td>
-                <td style="border: 1px solid black;"
-                    width="280">{{$intervento->contratto->cliente->ragione_sociale}}</td>
-                <td width="92" style="padding-left:5px">Data:</td>
-                <td style="border: 1px solid black;" width="65">{{$intervento->data}}</td>
-                <td width="87" style="padding-left:5px">n* rapportino:</td>
-                <td style="border: 1px solid black;" width="65">&nbsp;</td>
-            </tr>
-            <tr>
-                <td>Localit&agrave;:</td>
-                <td style="border: 1px solid black;">{{$intervento->contratto->cliente->citta}}@if($intervento->contratto->cliente->provincia)
-                        , {{$intervento->contratto->cliente->provincia}} @endif</td>
-                <td style="padding-left:5px">Ora inizio:</td>
-                <td style="border: 1px solid black;">{{$intervento->oraInizio}}</td>
-                <td style="padding-left:5px">Ora fine:</td>
-                <td style="border: 1px solid black;"></td>
-            </tr>
-            <tr>
-                <td>Referenti cliente:</td>
-                <td style="border: 1px solid black;">&nbsp;</td>
-                <td style="padding-left:5px">Ora inizio:</td>
-                <td style="border: 1px solid black;">&nbsp;</td>
-                <td style="padding-left:5px">Ora fine:</td>
-                <td style="border: 1px solid black;">{{$intervento->oraFine}}</td>
-            </tr>
-            <tr>
-                <td>Consulente:</td>
-                <td style="border: 1px solid black;">{{$intervento->user->consulente->nominativo}}</td>
-                <td style="padding-left:5px">Totale ore:</td>
-                <td style="border: 1px solid black;">{{$intervento->ore_lavorate +0}}</td>
-            </tr>
-            <tr>
-                <td>Oggetto intervento:</td>
-                <td style="border: 1px solid black;">{{$intervento->attivita->descrizione}}</td>
-                <td style="padding-left:5px">Ore viaggio a/r:</td>
-                <td style="border: 1px solid black;">&nbsp;</td>
-            </tr>
-            <tr>
-                <td>Prodotto:</td>
-                <td style="border: 1px solid black;"></td>
-            </tr>
-            </tbody>
-        </table>
+            <table style="border-collapse: collapse; height: 96px;" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td width="119">Cliente:</td>
+                    <td style="border: 1px solid black;"
+                        width="280">{{$intervento->contratto->cliente->ragione_sociale}}</td>
+                    <td width="92" style="padding-left:5px">Data:</td>
+                    <td style="border: 1px solid black;" width="65">{{$intervento->data}}</td>
+                    <td width="87" style="padding-left:5px">n* rapportino:</td>
+                    <td style="border: 1px solid black;" width="65">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Localit&agrave;:</td>
+                    <td style="border: 1px solid black;">{{$intervento->contratto->cliente->citta}}@if($intervento->contratto->cliente->provincia)
+                            , {{$intervento->contratto->cliente->provincia}} @endif</td>
+                    <td style="padding-left:5px">Ora inizio:</td>
+                    <td style="border: 1px solid black;">{{$intervento->oraInizio}}</td>
+                    <td style="padding-left:5px">Ora fine:</td>
+                    <td style="border: 1px solid black;"></td>
+                </tr>
+                <tr>
+                    <td>Referenti cliente:</td>
+                    <td style="border: 1px solid black;">&nbsp;</td>
+                    <td style="padding-left:5px">Ora inizio:</td>
+                    <td style="border: 1px solid black;">&nbsp;</td>
+                    <td style="padding-left:5px">Ora fine:</td>
+                    <td style="border: 1px solid black;">{{$intervento->oraFine}}</td>
+                </tr>
+                <tr>
+                    <td>Consulente:</td>
+                    <td style="border: 1px solid black;">{{$intervento->user->consulente->nominativo}}</td>
+                    <td style="padding-left:5px">Totale ore:</td>
+                    <td style="border: 1px solid black;">{{$intervento->ore_lavorate +0}}</td>
+                </tr>
+                <tr>
+                    <td>Oggetto intervento:</td>
+                    <td style="border: 1px solid black;">{{$intervento->attivita->descrizione}}
+                        ({{$intervento->sede}})
+                    </td>
+                    <td style="padding-left:5px">Ore viaggio a/r:</td>
+                    <td style="border: 1px solid black;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Progetto:</td>
+                    <td style="border: 1px solid black;">{{$intervento->contratto->progetto->nome}}</td>
+                </tr>
+                </tbody>
+            </table>
+    </div>
+    <div id='testo'>
     </div>
     <div id='testo'>
     <!--div id='attivitaPianificate'>

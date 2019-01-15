@@ -465,9 +465,9 @@ class InterventoController extends Controller {
     {
         $intervento = Intervento::find(Input::get('id'));
 
-        $intervento->contratto_id = $intervento->listinointerventi->contratto->id;
-        $intervento->cliente_id = $intervento->listinointerventi->contratto->cliente->id;
-        $intervento->progetto_id = $intervento->listinointerventi->contratto->progetto->id;
+        $intervento->contratto_id = $intervento->listinoInterventi_wt->contratto->id;
+        $intervento->cliente_id = $intervento->listinoInterventi_wt->contratto->cliente->id;
+        $intervento->progetto_id = $intervento->listinoInterventi_wt->contratto->progetto->id;
 
         if ($intervento)
         {

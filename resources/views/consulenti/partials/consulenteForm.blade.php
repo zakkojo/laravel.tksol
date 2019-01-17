@@ -8,7 +8,7 @@
     </div>
     <div class="form-group">
         {!! Form::email('email', null,['class'=>'form-control', 'id'=>'email', 'placeholder'=>'email']) !!}
-        <input type="hidden" name="user_email" value="{{$consulente->email or ''}}"/>
+        <input type="hidden" name="user_email" value="{{$consulente->user->email or ''}}"/>
     </div>
     <div class="form-group">
         {!! Form::text('indirizzo', null,['class'=>'form-control', 'id'=>'indirizzo', 'placeholder'=>'Indirizzo']) !!}

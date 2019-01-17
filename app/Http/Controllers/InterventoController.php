@@ -339,7 +339,7 @@ class InterventoController extends Controller {
         JOIN contratto_intervento ci ON (ci.id = i.listino_id)
         WHERE 
         i.deleted_at IS NULL
-        AND con.fatturazione_default = 1
+        AND i.fatturabile = 1
         AND i.approvato = "1" 
         AND i.ore_fatturate <> 0 
         AND ( i.fatturato IS NULL OR i.fatturato ="" OR i.data_fattura IS NULL OR i.data_fattura = "") ' . $wdi . $wdf . $wfiltro . ' order BY i.data_start DESC');

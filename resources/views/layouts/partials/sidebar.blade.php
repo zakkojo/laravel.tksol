@@ -8,7 +8,7 @@
         @if (! Auth::guest())
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="@yield('user_image', '/img/user-placeholder.png')" class="img-circle" alt="User Image" />
+                    <img src="{{Auth::User()->googleAvatarOriginal ?: '/img/user-placeholder.png'}}" class="img-circle" alt="User Image" />
                 </div>
                 <div class="pull-left info">
                     <p> @if(Auth::user()->tipo_utente == '1')

@@ -84,6 +84,18 @@ class UserController extends Controller {
     {
     }
 
+    public function unlinkGoogle()
+    {
+        $user = Auth::User();
+        $user->googleAccount = null;
+        $user->googleAvatar = null;
+        $user->googleAvatarOriginal = null;
+        $user->save();
+        //$googleClient = Google::getClient();
+        //$googleClient->revokeToken();
+        return redirect()->action('ConsulenteController@edit',$user->consulente->id);
+    }
+
     public function ajaxToggleUser()
     {
         if (Input::get('tipo_utente') == 1)
@@ -128,4 +140,6 @@ class UserController extends Controller {
 
         return Response::json($response);
     }
+
+
 }

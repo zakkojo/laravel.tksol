@@ -31,7 +31,7 @@
                                 <li>
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="@yield('user_image', '/img/user-placeholder.png')" class="img-circle" alt="User Image"/>
+                                            <img src="{{Auth::User()->googleAvatarOriginal ?: '/img/user-placeholder.png'}}" class="img-circle" alt="User Image"/>
                                         </div>
                                         <h4>
                                             Nome Richiedente
@@ -111,7 +111,7 @@
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <!-- The user image in the navbar-->
-                            <img src="@yield('user_image', '/img/user-placeholder.png')" class="user-image" alt="User Image"/>
+                            <img src="{{Auth::User()->googleAvatarOriginal ?: '/img/user-placeholder.png'}}" class="user-image" alt="User Image"/>
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
                             <span class="hidden-xs">
                                 @if(Auth::user()->tipo_utente == '1')
@@ -124,7 +124,7 @@
                         <ul class="dropdown-menu">
                             <!-- The user image in the menu -->
                             <li class="user-header">
-                                <img src="@yield('user_image', '/img/user-placeholder.png')" class="img-circle" alt="User Image" />
+                                <img src="{{Auth::User()->googleAvatarOriginal ?: '/img/user-placeholder.png'}}" class="img-circle" alt="User Image" />
                                 <p>
                                     @if(Auth::user()->tipo_utente == '1')
                                         {{ Auth::user()->consulente->nome }} {{ Auth::user()->consulente->cognome }}
@@ -149,7 +149,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Profilo</a>
+                                    <a href="{{ action('ConsulenteController@edit',Auth::User()->consulente->id)}}" class="btn btn-default btn-flat">Profilo</a>
                                 </div>
                                 <div class="pull-right">
                                     <a href="{{ url('/logout') }}" class="btn btn-default btn-flat">Log out</a>

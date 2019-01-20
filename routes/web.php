@@ -26,7 +26,7 @@
 | kernel and includes session state, CSRF protection, and more.
 |
 */
-Route::group(['middleware' => 'web'], function () {
+Route::group(['middlewareGroups' => 'web'], function () {
 /*
  * // Login routes
     Route::get('/login', 'Auth\LoginController@AuthenticatesUsers');
@@ -47,9 +47,10 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/', 'HomeController@index');
 
     Route::resource('user', 'UserController');
+    Route::get('/unlinkGoogle', 'UserController@unlinkGoogle');
+    Route::post('ajax/toggleUser', 'UserController@ajaxToggleUser');
 
     Route::resource('consulenti', 'ConsulenteController');
-    Route::post('ajax/toggleUser', 'UserController@ajaxToggleUser');
     Route::get('ajax/consulenti/getConsulente', 'ConsulenteController@ajaxGetConsulente');
     Route::get('ajax/consulenti/getContratti', 'ConsulenteController@ajaxGetContratti');
     Route::get('ajax/consulenti/getInterventiDaApprovare', 'ConsulenteController@ajaxGetInterventiDaApprovare');
@@ -114,6 +115,6 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('ajax/helper/pullSession', 'HelperController@ajaxPullSession');
 
     //route for socialite auth
-    Route::get('/loginGoogle', 'Auth\LoginController@redirectToProvider');
+    Route::get('/linkGoogle', 'Auth\LoginController@redirectToProvider');
     Route::get('/test', 'Auth\LoginController@handleProviderCallback');
 });

@@ -1,5 +1,20 @@
 @extends('layouts.auth')
+@section('htmlheader_extra')
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        .google-button {
+            border: 2px solid transparent;
+            padding: 8px 12px 8px 40px;
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+            background: #4285F4 url('/img/g-logo.png');
+            background-size: 18px 18px;
+            background-position: 8px 8px;
+            background-repeat: no-repeat;
 
+        }
+    </style>
+@endsection
 @section('htmlheader_title')
     Log in
 @endsection
@@ -47,8 +62,10 @@
                     </div><!-- /.col -->
                 </div>
             </form>
-            <div class="social-auth-links text-center">
-                <a href="{{ url('/linkGoogle') }}" class="btn btn-block btn-social btn-primary btn-flat" style="background-color: #4285F4"><i class="fab fa-google"></i> Accedi con il tuo account Google</a>
+            <div class=" text-center" style="margin-top: 20px;">
+                <a href="{{ url('/linkGoogle') }}">
+                    <button class="google-button">SIGN IN WITH GOOGLE</button>
+                </a>
             </div><!-- /.social-auth-links -->
             </br>
             <a href="{{ url('/password/reset') }}">Hai dimenticato la password?</a><br>

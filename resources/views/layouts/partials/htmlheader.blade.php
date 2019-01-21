@@ -1,4 +1,5 @@
 <head>
+    @yield('htmlheader_extra')
     <meta charset="UTF-8">
     <title> Teikos CRM - @yield('htmlheader_title', 'Pagina Web') </title>
     <meta name="csrf_token" content="{{ csrf_token() }}" />

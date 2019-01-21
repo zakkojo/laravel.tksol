@@ -7,7 +7,7 @@
     <div class="form-group">
         <label>Email</label>
         {!! Form::input('email','email', null,['class'=>'form-control', 'id'=>'email', 'placeholder'=>'Email']) !!}
-        <input type="hidden" name="user_email" value="{{$contatto->user->email or ''}}"/>
+        <input type="hidden" name="user_email" value="{{$contatto->userEmail or ''}}"/>
     </div>
     <div class="form-group">
         <label>Telefono/Fax</label>

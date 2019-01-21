@@ -27,4 +27,9 @@ class Contatto extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getUserEmailAttribute()
+    {
+        return $this->user()->withTrashed()->first()->email;
+    }
 }

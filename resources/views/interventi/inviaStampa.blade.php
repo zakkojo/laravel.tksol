@@ -48,12 +48,12 @@
                                 <div class="col-xs-12 col-sm-1">
                                     <div class="icheckbox_flat-green" style="margin:20px 2px 0 -10px"><input
                                                 name="fatturabile" type="checkbox" class="flat-red"
-                                                value="{{$contatto->user->email}}" style="position: absolute; opacity: 0;">
+                                                value="{{$contatto->userEmail}}" style="position: absolute; opacity: 0;">
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-9">
                                     <span><b>{{$contatto->descrizione}}</b></span><br/>
-                                    <span class="name">{{$contatto->user->email}}</span><br/>
+                                    <span class="name">{{$contatto->userEmail}}</span><br/>
                                     <span class="name">{{$contatto->indirizzo}}, {{$contatto->citta}}
                                         , {{$contatto->cap}}</span><br/>
                                 </div>

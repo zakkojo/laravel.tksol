@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('htmlheader_title')
-    Registrazione Fatture
+    Fatturazione
 @endsection
 @section('contentheader_title')
-    Registrazione Fatture
+    Fatturazione
 @endsection
 @section('contentheader_breadcrumb')
 @endsection
@@ -132,6 +132,7 @@
                 <tr>
                     <th style='padding:1pt'><input id='selezionaTutti' type='checkbox'></th>
                     <th>Data Intervento</th>
+                    <th class="hidden">ID</thclass>
                     <th>Consulente</th>
                     <th>Link</th>
                     <th>Società</th>
@@ -151,6 +152,7 @@
                         <tr class='intervento' data-id_intervento='{{$intervento->id}}'>
                             <td style='padding:1pt'><input name='selettoreRDA' type='checkbox'></td>
                             <td class="date">{{$intervento->data}}</td>
+                            <td class="hidden">{{$intervento->id}}</td>
                             <td>{{$intervento->user->consulente->nominativo}}</td>
                             <td style="width: 80px">
                                 <div class="btn-group btn-group-sm" role="group" aria-label="...">
@@ -217,6 +219,7 @@
 @endsection
 @section('page_scripts')
     <script>
+        $("#menu-contabilita").addClass('active').addClass('menu-open');
         function getUrlVars(url_to_load) {
             var vars = [], hash;
             var hashes = url_to_load.slice(url_to_load.indexOf('?') + 1).split('&');
@@ -235,6 +238,9 @@
             if (vars['page'])
                 params.page = vars['page'];
 
+            if (vars['fatturato'])
+                params.fatturato = vars['fatturato'];
+
             if ($('#filtro').val())
                 params.filtro = $('#filtro').val();
             else if (vars['filtro'])
@@ -242,13 +248,10 @@
 
             if ($('#di').val())
                 params.di = $('#di').val();
-            else if (vars['di'])
-                params.di = vars['di'];
 
             if ($('#df').val())
                 params.df = $('#df').val();
-            else if (vars['df'])
-                params.df = vars['df'];
+
             if (url.indexOf('?') != -1)
                 window.location.href = url.slice(0, url.indexOf('?')) + '?' + $.param(params);
             else
@@ -291,7 +294,7 @@
                 dataFattura = moment(dataFattura, 'DD/MM/YYYY').format();
                 noteFattura = $('tr[data-id_intervento=' + id + ']').find('.noteFattura').val();
                 $.ajax({
-                    url: "/ajax/interventi/registraFattura",
+                    url: "/ajax/interventi/visualizzaFattura",
                     type: "GET",
                     data: {id: id, fatturato: nFattura, dataFattura: dataFattura, note: noteFattura},
                     dataType: "JSON",

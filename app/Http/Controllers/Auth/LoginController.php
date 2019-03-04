@@ -8,6 +8,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
+
 class LoginController extends Controller {
 
     /*
@@ -37,7 +38,7 @@ class LoginController extends Controller {
      */
     public function __construct()
     {
-        $this->middleware('guest')->except(['logout','redirectToProvider','handleProviderCallback']);
+        $this->middleware('guest')->except(['logout', 'redirectToProvider', 'handleProviderCallback']);
     }
 
     /**
@@ -57,27 +58,20 @@ class LoginController extends Controller {
      */
     public function handleProviderCallback()
     {
+
         $googleUser = Socialite::driver('google')->user();
-        if(Auth::User()){
+        if (Auth::User())
+        {
             $existingUser = Auth::User();
             $existingUser->googleAccount = $googleUser->email;
             $existingUser->googleAvatar = $googleUser->avatar;
             $existingUser->googleAvatarOriginal = $googleUser->avatar_original;
             $existingUser->save();
-            return redirect()->action('ConsulenteController@edit',$existingUser->consulente->id);
-        }
-        else{
-            if($existingUser = User::where('email', $googleUser->email)->first()){
-                // update user info
-                $existingUser->googleAccount = $googleUser->email;
-                $existingUser->googleAvatar = $googleUser->avatar;
-                $existingUser->googleAvatarOriginal = $googleUser->avatar_original;
-                $existingUser->save();
-                // log them in
-                auth()->login($existingUser, true);
-                return redirect()->to('/');
-            }
-            elseif ($existingUser = User::where('googleAccount', $googleUser->email)->first())
+            $existingUser->createGoogleCalendarAppuntamenti($existingUser->id);
+            return redirect()->action('ConsulenteController@edit', $existingUser->consulente->id);
+        } else
+        {
+            if ($existingUser = User::where('email', $googleUser->email)->first())
             {
                 // update user info
                 $existingUser->googleAccount = $googleUser->email;
@@ -86,10 +80,20 @@ class LoginController extends Controller {
                 $existingUser->save();
                 // log them in
                 auth()->login($existingUser, true);
-
+                User::createGoogleCalendarAppuntamenti($existingUser->id);
                 return redirect()->to('/');
-            }
-            else
+            } elseif ($existingUser = User::where('googleAccount', $googleUser->email)->first())
+            {
+                // update user info
+                $existingUser->googleAccount = $googleUser->email;
+                $existingUser->googleAvatar = $googleUser->avatar;
+                $existingUser->googleAvatarOriginal = $googleUser->avatar_original;
+                $existingUser->save();
+                // log them in
+                auth()->login($existingUser, true);
+                User::createGoogleCalendarAppuntamenti($existingUser->id);
+                return redirect()->to('/');
+            } else
                 return redirect('/login')->withErrors(['Account Google non associato a nessun utente']);
 
         }

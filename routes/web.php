@@ -49,6 +49,9 @@ Route::group(['middlewareGroups' => 'web'], function () {
     Route::resource('user', 'UserController');
     Route::get('/unlinkGoogle', 'UserController@unlinkGoogle');
     Route::post('ajax/toggleUser', 'UserController@ajaxToggleUser');
+    Route::post('createGoogleCalendarAppuntamenti', 'UserController@createGoogleCalendarAppuntamenti');
+    Route::post('shareGoogleCalendarAppuntamenti', 'UserController@shareGoogleCalendarAppuntamenti');
+    Route::post('unshareGoogleCalendarAppuntamenti', 'UserController@unshareGoogleCalendarAppuntamenti');
 
     Route::resource('consulenti', 'ConsulenteController');
     Route::get('ajax/consulenti/getConsulente', 'ConsulenteController@ajaxGetConsulente');

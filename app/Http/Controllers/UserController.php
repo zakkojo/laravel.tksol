@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 
+use Google;
+use Google_Service_Calendar;
+use Google_Service_Calendar_Calendar;
+use Google_Service_Calendar_AclRule;
+use Google_Service_Calendar_AclRuleScope;
+
 class UserController extends Controller {
 
     /**
@@ -93,7 +99,79 @@ class UserController extends Controller {
         $user->save();
         //$googleClient = Google::getClient();
         //$googleClient->revokeToken();
-        return redirect()->action('ConsulenteController@edit',$user->consulente->id);
+        return redirect()->action('ConsulenteController@edit', $user->consulente->id);
+    }
+
+    public function createGoogleCalendarAppuntamenti(Request $request)
+    {
+        dd("asdsdddddddddd");
+        $user = User::findOrFail($request->user_id);
+        if ($user->googleCalendarAppuntamenti == null AND $user->tipo == 1)
+        {
+            //Creo Calendario Appuntamenti
+            $serviceClient = Google::getClient();
+            $calendar = new Google_Service_Calendar_Calendar();
+            $calendar->setSummary('CRM ' . $user->consulente->nominativo);
+            $calendar->setTimeZone('Europe/Rome');
+            $service = Google::make('calendar');
+            $createdCalendar = $service->calendars->insert($calendar);
+
+            $user->googleCalendarAppuntamenti = $createdCalendar->getId();
+            $user->save();
+        } else return "asdasdasdad";
+    }
+
+    public function shareGoogleCalendarAppuntamenti(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+        if ($calendar_id = $user->googleCalendarAppuntamenti != null AND $user->tipo == 1)
+        {
+            $serviceClient = Google::getClient();
+            $service = Google::make('calendar');
+            //condivido il calendario con la mail google dell'utente in lettura
+            $rule = new Google_Service_Calendar_AclRule();
+            $scope = new Google_Service_Calendar_AclRuleScope();
+            $scope->setType("user");
+            $scope->setValue($user->googleAccount);
+            $rule->setScope($scope);
+            $rule->setRole("reader");
+            $createdRule[] = $service->acl->insert($calendar_id, $rule);
+            //condivido il calendario con l'account solutions@tksol.net
+            $rule = new Google_Service_Calendar_AclRule();
+            $scope = new Google_Service_Calendar_AclRuleScope();
+            $scope->setType("user");
+            $scope->setValue("solutions@tksol.net");
+            $rule->setScope($scope);
+            $rule->setRole("owner");
+            $createdRule[] = $service->acl->insert($calendar_id, $rule);
+        } else
+        {
+            //create calendar and retry
+            return null;
+        }
+    }
+
+    public function unshareGoogleCalendarAppuntamenti(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+        if ($calendar_id = $user->googleCalendarAppuntamenti != null AND $user->tipo == 1)
+        {
+            $serviceClient = Google::getClient();
+            $service = Google::make('calendar');
+            $acl = $service->acl->listAcl($calendar_id);
+            foreach ($acl->getItems() as $rule)
+            {
+                if ($rule->getRole() != "owner")
+                {
+                    $service->acl->delete($calendar_id, $rule->getId());
+                }
+            }
+            return null;
+        } else
+        {
+            //nessun calendario per l'utente
+            return null;
+        }
     }
 
     public function ajaxToggleUser()

@@ -67,7 +67,7 @@ class LoginController extends Controller {
             $existingUser->googleAvatar = $googleUser->avatar;
             $existingUser->googleAvatarOriginal = $googleUser->avatar_original;
             $existingUser->save();
-            $existingUser->createGoogleCalendarAppuntamenti($existingUser->id);
+            //$existingUser->createGoogleCalendarAppuntamenti($existingUser->id);
             return redirect()->action('ConsulenteController@edit', $existingUser->consulente->id);
         } else
         {
@@ -80,7 +80,7 @@ class LoginController extends Controller {
                 $existingUser->save();
                 // log them in
                 auth()->login($existingUser, true);
-                User::createGoogleCalendarAppuntamenti($existingUser->id);
+                //User::createGoogleCalendarAppuntamenti($existingUser->id);
                 return redirect()->to('/');
             } elseif ($existingUser = User::where('googleAccount', $googleUser->email)->first())
             {
@@ -91,7 +91,7 @@ class LoginController extends Controller {
                 $existingUser->save();
                 // log them in
                 auth()->login($existingUser, true);
-                User::createGoogleCalendarAppuntamenti($existingUser->id);
+                //User::createGoogleCalendarAppuntamenti($existingUser->id);
                 return redirect()->to('/');
             } else
                 return redirect('/login')->withErrors(['Account Google non associato a nessun utente']);

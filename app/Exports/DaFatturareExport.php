@@ -80,6 +80,7 @@ class DaFatturareExport implements FromCollection, WithHeadings, WithTitle {
         and inter.ore_fatturate <> 0
         and inter.fatturabile =1
         and (inter.fatturato is null or inter.data_fattura is null)
+        and inter.deleted_at is null
         ");
         for ($i = 0, $c = count($daFatturare); $i < $c; ++$i) {
             $daFatturare[$i] = (array)$daFatturare[$i];

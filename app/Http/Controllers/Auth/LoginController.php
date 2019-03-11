@@ -80,6 +80,7 @@ class LoginController extends Controller {
                 $existingUser->save();
                 // log them in
                 auth()->login($existingUser, true);
+                
                 //User::createGoogleCalendarAppuntamenti($existingUser->id);
                 return redirect()->to('/');
             } elseif ($existingUser = User::where('googleAccount', $googleUser->email)->first())

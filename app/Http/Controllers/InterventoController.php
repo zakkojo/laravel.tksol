@@ -2,6 +2,7 @@
 
 use App\Cliente;
 use App\Consulente;
+use App\Exports\FatturatoExport;
 use App\User;
 use App\ContrattoIntervento;
 use App\Http\Requests\AjaxInterventiRequest;
@@ -326,8 +327,9 @@ class InterventoController extends Controller {
             $wfiltro = ' AND  CONCAT_WS(" ", i.id, cons.nome, cons.cognome, cli.ragione_sociale, pro.nome, soc.nome, ci.descrizione) like "%' . Input::get('filtro') . '%" ';
         else $wfiltro = '';
 
-
-        $query = DB::select('
+        if (Input::get('output') != 'excel')
+        {
+            $query = DB::select('
         SELECT i.* 
         FROM laravel_tksol.intervento i 				
         JOIN users ON(users.id = i.user_id)						
@@ -342,20 +344,26 @@ class InterventoController extends Controller {
         JOIN contratto_intervento ci ON (ci.id = i.listino_id)
         WHERE 
         i.deleted_at IS NULL '
-        . $wfatture . $wdi . $wdf . $wfiltro . ' ORDER BY i.data_start DESC');
+                . $wfatture . $wdi . $wdf . $wfiltro . ' ORDER BY i.data_start DESC');
 
-        $interventi = Intervento::hydrate($query);
+            $interventi = Intervento::hydrate($query);
 
 
-        //$currentPage = LengthAwarePaginator::resolveCurrentPage();
+            //$currentPage = LengthAwarePaginator::resolveCurrentPage();
 
-        $currentItems = $interventi->slice($paginate * ($page - 1), $paginate);
+            $currentItems = $interventi->slice($paginate * ($page - 1), $paginate);
 
-        $paginator = new LengthAwarePaginator($currentItems, $interventi->count(), $paginate, $page);
-        $paginator->withPath('visualizzaFattura');
-        $daFatturare = $paginator->appends(request()->except('page'));
+            $paginator = new LengthAwarePaginator($currentItems, $interventi->count(), $paginate, $page);
+            $paginator->withPath('visualizzaFattura');
+            $daFatturare = $paginator->appends(request()->except('page'));
 
-        return view('interventi.visualizzaFattura', compact('daFatturare'));
+            return view('interventi.visualizzaFattura', compact('daFatturare'));
+        }
+        else{
+            $filtro=['wfatture'=>$wfatture,'wdi'=>$wdi,'wdf'=>$wdf,'wfiltro'=>$wfiltro];
+            $filename = 'crm_fatturato_' . Carbon::now()->format('Ymd') . '.xlsx';
+            return Excel::download(new FatturatoExport($filtro), $filename);
+        }
     }
 
     public function uploadFattureGamma(Request $request)

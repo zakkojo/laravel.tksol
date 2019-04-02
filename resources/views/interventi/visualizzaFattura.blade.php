@@ -91,7 +91,7 @@
         }
     </style>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class='rdaHEAD'>
                 <div>Filtro: <input size='30' type='text' id='filtro'
                                     @if(Input::has('filtro')) value='{{ Input::get('filtro')}}'
@@ -111,7 +111,10 @@
                 <button class="btn  btnFiltroReset"><i class="fa fa-refresh"></i></button>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-1">
+            <button class="btn btn-success btnFiltroExcel"><i class="fa fa-download"></i>&nbsp; Esporta Excel</button>
+        </div>
+        <div class="col-md-1">
             <form id="uploadFattureGamma" action="{{ route('interventi.uploadFattureGamma') }}" method="POST"
                   enctype="multipart/form-data">
                 {{ csrf_field() }}
@@ -259,6 +262,34 @@
 
         });
 
+        $('.btnFiltroExcel').click(function (e) {
+            var url = window.location.href;
+            vars = getUrlVars(url);
+            var params = {};
+            if (vars['page'])
+                params.page = vars['page'];
+
+            if (vars['fatturato'])
+                params.fatturato = vars['fatturato'];
+
+            if ($('#filtro').val())
+                params.filtro = $('#filtro').val();
+            else if (vars['filtro'])
+                params.filtro = vars['filtro'];
+
+            if ($('#di').val())
+                params.di = $('#di').val();
+
+            if ($('#df').val())
+                params.df = $('#df').val();
+
+            if (url.indexOf('?') != -1)
+                window.location.href = url.slice(0, url.indexOf('?')) + '?' + $.param(params)+'&output=excel';
+            else
+                window.location.href = url + '?' + $.param(params)+'&output=excel';
+
+        });
+
         $('.btnFiltroReset').click(function (e) {
             var url = window.location.href;
             if (url.indexOf('?') != -1)
@@ -294,7 +325,7 @@
                 dataFattura = moment(dataFattura, 'DD/MM/YYYY').format();
                 noteFattura = $('tr[data-id_intervento=' + id + ']').find('.noteFattura').val();
                 $.ajax({
-                    url: "/ajax/interventi/visualizzaFattura",
+                    url: "/ajax/interventi/registraFattura",
                     type: "GET",
                     data: {id: id, fatturato: nFattura, dataFattura: dataFattura, note: noteFattura},
                     dataType: "JSON",

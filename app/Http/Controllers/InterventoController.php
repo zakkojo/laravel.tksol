@@ -313,9 +313,8 @@ class InterventoController extends Controller {
         $paginate = Input::get('paginate', '100');
         //$daFatturare = Intervento::whereRaw('approvato = "1" AND ore_fatturate <> 0 AND ( fatturato is null OR data_fattura is null)')->orderBy('data_start', 'desc')->paginate($paginate);
 
-
         if (Input::get('fatturato', '0') == 0)
-            $wfatture = ' AND ( i.fatturato IS NULL OR i.fatturato ="" OR i.data_fattura IS NULL OR i.data_fattura = "") ';
+            $wfatture = ' AND approvato = "1" AND ore_fatturate <> 0 AND ( i.fatturato IS NULL OR i.fatturato ="" OR i.data_fattura IS NULL OR i.data_fattura = "") ';
         else $wfatture = ' AND i.fatturato IS NOT NULL AND i.fatturato <> "" ';
         if (Input::get('di'))
             $wdi = ' AND i.data_start >= STR_TO_DATE("' . Input::get('di') . '", "%d/%m/%Y") ';

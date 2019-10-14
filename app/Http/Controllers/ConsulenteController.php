@@ -68,19 +68,19 @@ class ConsulenteController extends Controller
         $prossimiInterventi = Intervento::whereRaw("user_id = '".$consulente->user->id."' AND data_start >= now() AND data_start <= (CURDATE() + INTERVAL 30 DAY) AND inviato = 0 AND approvato = 0")->orderBy('data_start')->get();
         //$rapportiniDaInviare = Intervento::where('consulente_id', '=', $consulente->id)->where('stampa', '<', '2');
         $contrattiSenzaInterventi = DB::select("
-            SELECT c.id contratto_id, ragione_sociale, pro.nome, min(data_start) data_primo_intervento 
+            SELECT c.id contratto_id, ragione_sociale, pro.nome, min(data_start) data_prossimo_intervento 
             FROM contratto c
             JOIN cliente cli ON (c.cliente_id = cli.id)
             JOIN progetto pro ON (c.progetto_id = pro.id)
             LEFT JOIN contratto_intervento ci on (c.id = ci.contratto_id) 
             LEFT JOIN consulente_contratto cc on (cc.contratto_id = c.id) 
-            LEFT JOIN intervento i ON (i.listino_id = ci.id) 
+            LEFT JOIN intervento i ON (i.listino_id = ci.id AND i.data_start > '" . Carbon::now() . "') 
             WHERE cc.consulente_id = '" . $consulente->id . "'
             AND c.stato <> 'CLOSED' 
             AND c.deleted_at is null
             AND cc.ruolo = 'Capo Progetto'
             GROUP BY c.id,ragione_sociale, pro.nome
-            HAVING (data_primo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR data_primo_intervento is null)
+            HAVING (data_prossimo_intervento >= '" . Carbon::now()->addMonths(2) . "' OR data_prossimo_intervento is null)
         ");
 
         //$interventiDaApprovare = Intervento::where('consulente_id',$consulente->id)->whereRaw('consulente_id <> creatore_id')->whereRaw('data_accettazione is null')->get();

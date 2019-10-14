@@ -23,7 +23,7 @@
                 <td>Opzioni</td>
                 <td>Cliente</td>
                 <td>Progetto</td>
-                <td>Ultimo Intervento</td>
+                <td>Prossimo Intervento</td>
             </tr>
             </thead>
             <tbody>
@@ -36,7 +36,7 @@
                     </td>
                     <td>{{ $contrattoSenzaIntervento->ragione_sociale }}</td>
                     <td class="pull-right">{{$contrattoSenzaIntervento->nome}}</td>
-                    <td>{{$contrattoSenzaIntervento->data_primo_intervento}}</td>
+                    <td>{{$contrattoSenzaIntervento->data_prossimo_intervento}}</td>
                 </tr>
             @endforeach
             </tbody>

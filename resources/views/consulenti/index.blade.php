@@ -66,7 +66,7 @@
                             {{ $consulente->nome . " " . $consulente->cognome }}
                         </td>
                         <td>{{ $consulente->tipo }}</td>
-                        <td>{{ $consulente->mail }}</td>
+                        <td>{{ $consulente->user->email or ''}}</td>
                         <td>{{ $consulente->mobile . " " . $consulente->mobile2  }}</td>
                         <td></td>
                         <td></td>

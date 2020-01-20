@@ -217,7 +217,7 @@
         <div id="intestazione">
             <span class='main'>SFN ADRIATICA S.r.l. </span><br/>
             <span class='sub'>Codice Fiscale e Partita IVA 04217400409
-            <br/>SEDE Via Carlo Cignani, 58 - 47121 Forli (FC)
+            <br/>Via D. Martoni 7/10, 47012 Forlì (FC)
             <br/>{{$intervento->contratto->societa->email}}</span>
         </div>
         <div id="intestazione2">

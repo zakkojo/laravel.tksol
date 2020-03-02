@@ -129,7 +129,7 @@
                         <tr class='intervento' data-id_intervento='{{$intervento->id}}'>
                             <td style='padding:1pt'><input name='selettoreRDA' type='checkbox'></td>
                             <td class="date">{{$intervento->data}}</td>
-                            <td>{{$intervento->user->consulente->nominativo}}</td>
+                            <td>{{$intervento->user->consulente->nominativo ?? 'Consulente Non Trovato'}}</td>
                             <td>{{$intervento->contratto->cliente->ragione_sociale}}</td>
                             <td>
                                 <div class="btn-group btn-group-sm" role="group" aria-label="...">

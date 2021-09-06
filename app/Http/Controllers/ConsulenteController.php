@@ -86,7 +86,7 @@ class ConsulenteController extends Controller
         //$interventiDaApprovare = Intervento::where('consulente_id',$consulente->id)->whereRaw('consulente_id <> creatore_id')->whereRaw('data_accettazione is null')->get();
 
 
-        return view('consulenti.show', compact('consulente', 'prossimiInterventi', 'rapportiniDaInviare', 'contrattiSenzaInterventi'));
+        return view('consulenti.show', compact('consulente', 'prossimiInterventi', 'contrattiSenzaInterventi'));
     }
 
     /**

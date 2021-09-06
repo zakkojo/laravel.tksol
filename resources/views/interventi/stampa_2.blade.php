@@ -212,7 +212,7 @@
 <div id='rapportino'>
     <div id='testata'>
         <div id="logo">
-            <img src='<?=public_path()?>/img/SFNAdriatica.png'>
+            <img src='http://crmtest.tksol.net/img/SFNAdriatica.png'>
         </div>
         <div id="intestazione">
             <span class='main'>SFN ADRIATICA S.r.l. </span><br/>

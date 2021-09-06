@@ -202,7 +202,7 @@
 <div id='rapportino'>
     <div id='testata'>
         <div id="logo">
-            <img src='<?=public_path()?>/img/teikos_solutions.gif'>
+            <img src='http://crmtest.tksol.net/img/teikos_solutions.gif'>
         </div>
         <div id="intestazione">
             <span class='main'>TEIKOS SOLUTIONS s.r.l </span><br/>

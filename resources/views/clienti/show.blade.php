@@ -67,7 +67,7 @@
                         @foreach($cliente->rubrica as $contatto)
                             <tr>
                                 <td>
-                                    <?php if (count($contatto->user)) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
+                                    <?php if (!empty($contatto->user)) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
                                     <!--a onclick="toggleUser({{$contatto->id}})" id="consulente_{{$contatto->id}}"
                                        data-skin="skin-blue" class="btn btn-xs {{$btnclass}}"><i
                                                 class="glyphicon glyphicon-user"></i></a-->

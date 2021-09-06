@@ -204,7 +204,7 @@
 <div id='rapportino'>
     <div id='testata'>
         <div id="logo">
-            <img src='<?=public_path()?>/img/tksconsulting.jpg'>
+            <img src='http://crmtest.tksol.net/img/tksconsulting.jpg'>
         </div>
         <div id="intestazione">
             <span class='main'>TKS s.r.l </span><br/>

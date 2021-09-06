@@ -57,7 +57,7 @@
                     <tr>
                         <td>{{ $consulente->codice_fiscale }}</td>
                         <td>
-                            <?php if (count($consulente->user)) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
+                            <?php if (!empty($consulente->user) ) $btnclass = 'btn-primary'; else $btnclass = 'btn-default'; ?>
                             <a onclick="toggleUser({{$consulente->id}})" id="consulente_{{$consulente->id}}"
                                data-skin="skin-blue" class="btn btn-xs {{$btnclass}}"><i
                                         class="glyphicon glyphicon-user"></i></a>

@@ -242,7 +242,8 @@ class InterventoController extends Controller {
             $societa = $intervento->contratto->societa;
             Mail::send('email.inviaRapportino', compact('intervento'), function ($m) use ($user, $societa, $id, $base_path, $recipients)
             {
-                $m->from($societa->email, 'Rapportini ' . $societa->nome);
+                //$m->from($societa->email, 'Rapportini ' . $societa->nome);
+                $m->from('auto@tksol.net', 'Rapportini ' . $societa->nome);
                 $m->replyTo($user->email, $user->consulente->nominativo);
                 if (config('app.customer_email'))
                 {

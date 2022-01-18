@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Kalnoy\Nestedset\NodeTrait;
 
 class Attivita extends Model
 {
@@ -13,7 +12,6 @@ class Attivita extends Model
     public $timestamps = true;
 
     use SoftDeletes;
-    use NodeTrait;
 
     protected $dates = ['deleted_at'];
 
@@ -29,21 +27,19 @@ class Attivita extends Model
 
     public static function getDataTree($progetto_id)
     {
-        Attivita::where(['progetto_id' => $progetto_id])->fixTree();
-        $attivitas = Attivita::where(['progetto_id' => $progetto_id])->defaultOrder()->get()->toTree();
-
         function traverse($collection)
         {
             foreach ($collection as $attivita) {
                 $attivita['text'] = $attivita['descrizione'];
-                if (count($attivita['children'])) {
-                    $attivita['nodes'] = traverse($attivita['children']);
-                }
+                //if (count($attivita['children'])) {
+                //    $attivita['nodes'] = traverse($attivita['children']);
+                //}
             }
-
             return $collection;
         }
-        $listAttivita = traverse($attivitas);
+
+        $attivita = Attivita::where(['progetto_id' => $progetto_id])->get();    
+        $listAttivita = traverse($attivita);
         return $listAttivita;
     }
 }

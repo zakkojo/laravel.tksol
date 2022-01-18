@@ -183,7 +183,7 @@ class UserController extends Controller {
         {
             $utente = Contatto::findOrFail(Input::get('id'));
         }
-        if (count($utente->user))
+        if ($utente->user)
         {
             $user = $utente->user;
             $user->delete();

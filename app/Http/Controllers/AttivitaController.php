@@ -41,9 +41,10 @@ class AttivitaController extends Controller
         }
         $data = $request->all();
         Attivita::create($data);
-        if ($request->parent_id != 0) {
-            $attivita = Attivita::findOrFail($request->parent_id);
-        }
+        $attivita = Attivita::find($request->parent_id);
+        //if ($request->parent_id != 0) {
+        //    $attivita = Attivita::findOrFail($request->parent_id);
+        //}
         $progetto = Progetto::findOrFail($request->progetto_id);
 
         return redirect()->action('ProgettoController@edit', compact('progetto', 'attivita'));

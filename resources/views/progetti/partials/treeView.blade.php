@@ -33,7 +33,7 @@
             if (typeof(selectedId) === 'undefined') selectedId = {!! $_GET['attivita'] or 0 !!};
 
 
-            if (typeof(treeData) === 'undefined') var treeData = {!!  $listAttivita !!};
+            if (typeof(treeData) === 'undefined') var treeData = {!! $listAttivita !!};
             var alternateData = [{
                 text: '<b>{{$progetto->area}} / {{$progetto->nome}}</b>',
                 //icon: 'glyphicon glyphicon-certificate',

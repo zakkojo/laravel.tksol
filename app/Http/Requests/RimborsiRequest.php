@@ -26,34 +26,29 @@ class RimborsiRequest extends FormRequest
 
         switch ($this->method()) {
             case 'GET':
-            case 'DELETE':
-            {
-                return [
-                    
-                ];
-            }
-            case 'POST':
-            {
-                return [
-                    'intervento_id'=> 'required',
-                    'tipo_spesa'=> 'required',
-                    'um'=> 'required',
-                    'quantita' => 'required|numeric',
-                    'importo' => 'required|numeric',
-                ];
-            }
+            case 'DELETE': {
+                    return [];
+                }
+            case 'POST': {
+                    return [
+                        'intervento_id' => 'required',
+                        'tipo_spesa' => 'required',
+                        'um' => 'required',
+                        'quantita' => 'required|numeric',
+                        'importo' => 'required|numeric',
+                    ];
+                }
             case 'PUT':
-            case 'PATCH':
-            {
-                return [
-                    'id' => 'required',
-                    'intervento_id'=> 'required',
-                    'tipo_spesa'=> 'required',
-                    'um'=> 'required',
-                    'quantita' => 'required|numeric',
-                    'importo' => 'required|numeric',
-                ];
-            }
+            case 'PATCH': {
+                    return [
+                        //'id' => 'required',
+                        'intervento_id' => 'required',
+                        'tipo_spesa' => 'required',
+                        'um' => 'required',
+                        'quantita' => 'required|numeric',
+                        'importo' => 'required|numeric',
+                    ];
+                }
             default:
                 break;
         }

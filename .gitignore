@@ -9,4 +9,6 @@ Homestead.json
 /.idea/workspace.xml
 /.idea/tasks.xml
 
+.vscode
+
 resources/assets/google/

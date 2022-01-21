@@ -26,4 +26,9 @@ class ConsulenteContratto extends Model
     {
         return $this->belongsTo(Consulente::class);
     }
+
+    public function consulente_wt()
+    {
+        return $this->belongsTo(Consulente::class)->withTrashed();
+    }
 }

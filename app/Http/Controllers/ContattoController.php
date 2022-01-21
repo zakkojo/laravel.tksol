@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Requests\ContattiRequest;
@@ -10,7 +12,8 @@ use App\ClienteContatto;
 use Exception;
 
 
-class ContattoController extends Controller {
+class ContattoController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -32,23 +35,18 @@ class ContattoController extends Controller {
         $messages = [];
         $data = $request->all();
         $user = User::withTrashed()->where('email', $request->email);
-        if ($user->count() > 0)
-        {
-            if ($user->first()->tipo_utente == 1)
-            {
+        if ($user->count() > 0) {
+            if ($user->first()->tipo_utente == 1) {
                 $messages[] = "Un consulente non può essere associato come contatto <a href='" . action('ConsulenteController@edit', $user->first()->consulente->id) . "'> Link al CONSULENTE</a>";
 
                 return redirect()->back()->withErrors($messages);
-            } else
-            {
+            } else {
                 if ($request->cliente_id)
                     ClienteContatto::firstOrCreate(['cliente_id' => $request->cliente_id, 'contatto_id' => $user->first()->contatto->id]);
 
                 return redirect()->action('ContattoController@edit', $user->first()->contatto->id)->withErrors($messages);
             }
-        }
-        else
-        {
+        } else {
             $user = User::create(['email' => $request->email, 'password' => bcrypt('tksol'), 'tipo_utente' => '2']);
             $contatto = Contatto::create($data);
             $contatto->user()->associate($user->id);
@@ -100,10 +98,8 @@ class ContattoController extends Controller {
 
 
         $emailUtente = User::withTrashed()->where('email', $request->email);
-        if ($emailUtente->count() > 0)
-        {
-            if ($emailUtente->first()->email != $user->email)
-            {
+        if ($emailUtente->count() > 0) {
+            if ($emailUtente->first()->email != $user->email) {
                 if ($emailUtente->first()->tipo_utente == 1)
                     $messages[] = "Email già presente in rubrica <a href='" . action('ConsulenteController@edit', $emailUtente->first()->consulente->id) . "'> Link al CONSULENTE collegato</a>";
                 else
@@ -127,9 +123,9 @@ class ContattoController extends Controller {
      */
     public function destroy($id)
     {
-        $cliente_id = Contatto::find($id)->cliente->id;
+        //$cliente_id = Contatto::find($id)->cliente->id;
         $resp = Contatto::destroy($id);
 
-        return redirect()->action('ClienteController@show', $cliente_id);
+        return redirect()->action('ClienteController@index');
     }
 }

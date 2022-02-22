@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 @foreach($consulentiContratto as $consulenteContratto)
-                @if($consulenteContratto->consulente->deleted_at)
+                @if($consulenteContratto->consulente->user->deleted_at)
                 <tr class="danger">
                     @else
                 <tr>

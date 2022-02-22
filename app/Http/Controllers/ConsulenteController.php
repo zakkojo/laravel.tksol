@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Contratto;
 use App\Http\Requests;
@@ -25,7 +27,7 @@ class ConsulenteController extends Controller
      */
     public function index()
     {
-        $consulenti = Consulente::all();
+        $consulenti = Consulente::withTrashed()->get();
 
         return view('consulenti.index')->with(compact('consulenti'));
     }
@@ -65,7 +67,7 @@ class ConsulenteController extends Controller
     public function show($id)
     {
         $consulente = Consulente::findOrFail($id);
-        $prossimiInterventi = Intervento::whereRaw("user_id = '".$consulente->user->id."' AND data_start >= now() AND data_start <= (CURDATE() + INTERVAL 30 DAY) AND inviato = 0 AND approvato = 0")->orderBy('data_start')->get();
+        $prossimiInterventi = Intervento::whereRaw("user_id = '" . $consulente->user->id . "' AND data_start >= now() AND data_start <= (CURDATE() + INTERVAL 30 DAY) AND inviato = 0 AND approvato = 0")->orderBy('data_start')->get();
         //$rapportiniDaInviare = Intervento::where('consulente_id', '=', $consulente->id)->where('stampa', '<', '2');
         $contrattiSenzaInterventi = DB::select("
             SELECT c.id contratto_id, ragione_sociale, pro.nome, min(data_start) data_prossimo_intervento 
@@ -150,7 +152,7 @@ class ConsulenteController extends Controller
         } else {
             //return Contratto::with('progetto','consulenti')->where('cliente_id', $cliente_id)->get();
             //$contratti = User::find($user)->consulente->contratti;
-            $contratti = Contratto::with('progetto')->whereRaw("stato <> 'CLOSED' AND (DATE(data_chiusura_progetto) >= '".Carbon::today()->format('Y-m-d')."' OR data_chiusura_progetto IS NULL)")
+            $contratti = Contratto::with('progetto')->whereRaw("stato <> 'CLOSED' AND (DATE(data_chiusura_progetto) >= '" . Carbon::today()->format('Y-m-d') . "' OR data_chiusura_progetto IS NULL)")
                 ->whereHas('consulenti', function ($query) use ($consulente) {
                     $query->where('consulente_id', $consulente->id);
                 })
@@ -162,7 +164,7 @@ class ConsulenteController extends Controller
     public function ajaxGetInterventiDaApprovare()
     {
         $consulente = Auth::User()->consulente;
-        $daApprovare=0;
+        $daApprovare = 0;
         $consulente->contrattiDaFatturare->each(function ($contratto, $key) use (&$daApprovare) {
             if ($contratto->interventiDaApprovare) {
                 $daApprovare = $daApprovare + $contratto->interventiDaApprovare->count();

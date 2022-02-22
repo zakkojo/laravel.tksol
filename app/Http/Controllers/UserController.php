@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Consulente;
@@ -17,7 +19,8 @@ use Google_Service_Calendar_Calendar;
 use Google_Service_Calendar_AclRule;
 use Google_Service_Calendar_AclRuleScope;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -106,8 +109,7 @@ class UserController extends Controller {
     {
         dd("asdsdddddddddd");
         $user = User::findOrFail($request->user_id);
-        if ($user->googleCalendarAppuntamenti == null AND $user->tipo == 1)
-        {
+        if ($user->googleCalendarAppuntamenti == null and $user->tipo == 1) {
             //Creo Calendario Appuntamenti
             $serviceClient = Google::getClient();
             $calendar = new Google_Service_Calendar_Calendar();
@@ -124,8 +126,7 @@ class UserController extends Controller {
     public function shareGoogleCalendarAppuntamenti(Request $request)
     {
         $user = User::findOrFail($request->user_id);
-        if ($calendar_id = $user->googleCalendarAppuntamenti != null AND $user->tipo == 1)
-        {
+        if ($calendar_id = $user->googleCalendarAppuntamenti != null and $user->tipo == 1) {
             $serviceClient = Google::getClient();
             $service = Google::make('calendar');
             //condivido il calendario con la mail google dell'utente in lettura
@@ -144,8 +145,7 @@ class UserController extends Controller {
             $rule->setScope($scope);
             $rule->setRole("owner");
             $createdRule[] = $service->acl->insert($calendar_id, $rule);
-        } else
-        {
+        } else {
             //create calendar and retry
             return null;
         }
@@ -154,21 +154,17 @@ class UserController extends Controller {
     public function unshareGoogleCalendarAppuntamenti(Request $request)
     {
         $user = User::findOrFail($request->user_id);
-        if ($calendar_id = $user->googleCalendarAppuntamenti != null AND $user->tipo == 1)
-        {
+        if ($calendar_id = $user->googleCalendarAppuntamenti != null and $user->tipo == 1) {
             $serviceClient = Google::getClient();
             $service = Google::make('calendar');
             $acl = $service->acl->listAcl($calendar_id);
-            foreach ($acl->getItems() as $rule)
-            {
-                if ($rule->getRole() != "owner")
-                {
+            foreach ($acl->getItems() as $rule) {
+                if ($rule->getRole() != "owner") {
                     $service->acl->delete($calendar_id, $rule->getId());
                 }
             }
             return null;
-        } else
-        {
+        } else {
             //nessun calendario per l'utente
             return null;
         }
@@ -176,30 +172,26 @@ class UserController extends Controller {
 
     public function ajaxToggleUser()
     {
-        if (Input::get('tipo_utente') == 1)
-        {
-            $utente = Consulente::findOrFail(Input::get('id'));
-        } elseif (Input::get('tipo_utente') == 2)
-        {
-            $utente = Contatto::findOrFail(Input::get('id'));
+        if (Input::get('tipo_utente') == 1) {
+            $utente = Consulente::withTrashed()->findOrFail(Input::get('id'));
+        } elseif (Input::get('tipo_utente') == 2) {
+            $utente = Contatto::withTrashed()->findOrFail(Input::get('id'));
         }
-        if ($utente->user)
-        {
+        if ($utente->user) {
             $user = $utente->user;
             $user->delete();
+            $user->consulente->delete();
             $msg = 'Accesso Disabilitato per: ' . $user->email;
-        } else
-        {
+        } else {
             $utente->user()->withTrashed()->first()->restore();
+            $utente->withTrashed()->first()->restore();
             $user = User::find($utente->user_id);
             $msg = 'Accesso Abilitato per: ' . $user->email;
 
 
-            try
-            {
+            try {
                 Password::sendResetLink(['email' => $user->email]);
-            } catch (\Exception $ex)
-            {
+            } catch (\Exception $ex) {
                 $response = [
                     'status'    => 'warning',
                     'msg'       => 'WARNING!\nUtente riattivato correttamente\nImpossibile inviare email reset password',
@@ -208,8 +200,6 @@ class UserController extends Controller {
 
                 return Response::json($response);
             }
-
-
         }
         $response = [
             'status' => 'success',
@@ -218,6 +208,4 @@ class UserController extends Controller {
 
         return Response::json($response);
     }
-
-
 }

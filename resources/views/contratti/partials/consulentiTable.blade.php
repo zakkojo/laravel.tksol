@@ -29,11 +29,12 @@
             </thead>
             <tbody>
                 @foreach($consulentiContratto as $consulenteContratto)
-                @if($consulenteContratto->consulente->user->deleted_at)
+                {{--@if($consulenteContratto->consulente->user->deleted_at)
                 <tr class="danger">
                     @else
                 <tr>
-                    @endif
+                    @endif--}}
+                <tr>
                     <td>
                         <a href="{{ action('ConsulenteContrattoController@edit',[$contratto->id,$consulenteContratto->id]) }}" data-skin="skin-blue" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
                         @if(Auth::User()->consulente->tipo == 'Partner' OR Auth::User()->consulente->tipo == 'Admin' OR Auth::User()->consulente->contratti->contains($contratto->id))
